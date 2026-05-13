@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Créditos Bolivia | SimuladordeCreditos.com</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 50:'#EEF4FF', 100:'#DBEAFE', 700:'#1D4ED8', 800:'#0B2A56', 900:'#0A1F42', 950:'#06132B' },
+            gold: { 200:'#FEF3C7', 300:'#F5D98A', 400:'#D4A843', 500:'#B8860B', 600:'#9A6E00' }
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans:    ['Outfit', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Outfit', system-ui, sans-serif; background: #EEF2FA; color: #0A1F42; }
+    .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+    /* ── Gradients ── */
+    .hero-bg  { background: linear-gradient(135deg, #060F1E 0%, #0A1F42 45%, #0D2860 100%); }
+    .gold-bg  { background: linear-gradient(135deg, #D4A843 0%, #A87420 100%); }
+    .card-bg  { background: #ffffff; border-radius: 16px; box-shadow: 0 2px 18px rgba(10,31,66,.08); }
+
+    /* ── Inputs ── */
+    .lbl { display:block; font-size:11px; font-weight:600; text-transform:uppercase;
+           letter-spacing:.06em; color:#4B6A9B; margin-bottom:5px; }
+    .inp { width:100%; padding:10px 13px; border:1.5px solid #D1DCF0; border-radius:10px;
+           font-family:'Outfit',sans-serif; font-size:14px; color:#0A1F42; background:#F7FAFF;
+           transition:border-color .2s, box-shadow .2s; outline:none; }
+    .inp:focus { border-color:#D4A843; background:#fff; box-shadow:0 0 0 3px rgba(212,168,67,.15); }
+    select.inp { appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234B6A9B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 11px center; padding-right:34px; }
+    input[type=range]  { accent-color:#D4A843; width:100%; }
+    input[type=number] { -moz-appearance:textfield; }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; }
+
+    /* ── Buttons ── */
+    .btn-gold { background:linear-gradient(135deg,#D4A843 0%,#A87420 100%); color:#fff;
+                font-weight:600; padding:14px 28px; border-radius:12px; border:none; cursor:pointer;
+                font-family:'Outfit',sans-serif; font-size:15px; letter-spacing:.02em;
+                transition:all .2s; box-shadow:0 4px 16px rgba(212,168,67,.38); width:100%; }
+    .btn-gold:hover  { transform:translateY(-1px); box-shadow:0 7px 22px rgba(212,168,67,.50); }
+    .btn-gold:active { transform:translateY(0); }
+    .btn-sm { background:#fff; color:#0A1F42; font-weight:500; padding:8px 16px; border-radius:9px;
+              border:1.5px solid #D1DCF0; cursor:pointer; font-family:'Outfit',sans-serif;
+              font-size:12px; transition:all .2s; white-space:nowrap; }
+    .btn-sm:hover  { border-color:#D4A843; color:#A87420; }
+    .btn-sm:disabled { opacity:.45; cursor:not-allowed; }
+
+    /* ── Rate Tabs ── */
+    .rate-tabs { display:flex; gap:3px; background:#F0F4FB; padding:4px; border-radius:11px; }
+    .rtab { flex:1; padding:8px 6px; border-radius:8px; font-size:13px; font-weight:500;
+             cursor:pointer; border:none; background:transparent; color:#4B6A9B;
+             transition:all .2s; font-family:'Outfit',sans-serif; }
+    .rtab.active { background:#0A1F42; color:#fff; box-shadow:0 2px 8px rgba(10,31,66,.25); }
+
+    /* ── TRE pulse ── */
+    .tre-pill { display:inline-flex; align-items:center; gap:6px;
+                background:rgba(212,168,67,.12); border:1px solid rgba(212,168,67,.35);
+                border-radius:20px; padding:4px 11px; font-size:11px; color:#C9A840; font-weight:600; }
+    .tre-dot  { width:6px; height:6px; border-radius:50%; background:#D4A843; animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+    /* ── Summary cards ── */
+    .sum-card { border-radius:14px; padding:18px 20px; transition:transform .2s; }
+    .sum-card:hover { transform:translateY(-2px); }
+
+    /* ── Capacity badges ── */
+    .badge-ok     { background:#D1FAE5; color:#065F46; }
+    .badge-warn   { background:#FEF3C7; color:#92400E; }
+    .badge-danger { background:#FEE2E2; color:#991B1B; }
+
+    /* ── Progress bar ── */
+    .pbar { height:7px; border-radius:4px; background:#E5EDF8; overflow:hidden; }
+    .pbar-fill { height:100%; border-radius:4px; transition:width .5s ease; }
+
+    /* ── Table ── */
+    .tbl-wrap { overflow-x:auto; border-radius:12px; border:1px solid #E5EDF8; }
+    .amort-tbl { width:100%; border-collapse:separate; border-spacing:0; font-size:12.5px; min-width:680px; }
+    .amort-tbl thead th { background:#0A1F42; color:#fff; padding:11px 10px; text-align:right;
+                           font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; }
+    .amort-tbl thead th:first-child { text-align:center; border-radius:10px 0 0 0; }
+    .amort-tbl thead th:last-child  { border-radius:0 10px 0 0; }
+    .amort-tbl tbody td  { padding:9px 10px; text-align:right; border-bottom:1px solid #EDF2F9; color:#1A3558; }
+    .amort-tbl tbody td:first-child { text-align:center; }
+    .amort-tbl tbody td:nth-child(2) { text-align:left; font-size:11px; white-space:nowrap; }
+    .amort-tbl tbody tr:hover td    { background:#F5F9FF; }
+    .amort-tbl tbody tr.fase2 td    { background:rgba(212,168,67,.04); }
+    .amort-tbl tbody tr.fase2:hover td { background:rgba(212,168,67,.09); }
+    .amort-tbl tfoot td { padding:10px; font-weight:600; font-size:12px; background:#F0F5FC;
+                           text-align:right; color:#0A1F42; border-top:2px solid #D1DCF0; }
+    .amort-tbl tfoot td:first-child { text-align:center; border-radius:0 0 0 10px; }
+    .amort-tbl tfoot td:last-child  { border-radius:0 0 10px 0; }
+
+    /* ── Phase legend ── */
+    .phase-dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; }
+    .p1-dot { background:#0A1F42; }
+    .p2-dot { background:#D4A843; }
+
+    /* ── Animations ── */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+    .fade-up { animation:fadeUp .45s ease forwards; }
+    .d1 { animation-delay:.08s; opacity:0; }
+    .d2 { animation-delay:.16s; opacity:0; }
+    .d3 { animation-delay:.24s; opacity:0; }
+    .d4 { animation-delay:.32s; opacity:0; }
+
+    /* ── Donut chart ── */
+    .donut-label { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; fill:#0A1F42; }
+    .donut-sub   { font-family:'Outfit',sans-serif; font-size:10px; fill:#6B7A8D; letter-spacing:.04em; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar       { width:5px; height:5px; }
+    ::-webkit-scrollbar-track { background:#EEF2FA; }
+    ::-webkit-scrollbar-thumb { background:#D4A843; border-radius:3px; }
+
+    /* ── Responsive ── */
+    @media(max-width:640px) {
+      .sum-grid { grid-template-columns:1fr 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════ -->
+<header class="hero-bg text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl gold-bg flex items-center justify-center shadow-lg flex-shrink-0">
+        <!-- coin icon -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.8"/>
+          <path d="M12 7v1m0 8v1M9.5 9.5C9.5 8.67 10.67 8 12 8s2.5.67 2.5 1.5S13.33 11 12 11s-2.5.67-2.5 1.5S10.67 14 12 14s2.5.67 2.5 1.5" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="font-display text-2xl sm:text-3xl font-semibold tracking-tight leading-none">
+          Simulador<span class="text-yellow-300">de</span>Créditos
+        </h1>
+        <p class="text-blue-300 text-xs tracking-widest uppercase font-light mt-0.5">Bolivia · Sistema Francés · Norma ASFI</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 flex-wrap">
+      <div class="tre-pill" title="Tasa de Referencia – Banco Central de Bolivia">
+        <div class="tre-dot"></div>
+        TRE Vigente:&nbsp;<strong id="hdrTRE">2.95</strong>%
+      </div>
+      <span class="text-blue-300 text-xs hidden md:block">Bs. · US$ · UFV</span>
+    </div>
+
+  </div>
+</header>
+
+
+<!-- ════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════ -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+<div class="grid grid-cols-1 xl:grid-cols-5 gap-6 items-start">
+
+
+  <!-- ─────────────────────────────────────────
+       PANEL IZQUIERDO: FORMULARIO (2 / 5)
+  ───────────────────────────────────────── -->
+  <div class="xl:col-span-2 space-y-5">
+
+    <!-- ① Datos del crédito -->
+    <div class="card-bg p-6">
+      <h2 class="font-display text-xl font-semibold mb-4 flex items-center gap-2">
+        <span class="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A1F42" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </span>
+        Datos del Crédito
+      </h2>
+
+      <div class="space-y-4">
+
+        <!-- Tipo crédito -->
+        <div>
+          <label class="lbl">Tipo de Crédito</label>
+          <select id="tipoCredito" class="inp" onchange="actualizarUI()">
+            <option value="hipotecario">🏠  Crédito Hipotecario (Vivienda)</option>
+            <option value="vehicular">🚗  Crédito Vehicular</option>
+            <option value="personal">👤  Crédito Personal</option>
+            <option value="comercial">🏢  Crédito Comercial / PyME</option>
+          </select>
+        </div>
+
+        <!-- Moneda -->
+        <div>
+          <label class="lbl">Moneda</label>
+          <select id="moneda" class="inp" onchange="onMonedaChange()">
+            <option value="BOB">BOB — Boliviano</option>
+            <option value="USD">USD — Dólar Americano</option>
+            <option value="UFV">UFV — Unidad de Fomento a la Vivienda</option>
+          </select>
+        </div>
+
+        <!-- Monto -->
+        <div>
+          <label class="lbl">Monto del Préstamo</label>
+          <div class="relative">
+            <span id="currSym" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-yellow-600">Bs.</span>
+            <input type="number" id="monto" class="inp pl-9" value="500000" min="1000" step="1000">
+          </div>
+          <input type="range" id="montoSlider" min="10000" max="5000000" step="10000" value="500000" class="mt-2"
+                 oninput="syncVal('montoSlider','monto')">
+          <div class="flex justify-between text-xs text-blue-400 mt-1">
+            <span>Bs. 10k</span><span id="montoLbl" class="font-semibold text-yellow-600">Bs. 500k</span><span>Bs. 5M</span>
+          </div>
+        </div>
+
+        <!-- Plazo -->
+        <div>
+          <label class="lbl">Plazo del Crédito (años)</label>
+          <input type="number" id="plazo" class="inp" value="15" min="1" max="30"
+                 oninput="document.getElementById('plazoSlider').value=this.value; document.getElementById('plazoLbl').textContent=this.value+' años'">
+          <input type="range" id="plazoSlider" min="1" max="30" value="15" class="mt-2"
+                 oninput="syncVal('plazoSlider','plazo'); document.getElementById('plazoLbl').textContent=this.value+' años'">
+          <div class="flex justify-between text-xs text-blue-400 mt-1">
+            <span>1 año</span><span id="plazoLbl" class="font-semibold text-yellow-600">15 años</span><span>30 años</span>
+          </div>
+        </div>
+
+        <!-- Fecha primer pago -->
+        <div>
+          <label class="lbl">Fecha del Primer Pago</label>
+          <input type="date" id="fechaInicio" class="inp">
+        </div>
+
+      </div>
+    </div><!-- /card datos -->
+
+
+    <!-- ② Tipo de Tasa -->
+    <div class="card-bg p-6">
+      <h2 class="font-display text-xl font-semibold mb-4 flex items-center gap-2">
+        <span class="w-7 h-7 rounded-lg bg-yellow-50 flex items-center justify-center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </span>
+        Tipo de Tasa
+      </h2>
+
+      <div class="rate-tabs mb-5">
+        <button class="rtab active" id="tab-fija"     onclick="setTasa('fija')">Fija</button>
+        <button class="rtab"        id="tab-variable" onclick="setTasa('variable')">Variable</button>
+        <button class="rtab"        id="tab-mixta"    onclick="setTasa('mixta')">Mixta</button>
+      </div>
+
+      <!-- Panel Fija -->
+      <div id="pnl-fija" class="space-y-3">
+        <div>
+          <label class="lbl">Tasa Nominal Anual (%)</label>
+          <input type="number" id="tasaFija" class="inp" value="7.50" min="0" max="30" step="0.01">
+          <p class="text-xs text-blue-400 mt-1">Ingresa el porcentaje anual. Ej: 7.5 = 7.5%</p>
+        </div>
+      </div>
+
+      <!-- Panel Variable -->
+      <div id="pnl-variable" class="space-y-3 hidden">
+        <div class="bg-yellow-50 rounded-xl p-3 text-xs text-yellow-800">
+          ⚡ Tasa = <strong>TRE + Spread (margen del banco)</strong>
+        </div>
+        <div>
+          <label class="lbl">TRE Actual (% anual)</label>
+          <div class="relative">
+            <input type="number" id="treVar" class="inp pr-16" value="2.95" min="0" max="20" step="0.01"
+                   oninput="calcTasaVar()">
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 tre-pill py-0.5 text-[10px]">BCB</span>
+          </div>
+          <!-- TODO: SQL → SELECT valor FROM tre_bcb WHERE vigente=1 ORDER BY fecha DESC LIMIT 1 -->
+          <p class="text-xs text-blue-400 mt-1">📡 Valor manual · Puede conectarse automáticamente a la BCB.</p>
+        </div>
+        <div>
+          <label class="lbl">Spread / Margen del Banco (%)</label>
+          <input type="number" id="spreadVar" class="inp" value="4.55" min="0" max="20" step="0.01"
+                 oninput="calcTasaVar()">
+        </div>
+        <div class="bg-blue-50 rounded-xl p-3 text-xs text-blue-700">
+          Tasa efectiva = TRE <span id="treVarD">2.95</span>% + Spread <span id="spreadVarD">4.55</span>% =
+          <strong class="text-navy-900 text-sm" id="efecVar">7.50%</strong>
+        </div>
+      </div>
+
+      <!-- Panel Mixta -->
+      <div id="pnl-mixta" class="space-y-3 hidden">
+        <div class="bg-blue-50 rounded-xl p-3 text-xs text-blue-700">
+          💡 Período inicial con <strong>tasa fija</strong>, luego cambia a <strong>TRE + margen</strong>.
+        </div>
+
+        <div>
+          <label class="lbl">Tasa Fija Inicial (%)</label>
+          <input type="number" id="tasaMixtaFija" class="inp" value="6.50" min="0" max="30" step="0.01">
+        </div>
+        <div>
+          <label class="lbl">Duración del Período Fijo (años)</label>
+          <input type="number" id="aniosFijos" class="inp" value="5" min="1" max="29">
+          <p class="text-xs text-blue-400 mt-1">El resto del plazo pasará a tasa variable.</p>
+        </div>
+
+        <div class="border-t border-gray-100 pt-4">
+          <p class="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-3">Fase 2 · Tasa Variable</p>
+          <div class="space-y-3">
+            <div>
+              <label class="lbl">TRE Proyectada (%)</label>
+              <input type="number" id="treMixta" class="inp" value="2.95" min="0" max="20" step="0.01"
+                     oninput="calcTasaMixta()">
+            </div>
+            <div>
+              <label class="lbl">Spread / Margen (%)</label>
+              <input type="number" id="spreadMixta" class="inp" value="5.05" min="0" max="20" step="0.01"
+                     oninput="calcTasaMixta()">
+            </div>
+            <div class="bg-yellow-50 rounded-xl p-3 text-xs text-yellow-800">
+              Tasa Fase 2 = TRE + Spread = <strong id="mixFase2">8.00%</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /card tasa -->
+
+
+    <!-- ③ Seguros -->
+    <div class="card-bg p-6">
+      <h2 class="font-display text-xl font-semibold mb-4 flex items-center gap-2">
+        <span class="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </span>
+        Seguros
+      </h2>
+      <div class="space-y-5">
+
+        <!-- Desgravamen -->
+        <div class="flex items-start gap-3">
+          <input type="checkbox" id="chkDesgrav" checked class="mt-1 w-4 h-4 rounded" style="accent-color:#B8860B">
+          <div class="flex-1">
+            <label for="chkDesgrav" class="lbl cursor-pointer">Seguro de Desgravamen</label>
+            <div class="flex gap-2 items-center">
+              <input type="number" id="tasaDesgrav" class="inp" value="0.083" min="0" max="2" step="0.001">
+              <span class="text-xs text-blue-400 whitespace-nowrap">% mensual / saldo</span>
+            </div>
+            <p class="text-xs text-blue-400 mt-1">Calculado mensualmente sobre el saldo insoluto.</p>
+          </div>
+        </div>
+
+        <!-- Seguro inmueble / vehicular -->
+        <div id="segOtroWrap" class="flex items-start gap-3">
+          <input type="checkbox" id="chkSegOtro" checked class="mt-1 w-4 h-4 rounded" style="accent-color:#B8860B">
+          <div class="flex-1">
+            <label for="chkSegOtro" class="lbl cursor-pointer" id="lblSegOtro">Seguro de Inmueble</label>
+            <div class="flex gap-2 items-center">
+              <input type="number" id="tasaSegOtro" class="inp" value="0.022" min="0" max="5" step="0.001">
+              <span class="text-xs text-blue-400 whitespace-nowrap">% mensual / saldo</span>
+            </div>
+            <p class="text-xs text-blue-400 mt-1">Calculado mensualmente sobre el saldo insoluto.</p>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /card seguros -->
+
+
+    <!-- ④ Capacidad de Pago (input) -->
+    <div class="card-bg p-6">
+      <h2 class="font-display text-xl font-semibold mb-4 flex items-center gap-2">
+        <span class="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </span>
+        Análisis de Capacidad
+      </h2>
+      <div>
+        <label class="lbl">Ingreso Mensual Neto</label>
+        <div class="relative">
+          <span id="currSym2" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-yellow-600">Bs.</span>
+          <input type="number" id="ingreso" class="inp pl-9" placeholder="Ej: 8,000" min="0">
+        </div>
+        <p class="text-xs text-blue-400 mt-1">Opcional. Tu sueldo para el análisis de riesgo bancario (estándar ASFI).</p>
+      </div>
+    </div>
+
+    <!-- Calcular -->
+    <button class="btn-gold" onclick="calcular()">
+      ⚡&nbsp; Calcular Amortización
+    </button>
+
+  </div><!-- /col izquierda -->
+
+
+  <!-- ─────────────────────────────────────────
+       PANEL DERECHO: RESULTADOS (3 / 5)
+  ───────────────────────────────────────── -->
+  <div class="xl:col-span-3" id="colResultados">
+
+    <!-- Placeholder -->
+    <div id="placeholder" class="card-bg p-14 flex flex-col items-center justify-center text-center gap-4" style="min-height:320px">
+      <div class="w-20 h-20 rounded-full gold-bg flex items-center justify-center opacity-20">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+          <path d="M9 7H6a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-3"/>
+          <path d="M9 15h3l8.5-8.5a1.5 1.5 0 00-3-3L9 12v3"/><path d="M16 5l3 3"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="font-display text-2xl text-navy-900 opacity-40">Configure el crédito</h3>
+        <p class="text-blue-400 text-sm mt-1 opacity-50">Complete los parámetros y presione <strong>Calcular</strong><br>para ver la tabla de amortización completa.</p>
+      </div>
+    </div>
+
+    <!-- Resultados (ocultos hasta calcular) -->
+    <div id="resultados" class="hidden space-y-5">
+
+      <!-- Resumen 4 cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sum-grid">
+
+        <div class="sum-card hero-bg text-white fade-up d1">
+          <p class="text-blue-300 text-xs uppercase tracking-wider mb-1">Cuota Cap+Int</p>
+          <p class="font-display text-2xl font-semibold" id="sC">—</p>
+          <p class="text-blue-400 text-xs mt-1">Sistema Francés</p>
+        </div>
+
+        <div class="sum-card gold-bg text-white fade-up d2">
+          <p class="text-yellow-100 text-xs uppercase tracking-wider mb-1">Cuota Total</p>
+          <p class="font-display text-2xl font-semibold" id="sCT">—</p>
+          <p class="text-yellow-100 text-xs mt-1">Incluye seguros</p>
+        </div>
+
+        <div class="sum-card card-bg border border-gray-100 fade-up d3">
+          <p class="text-blue-400 text-xs uppercase tracking-wider mb-1">Total Intereses</p>
+          <p class="font-display text-2xl font-semibold text-navy-900" id="sI">—</p>
+          <p class="text-blue-400 text-xs mt-1" id="sIPct">% del capital</p>
+        </div>
+
+        <div class="sum-card card-bg border border-gray-100 fade-up d4">
+          <p class="text-blue-400 text-xs uppercase tracking-wider mb-1">Total a Pagar</p>
+          <p class="font-display text-2xl font-semibold text-navy-900" id="sTP">—</p>
+          <p class="text-blue-400 text-xs mt-1">Capital+Int+Seg</p>
+        </div>
+
+      </div>
+
+      <!-- Gráfico composición primera cuota -->
+      <div class="card-bg p-5 fade-up" id="chartCard">
+        <h3 class="font-display text-lg font-semibold mb-4">Composición del Pago</h3>
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+          <!-- Donut -->
+          <svg id="donutSvg" width="140" height="140" viewBox="0 0 140 140" class="flex-shrink-0">
+            <circle cx="70" cy="70" r="52" fill="none" stroke="#EEF2FA" stroke-width="22"/>
+            <circle id="dArc1" cx="70" cy="70" r="52" fill="none" stroke="#0A1F42" stroke-width="22"
+                    stroke-dasharray="0 327" stroke-dashoffset="81.75" transform="rotate(-90 70 70)"
+                    style="transition:stroke-dasharray .6s ease"/>
+            <circle id="dArc2" cx="70" cy="70" r="52" fill="none" stroke="#D4A843" stroke-width="22"
+                    stroke-dasharray="0 327" stroke-dashoffset="81.75" transform="rotate(-90 70 70)"
+                    style="transition:stroke-dasharray .6s ease"/>
+            <circle id="dArc3" cx="70" cy="70" r="52" fill="none" stroke="#93C5FD" stroke-width="22"
+                    stroke-dasharray="0 327" stroke-dashoffset="81.75" transform="rotate(-90 70 70)"
+                    style="transition:stroke-dasharray .6s ease"/>
+            <text x="70" y="66" text-anchor="middle" class="donut-label" id="donutPct">—</text>
+            <text x="70" y="80" text-anchor="middle" class="donut-sub">CAPITAL</text>
+          </svg>
+          <!-- Legend -->
+          <div class="space-y-2 w-full">
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm" style="background:#0A1F42"></span>Capital Amortizado</div>
+              <div class="flex items-center gap-3">
+                <span class="font-semibold text-navy-900" id="lgCap">—</span>
+                <span class="text-blue-400 text-xs w-10 text-right" id="lgCapPct">—</span>
+              </div>
+            </div>
+            <div class="pbar"><div class="pbar-fill" id="barCap" style="background:#0A1F42; width:0%"></div></div>
+
+            <div class="flex items-center justify-between text-sm mt-2">
+              <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm" style="background:#D4A843"></span>Intereses</div>
+              <div class="flex items-center gap-3">
+                <span class="font-semibold text-navy-900" id="lgInt">—</span>
+                <span class="text-blue-400 text-xs w-10 text-right" id="lgIntPct">—</span>
+              </div>
+            </div>
+            <div class="pbar"><div class="pbar-fill" id="barInt" style="background:#D4A843; width:0%"></div></div>
+
+            <div class="flex items-center justify-between text-sm mt-2" id="lgSegRow">
+              <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm" style="background:#93C5FD"></span>Seguros</div>
+              <div class="flex items-center gap-3">
+                <span class="font-semibold text-navy-900" id="lgSeg">—</span>
+                <span class="text-blue-400 text-xs w-10 text-right" id="lgSegPct">—</span>
+              </div>
+            </div>
+            <div class="pbar"><div class="pbar-fill" id="barSeg" style="background:#93C5FD; width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Análisis de Capacidad -->
+      <div id="capSection" class="card-bg p-5 hidden fade-up">
+        <h3 class="font-display text-lg font-semibold mb-3">📊 Análisis de Capacidad de Pago</h3>
+        <div id="capContent"></div>
+      </div>
+
+      <!-- Indicador de fases (mixta) -->
+      <div id="faseInd" class="hidden flex gap-5 text-xs text-blue-500 font-medium">
+        <span><span class="phase-dot p1-dot"></span>Fase 1 – Tasa Fija</span>
+        <span><span class="phase-dot p2-dot"></span>Fase 2 – Tasa Variable (TRE + Spread)</span>
+      </div>
+
+      <!-- Tabla amortización -->
+      <div class="card-bg p-5 fade-up">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 class="font-display text-xl font-semibold">Tabla de Amortización</h3>
+            <p class="text-blue-400 text-xs" id="tblMeta">Sistema Francés</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn-sm" onclick="exportCSV()">⬇ CSV</button>
+            <button class="btn-sm" onclick="toggleAll()" id="btnAll">Ver todo</button>
+          </div>
+        </div>
+
+        <div class="tbl-wrap">
+          <table class="amort-tbl">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th style="text-align:left">Fecha</th>
+                <th>Capital</th>
+                <th>Interés</th>
+                <th>Desgravamen</th>
+                <th>Seg. Otro</th>
+                <th>Cuota Total</th>
+                <th>Saldo</th>
+              </tr>
+            </thead>
+            <tbody id="tblBody"></tbody>
+            <tfoot id="tblFoot"></tfoot>
+          </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="flex items-center justify-between mt-4 flex-wrap gap-2" id="pgSection">
+          <p class="text-xs text-blue-400" id="pgInfo">—</p>
+          <div class="flex gap-2">
+            <button class="btn-sm" id="btnPrev" onclick="cambiarPg(-1)">← Anterior</button>
+            <button class="btn-sm" id="btnNext" onclick="cambiarPg(1)">Siguiente →</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /resultados -->
+  </div><!-- /col derecha -->
+
+</div>
+</main>
+
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer class="hero-bg text-white mt-14 py-9">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
+      <div>
+        <p class="font-display text-xl mb-2">SimuladordeCreditos.com</p>
+        <p class="text-blue-300 text-xs leading-relaxed">Herramienta de simulación financiera para el mercado boliviano. Los resultados son <em>referenciales</em> y no constituyen oferta de crédito.</p>
+      </div>
+      <div>
+        <p class="font-semibold text-yellow-300 mb-2">Normativa Aplicada</p>
+        <ul class="text-blue-300 text-xs space-y-1">
+          <li>· Sistema Francés de Amortización</li>
+          <li>· Circular ASFI/DN/CR-7539/2022</li>
+          <li>· Ley 393 de Servicios Financieros</li>
+          <li>· TRE — Banco Central de Bolivia</li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-semibold text-yellow-300 mb-2">Aviso Legal</p>
+        <p class="text-blue-300 text-xs leading-relaxed">Consulte con su entidad financiera para condiciones definitivas. Tasas, seguros y plazos pueden variar según banco e historial crediticio.</p>
+      </div>
+    </div>
+    <div class="border-t border-white border-opacity-10 mt-7 pt-4 text-center text-blue-400 text-xs">
+      © 2025 SimuladordeCreditos.com · Bolivia · v1.0.0 · Sistema Francés
+    </div>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+"use strict";
+
+/* ══════════════════════════════════════════
+   ⚙️  CONFIGURACIÓN DEL SISTEMA — BD SQL
+   ══════════════════════════════════════════
+   TODO: Conectar con fetch() a tu API REST que ejecute:
+   
+   SELECT codigo, CAST(valor AS DECIMAL(10,4)) valor
+   FROM   parametros_sistema
+   WHERE  activo = 1
+     AND  fecha_vigencia <= CURDATE()
+   ORDER  BY codigo, fecha_vigencia DESC
+   LIMIT  10;
+   
+   Reemplaza DB_CONFIG con la respuesta del servidor.
+   ══════════════════════════════════════════ */
+const DB_CONFIG = {
+  TRE:           2.95,   // Tasa de Referencia BCB (% anual)
+  UFV_DIA:       2.3847, // Valor UFV del día (Bs. por UFV)
+  LIMITE_OPTIMO: 25,     // Cuota/ingreso óptima (%)
+  LIMITE_MAXIMO: 30,     // Cuota/ingreso máxima aceptada (%)
+};
+
+/* Estado global */
+const ST = {
+  tipoTasa:     'fija',
+  tabla:        [],
+  pagina:       1,
+  porPagina:    24,
+  verTodo:      false,
+  moneda:       'BOB',
+  params:       {},
+};
+
+/* ══════════════════════════════════════════
+   🚀  INICIALIZACIÓN
+   ══════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Fecha primer pago: 1° del mes siguiente
+  const d = new Date();
+  d.setMonth(d.getMonth() + 1);
+  d.setDate(1);
+  document.getElementById('fechaInicio').value = d.toISOString().slice(0,10);
+
+  // Pre-llenar TRE desde BD config
+  document.getElementById('treVar').value   = DB_CONFIG.TRE;
+  document.getElementById('treMixta').value = DB_CONFIG.TRE;
+  document.getElementById('hdrTRE').textContent = DB_CONFIG.TRE;
+
+  // Slider ↔ input sincronía (monto)
+  document.getElementById('monto').addEventListener('input', () => {
+    const v = +document.getElementById('monto').value;
+    document.getElementById('montoSlider').value = Math.min(Math.max(v,10000),5000000);
+    document.getElementById('montoLbl').textContent = fmtCompact(v, ST.moneda);
+  });
+  document.getElementById('montoSlider').addEventListener('input', () => {
+    const v = +document.getElementById('montoSlider').value;
+    document.getElementById('monto').value = v;
+    document.getElementById('montoLbl').textContent = fmtCompact(v, ST.moneda);
+  });
+
+  // Live update tasa efectiva
+  ['treVar','spreadVar'].forEach(id =>
+    document.getElementById(id)?.addEventListener('input', calcTasaVar)
+  );
+  ['treMixta','spreadMixta'].forEach(id =>
+    document.getElementById(id)?.addEventListener('input', calcTasaMixta)
+  );
+
+  actualizarUI();
+  calcTasaVar();
+  calcTasaMixta();
+});
+
+/* ══════════════════════════════════════════
+   🎨  UI HELPERS
+   ══════════════════════════════════════════ */
+function setTasa(tipo) {
+  ST.tipoTasa = tipo;
+  ['fija','variable','mixta'].forEach(t => {
+    document.getElementById(`tab-${t}`).classList.toggle('active', t === tipo);
+    document.getElementById(`pnl-${t}`).classList.toggle('hidden', t !== tipo);
+  });
+}
+
+function actualizarUI() {
+  const tipo = document.getElementById('tipoCredito').value;
+  const cfgs = {
+    hipotecario: { lbl:'Seguro de Inmueble',    tasa:'0.022', show:true  },
+    vehicular:   { lbl:'Seguro de Vehículo',    tasa:'0.030', show:true  },
+    personal:    { lbl:'Seguro de Vida',         tasa:'0.015', show:false },
+    comercial:   { lbl:'Seguro Comercial',       tasa:'0.018', show:false },
+  };
+  const cfg = cfgs[tipo];
+  document.getElementById('lblSegOtro').textContent    = cfg.lbl;
+  document.getElementById('tasaSegOtro').value          = cfg.tasa;
+  document.getElementById('segOtroWrap').classList.toggle('hidden', !cfg.show);
+  document.getElementById('chkSegOtro').checked         = cfg.show;
+}
+
+function onMonedaChange() {
+  ST.moneda = document.getElementById('moneda').value;
+  const sym = { BOB:'Bs.', USD:'US$', UFV:'UFV' };
+  document.getElementById('currSym').textContent  = sym[ST.moneda];
+  document.getElementById('currSym2').textContent = sym[ST.moneda];
+  document.getElementById('montoLbl').textContent =
+    fmtCompact(+document.getElementById('monto').value, ST.moneda);
+}
+
+function syncVal(sliderId, inputId) {
+  document.getElementById(inputId).value = document.getElementById(sliderId).value;
+}
+
+function calcTasaVar() {
+  const tre    = +(document.getElementById('treVar')?.value    || 0);
+  const spread = +(document.getElementById('spreadVar')?.value || 0);
+  const ef = (tre + spread).toFixed(2);
+  document.getElementById('treVarD').textContent    = tre;
+  document.getElementById('spreadVarD').textContent = spread;
+  document.getElementById('efecVar').textContent    = ef + '%';
+}
+
+function calcTasaMixta() {
+  const tre    = +(document.getElementById('treMixta')?.value    || 0);
+  const spread = +(document.getElementById('spreadMixta')?.value || 0);
+  document.getElementById('mixFase2').textContent = (tre + spread).toFixed(2) + '%';
+}
+
+/* ══════════════════════════════════════════
+   💰  LÓGICA FINANCIERA — SISTEMA FRANCÉS
+   ══════════════════════════════════════════ */
+
+/**
+ * PMT — Cuota mensual de amortización francesa
+ * PMT = PV × r / (1 − (1+r)^-n)
+ *
+ * @param {number} pv  Capital (saldo presente)
+ * @param {number} r   Tasa mensual decimal  (ej: 0.00625 para 7.5% anual)
+ * @param {number} n   Número de cuotas restantes
+ * @returns {number}   Cuota capital + interés
+ */
+function pmt(pv, r, n) {
+  if (n <= 0) return 0;
+  if (r === 0) return pv / n;
+  return pv * r / (1 - Math.pow(1 + r, -n));
+}
+
+/**
+ * Genera la tabla de amortización completa
+ * @param {object} p  Parámetros del crédito
+ * @returns {Array}   Filas de la tabla
+ */
+function generarTabla(p) {
+  const totalMeses = p.plazoAnios * 12;
+  const tabla = [];
+  let saldo = p.monto;
+
+  /* ── Determinar tasas y fases ── */
+  let r1, r2 = null, mesesF1;
+
+  if (p.tipoTasa === 'fija') {
+    r1      = p.tasaFija / 100 / 12;
+    mesesF1 = totalMeses;
+  } else if (p.tipoTasa === 'variable') {
+    r1      = (p.treVar + p.spreadVar) / 100 / 12;
+    mesesF1 = totalMeses;
+  } else {                                   // mixta
+    r1      = p.tasaMixtaFija / 100 / 12;
+    r2      = (p.treMixta + p.spreadMixta) / 100 / 12;
+    mesesF1 = Math.min(p.aniosFijos * 12, totalMeses - 1);
+  }
+
+  /* PMT Fase 1: calculado sobre el plazo TOTAL (francés puro) */
+  const PMT1 = pmt(p.monto, r1, totalMeses);
+  let PMT2   = null;
+
+  let fecha = new Date(p.fechaInicio + 'T00:00:00');
+
+  for (let i = 1; i <= totalMeses; i++) {
+    /* Avanzar exactamente un mes */
+    fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 1, fecha.getDate());
+
+    const fase2  = (p.tipoTasa === 'mixta') && (i > mesesF1);
+    const rMes   = fase2 ? r2 : r1;
+
+    /* Recalcular PMT al inicio de la Fase 2 */
+    if (fase2 && i === mesesF1 + 1) {
+      PMT2 = pmt(saldo, r2, totalMeses - mesesF1);
+    }
+    const cuotaCI = fase2 ? PMT2 : PMT1;
+
+    /* Interés y capital del período */
+    const interes = saldo * rMes;
+    let   capital = cuotaCI - interes;
+
+    /* Última cuota: liquidar saldo exacto */
+    if (i === totalMeses || capital >= saldo) {
+      capital = saldo;
+    }
+
+    /* ── Seguros (sobre saldo insoluto) ── */
+    const segDesgrav = p.chkDesgrav ? saldo * (p.tasaDesgrav / 100) : 0;
+    const segOtro    = p.chkSegOtro ? saldo * (p.tasaSegOtro  / 100) : 0;
+
+    const cuotaTotal = capital + interes + segDesgrav + segOtro;
+
+    saldo = Math.max(0, saldo - capital);
+
+    tabla.push({
+      nro: i,
+      fecha: fmtFecha(fecha),
+      capital, interes, segDesgrav, segOtro,
+      cuotaCI: capital + interes,   // cuota pura capital+interés
+      cuotaTotal, saldo,
+      fase2
+    });
+
+    if (saldo === 0) break;
+  }
+
+  return tabla;
+}
+
+/* ══════════════════════════════════════════
+   🔢  CALCULAR (main entry point)
+   ══════════════════════════════════════════ */
+function calcular() {
+  /* ── Leer inputs ── */
+  const tipoCredito = document.getElementById('tipoCredito').value;
+  const moneda      = document.getElementById('moneda').value;
+  const monto       = parseFloat(document.getElementById('monto').value);
+  const plazoAnios  = parseInt(document.getElementById('plazo').value);
+  const fechaInicio = document.getElementById('fechaInicio').value;
+
+  if (!monto      || monto     <= 0) return alert('Ingrese un monto válido.');
+  if (!plazoAnios || plazoAnios <= 0) return alert('Ingrese un plazo válido (1–30 años).');
+  if (!fechaInicio)                   return alert('Seleccione la fecha del primer pago.');
+
+  /* ── Tasas ── */
+  let tasaFija=0, treVar=0, spreadVar=0;
+  let tasaMixtaFija=0, aniosFijos=0, treMixta=0, spreadMixta=0;
+
+  if (ST.tipoTasa === 'fija') {
+    tasaFija = parseFloat(document.getElementById('tasaFija').value) || 0;
+  } else if (ST.tipoTasa === 'variable') {
+    treVar    = parseFloat(document.getElementById('treVar').value)    || DB_CONFIG.TRE;
+    spreadVar = parseFloat(document.getElementById('spreadVar').value) || 0;
+  } else {
+    tasaMixtaFija = parseFloat(document.getElementById('tasaMixtaFija').value) || 0;
+    aniosFijos    = parseInt(document.getElementById('aniosFijos').value)       || 0;
+    treMixta      = parseFloat(document.getElementById('treMixta').value)       || DB_CONFIG.TRE;
+    spreadMixta   = parseFloat(document.getElementById('spreadMixta').value)    || 0;
+
+    if (aniosFijos <= 0 || aniosFijos >= plazoAnios)
+      return alert(`El período fijo debe estar entre 1 y ${plazoAnios - 1} años.`);
+  }
+
+  /* ── Seguros ── */
+  const chkDesgrav = document.getElementById('chkDesgrav').checked;
+  const tasaDesgrav = parseFloat(document.getElementById('tasaDesgrav').value) || 0;
+  const chkSegOtro  = document.getElementById('chkSegOtro').checked &&
+                      !document.getElementById('segOtroWrap').classList.contains('hidden');
+  const tasaSegOtro = parseFloat(document.getElementById('tasaSegOtro').value) || 0;
+
+  const params = {
+    monto, plazoAnios, tipoTasa: ST.tipoTasa,
+    tasaFija, treVar, spreadVar,
+    tasaMixtaFija, aniosFijos, treMixta, spreadMixta,
+    chkDesgrav, tasaDesgrav,
+    chkSegOtro,  tasaSegOtro,
+    fechaInicio, tipoCredito, moneda,
+  };
+
+  ST.params  = params;
+  ST.moneda  = moneda;
+  ST.tabla   = generarTabla(params);
+  ST.pagina  = 1;
+  ST.verTodo = false;
+
+  mostrarResultados();
+}
+
+/* ══════════════════════════════════════════
+   📊  MOSTRAR RESULTADOS
+   ══════════════════════════════════════════ */
+function mostrarResultados() {
+  const t    = ST.tabla;
+  const p    = ST.params;
+  if (!t.length) return;
+
+  const r0  = t[0];  // primera fila
+  const tot = (key) => t.reduce((s, r) => s + r[key], 0);
+
+  const totalInt    = tot('interes');
+  const totalDesgr  = tot('segDesgrav');
+  const totalOtro   = tot('segOtro');
+  const totalPagar  = p.monto + totalInt + totalDesgr + totalOtro;
+
+  /* ── Summary cards ── */
+  const f = (n) => fmtMoneda(n, ST.moneda);
+  $('sC').textContent  = f(r0.cuotaCI);
+  $('sCT').textContent = f(r0.cuotaTotal);
+  $('sI').textContent  = f(totalInt);
+  $('sIPct').textContent = ((totalInt / p.monto) * 100).toFixed(1) + '% del capital';
+  $('sTP').textContent = f(totalPagar);
+
+  /* ── Meta ── */
+  const lblTasa = {
+    fija:     `Tasa Fija ${p.tasaFija}%`,
+    variable: `TRE (${p.treVar}%) + Spread (${p.spreadVar}%) = ${(p.treVar + p.spreadVar).toFixed(2)}%`,
+    mixta:    `Mixta — Fija ${p.tasaMixtaFija}% (${p.aniosFijos}a) → Variable ${(p.treMixta+p.spreadMixta).toFixed(2)}%`,
+  };
+  $('tblMeta').textContent = `Sistema Francés · ${lblTasa[ST.tipoTasa]} · ${t.length} cuotas`;
+
+  /* ── Gráfico composición ── */
+  actualizarDonut(r0);
+
+  /* ── Indicador de fases ── */
+  $('faseInd').classList.toggle('hidden', ST.tipoTasa !== 'mixta');
+
+  /* ── Capacidad de pago ── */
+  const ingreso = parseFloat(document.getElementById('ingreso').value) || 0;
+  if (ingreso > 0) mostrarCapacidad(r0.cuotaTotal, ingreso);
+  else $('capSection').classList.add('hidden');
+
+  /* ── Render tabla ── */
+  renderTabla();
+
+  /* ── Mostrar panel ── */
+  $('placeholder').classList.add('hidden');
+  $('resultados').classList.remove('hidden');
+
+  /* Scroll en mobile */
+  if (window.innerWidth < 1280) {
+    setTimeout(() => $('resultados').scrollIntoView({ behavior:'smooth', block:'start' }), 80);
+  }
+}
+
+/* ── Donut chart ── */
+function actualizarDonut(r0) {
+  const total = r0.cuotaTotal;
+  const capPct  = total ? r0.capital    / total : 0;
+  const intPct  = total ? r0.interes    / total : 0;
+  const segPct  = total ? (r0.segDesgrav + r0.segOtro) / total : 0;
+
+  /* circunferencia ≈ 327 (2π × 52) */
+  const C = 2 * Math.PI * 52;
+  const seg1 = capPct * C;
+  const seg2 = intPct * C;
+  const seg3 = segPct * C;
+
+  /* Arco 1: capital (navy) */
+  const a1 = $('dArc1');
+  a1.setAttribute('stroke-dasharray', `${seg1} ${C - seg1}`);
+
+  /* Arco 2: interés (gold) — offset tras arco 1 */
+  const off2 = -seg1 * (C / (2 * Math.PI * 52));  // reuse ratio
+  const a2 = $('dArc2');
+  a2.setAttribute('stroke-dasharray', `${seg2} ${C - seg2}`);
+  a2.setAttribute('stroke-dashoffset', -seg1 + 81.75);
+
+  /* Arco 3: seguros (blue) */
+  const a3 = $('dArc3');
+  a3.setAttribute('stroke-dasharray', `${seg3} ${C - seg3}`);
+  a3.setAttribute('stroke-dashoffset', -(seg1 + seg2) + 81.75);
+
+  $('donutPct').textContent = (capPct * 100).toFixed(0) + '%';
+
+  /* Leyenda + barras */
+  const f = (n) => fmtMoneda(n, ST.moneda);
+  $('lgCap').textContent    = f(r0.capital);
+  $('lgCapPct').textContent = (capPct * 100).toFixed(1) + '%';
+  $('barCap').style.width   = (capPct * 100) + '%';
+
+  $('lgInt').textContent    = f(r0.interes);
+  $('lgIntPct').textContent = (intPct * 100).toFixed(1) + '%';
+  $('barInt').style.width   = (intPct * 100) + '%';
+
+  const segTotal = r0.segDesgrav + r0.segOtro;
+  $('lgSeg').textContent    = f(segTotal);
+  $('lgSegPct').textContent = (segPct * 100).toFixed(1) + '%';
+  $('barSeg').style.width   = (segPct * 100) + '%';
+}
+
+/* ── Capacidad de pago ── */
+function mostrarCapacidad(cuota, ingreso) {
+  const pct     = (cuota / ingreso) * 100;
+  const section = $('capSection');
+  section.classList.remove('hidden');
+
+  let badgeCls, borderCls, bgCls, textCls, titulo, msg;
+
+  if (pct <= DB_CONFIG.LIMITE_OPTIMO) {
+    badgeCls  = 'badge-ok'; borderCls = 'border-green-500';
+    bgCls     = 'bg-green-50'; textCls = 'text-green-800';
+    titulo    = '✅ Capacidad Óptima';
+    msg       = 'Tu cuota está dentro del límite óptimo del 25%. Los bancos consideran esta situación de <strong>bajo riesgo crediticio</strong>. Tienes excelentes probabilidades de aprobación.';
+  } else if (pct <= DB_CONFIG.LIMITE_MAXIMO) {
+    badgeCls  = 'badge-warn'; borderCls = 'border-yellow-500';
+    bgCls     = 'bg-yellow-50'; textCls = 'text-yellow-800';
+    titulo    = '⚠️ Capacidad Aceptable';
+    msg       = 'Tu cuota supera el 25% pero está dentro del límite del 30%. Puede aprobarse con <strong>análisis adicional</strong>. Considera ampliar el plazo o reducir el monto.';
+  } else {
+    badgeCls  = 'badge-danger'; borderCls = 'border-red-500';
+    bgCls     = 'bg-red-50'; textCls = 'text-red-800';
+    titulo    = '❌ Riesgo Alto';
+    msg       = 'Tu cuota supera el 30% de tus ingresos. La mayoría de entidades financieras <strong>rechazarían este crédito</strong>. Reduce el monto o extiende el plazo.';
+  }
+
+  const f  = (n) => fmtMoneda(n, ST.moneda);
+  const bw = Math.min(pct, 100);
+  const bc = pct <= 25 ? '#22C55E' : pct <= 30 ? '#F59E0B' : '#EF4444';
+  const libre = Math.max(0, ingreso - cuota);
+
+  $('capContent').innerHTML = `
+    <div class="flex flex-col sm:flex-row sm:items-start gap-5">
+      <div class="flex-1">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-semibold text-navy-900">Cuota / Ingreso</span>
+          <span class="px-3 py-1 rounded-full text-sm font-bold ${badgeCls}">${pct.toFixed(1)}%</span>
+        </div>
+        <div class="pbar mb-1">
+          <div class="pbar-fill" style="width:${bw}%; background:${bc}"></div>
+        </div>
+        <div class="flex justify-between text-xs text-blue-400 mt-1">
+          <span>0%</span>
+          <span class="text-green-600 font-semibold">25% Óptimo</span>
+          <span class="text-yellow-600 font-semibold">30% Límite</span>
+          <span>50%+</span>
+        </div>
+      </div>
+      <div class="flex flex-col items-center text-center sm:w-36">
+        <p class="text-3xl mb-1">${pct <= 25 ? '🟢' : pct <= 30 ? '🟡' : '🔴'}</p>
+        <p class="font-semibold text-sm text-navy-900 leading-tight">${titulo.replace(/[✅⚠️❌]\s*/,'')}</p>
+      </div>
+    </div>
+
+    <div class="mt-4 bg-gray-50 rounded-xl p-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+      <div><p class="text-blue-400 text-xs">Ingreso Mensual</p><p class="font-semibold">${f(ingreso)}</p></div>
+      <div><p class="text-blue-400 text-xs">Cuota Total</p><p class="font-semibold">${f(cuota)}</p></div>
+      <div><p class="text-blue-400 text-xs">% del Ingreso</p>
+           <p class="font-semibold ${pct>30?'text-red-600':pct>25?'text-yellow-600':'text-green-600'}">${pct.toFixed(2)}%</p></div>
+      <div><p class="text-blue-400 text-xs">Límite 25% (Óptimo)</p><p class="font-semibold">${f(ingreso*0.25)}</p></div>
+      <div><p class="text-blue-400 text-xs">Límite 30% (Máximo)</p><p class="font-semibold">${f(ingreso*0.30)}</p></div>
+      <div><p class="text-blue-400 text-xs">Ingreso Disponible</p>
+           <p class="font-semibold ${libre===0?'text-red-600':'text-green-600'}">${f(libre)}</p></div>
+    </div>
+
+    <div class="mt-3 p-3 rounded-xl border-l-4 ${borderCls} ${bgCls}">
+      <p class="text-sm ${textCls}">${msg}</p>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════
+   📋  RENDER TABLA
+   ══════════════════════════════════════════ */
+function renderTabla() {
+  const t   = ST.tabla;
+  const body = $('tblBody');
+  const foot = $('tblFoot');
+
+  let filas;
+  if (ST.verTodo) {
+    filas = t;
+  } else {
+    const ini = (ST.pagina - 1) * ST.porPagina;
+    filas = t.slice(ini, ini + ST.porPagina);
+  }
+
+  body.innerHTML = filas.map(r => `
+    <tr class="${r.fase2 ? 'fase2' : ''}">
+      <td>
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;
+              border-radius:50%;font-size:11px;font-weight:600;
+              background:${r.fase2 ? 'rgba(212,168,67,.18)' : '#EEF4FF'};
+              color:${r.fase2 ? '#A87420' : '#0A1F42'}">${r.nro}</span>
+      </td>
+      <td>${r.fecha}</td>
+      <td>${fmtNum(r.capital)}</td>
+      <td>${fmtNum(r.interes)}</td>
+      <td>${fmtNum(r.segDesgrav)}</td>
+      <td>${fmtNum(r.segOtro)}</td>
+      <td><strong>${fmtNum(r.cuotaTotal)}</strong></td>
+      <td>${fmtNum(r.saldo)}</td>
+    </tr>`).join('');
+
+  /* Totales */
+  const sm = (k) => t.reduce((s,r)=>s+r[k],0);
+  foot.innerHTML = `<tr>
+    <td colspan="2">TOTALES</td>
+    <td>${fmtNum(sm('capital'))}</td>
+    <td>${fmtNum(sm('interes'))}</td>
+    <td>${fmtNum(sm('segDesgrav'))}</td>
+    <td>${fmtNum(sm('segOtro'))}</td>
+    <td><strong>${fmtNum(sm('cuotaTotal'))}</strong></td>
+    <td>—</td>
+  </tr>`;
+
+  /* Paginación */
+  const total = t.length;
+  const ini   = (ST.pagina - 1) * ST.porPagina + 1;
+  const fin   = Math.min(ST.pagina * ST.porPagina, total);
+
+  if (ST.verTodo) {
+    $('pgInfo').textContent = `Mostrando todas las ${total} cuotas`;
+    $('btnPrev').style.display = 'none';
+    $('btnNext').style.display = 'none';
+  } else {
+    $('pgInfo').textContent = `Cuotas ${ini}–${fin} de ${total}`;
+    $('btnPrev').style.display = '';
+    $('btnNext').style.display = '';
+    $('btnPrev').disabled = ST.pagina === 1;
+    $('btnNext').disabled = fin >= total;
+  }
+}
+
+function cambiarPg(dir) {
+  const max = Math.ceil(ST.tabla.length / ST.porPagina);
+  ST.pagina = Math.max(1, Math.min(ST.pagina + dir, max));
+  renderTabla();
+  $('resultados').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function toggleAll() {
+  ST.verTodo = !ST.verTodo;
+  $('btnAll').textContent = ST.verTodo ? 'Paginar' : 'Ver todo';
+  renderTabla();
+}
+
+/* ══════════════════════════════════════════
+   📥  EXPORTAR CSV
+   ══════════════════════════════════════════ */
+function exportCSV() {
+  if (!ST.tabla.length) return;
+  const p = ST.params;
+
+  const meta = [
+    [`SimuladordeCreditos.com — Tabla de Amortización Sistema Francés`],
+    [`Tipo:${p.tipoCredito}`,`Monto:${p.monto} ${ST.moneda}`,`Plazo:${p.plazoAnios} años`,
+     `Tasa:${ST.tipoTasa}`,`Fecha:${new Date().toLocaleDateString('es-BO')}`],
+    [],
+  ];
+
+  const hdr = ['Cuota','Fecha','Capital','Interes','Seg.Desgravamen','Seg.Otro',
+                'Cuota Cap+Int','Cuota Total','Saldo','Fase'];
+
+  const rows = ST.tabla.map(r => [
+    r.nro, r.fecha,
+    r.capital.toFixed(2), r.interes.toFixed(2),
+    r.segDesgrav.toFixed(2), r.segOtro.toFixed(2),
+    r.cuotaCI.toFixed(2), r.cuotaTotal.toFixed(2),
+    r.saldo.toFixed(2), r.fase2 ? 2 : 1,
+  ]);
+
+  const csv = [
+    ...meta.map(r => r.join(',')),
+    hdr.join(','),
+    ...rows.map(r => r.join(',')),
+  ].join('\n');
+
+  const blob = new Blob(['\uFEFF' + csv], { type:'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `amortizacion_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ══════════════════════════════════════════
+   🛠️  UTILIDADES
+   ══════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+
+function fmtNum(n) {
+  return n.toLocaleString('es-BO', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+
+function fmtMoneda(n, moneda = 'BOB') {
+  const s = { BOB:'Bs. ', USD:'US$ ', UFV:'UFV ' }[moneda] || 'Bs. ';
+  if (n >= 1_000_000) return s + (n / 1_000_000).toFixed(3) + 'M';
+  if (n >= 100_000)   return s + (n / 1_000).toFixed(1)     + 'k';
+  return s + fmtNum(n);
+}
+
+function fmtCompact(n, moneda = 'BOB') {
+  const s = { BOB:'Bs.', USD:'US$', UFV:'UFV' }[moneda] || 'Bs.';
+  if (n >= 1_000_000) return `${s} ${(n/1_000_000).toFixed(2)}M`;
+  if (n >= 1_000)     return `${s} ${(n/1_000).toFixed(0)}k`;
+  return `${s} ${n}`;
+}
+
+function fmtFecha(date) {
+  return date.toLocaleDateString('es-BO', { day:'2-digit', month:'2-digit', year:'numeric' });
+}
+</script>
+</body>
+</html>
