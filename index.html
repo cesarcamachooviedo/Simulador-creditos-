@@ -149,44 +149,41 @@
 <!-- ════════════════════════════════════════════
      HEADER
 ════════════════════════════════════════════ -->
-<nav class="hero-bg sticky top-0 z-50 shadow-2xl">
+<!-- ══════════════════════ NAV ══════════════════════ -->
+<nav class="hero-bg sticky top-0 z-50" style="box-shadow:0 2px 20px rgba(0,0,0,.35)">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="flex items-center justify-between h-20">
-      <a href="index.html" class="flex items-center gap-3 flex-shrink-0">
-        <div class="w-10 h-10 rounded-xl gold-bg flex items-center justify-center shadow-lg">
-          <i data-lucide="landmark" class="w-5 h-5 text-white"></i>
+    <div class="flex items-center justify-between h-16">
+      <a href="index.html" class="flex items-center gap-2.5 flex-shrink-0">
+        <div class="w-9 h-9 rounded-xl gold-bg flex items-center justify-center">
+          <i data-lucide="landmark" class="w-4 h-4 text-white"></i>
         </div>
-        <div>
-          <h1 class="font-display text-2xl text-white font-semibold leading-none">
-            Simulador<span class="text-yellow-300">de</span>Créditos
-          </h1>
-          <p class="text-blue-300 text-[10px] tracking-widest uppercase font-light mt-1">Bolivia · Sistema Francés</p>
-        </div>
+        <span class="font-display text-xl text-white font-semibold leading-none">
+          Simulador<span class="text-yellow-300">de</span>Créditos
+        </span>
       </a>
-
-      <div class="hidden md:flex items-center gap-2">
-        <a href="index.html" class="px-4 py-2 text-sm font-medium text-yellow-400 bg-white/10 rounded-lg">Calculadora</a>
-        <a href="tre.html" class="px-4 py-2 text-sm font-medium text-blue-100 hover:text-white hover:bg-white/5 rounded-lg transition-all">¿Qué es la TRE?</a>
-        <a href="vivienda-social.html" class="px-4 py-2 text-sm font-medium text-blue-100 hover:text-white hover:bg-white/5 rounded-lg transition-all">Vivienda Social</a>
-        <a href="requisitos.html" class="px-4 py-2 text-sm font-medium text-blue-100 hover:text-white hover:bg-white/5 rounded-lg transition-all">Requisitos</a>
+      <div class="hidden md:flex items-center gap-1">
+        <a href="index.html"           class="nav-link">Calculadora</a>
+        <a href="tre.html"             class="nav-link">TRE</a>
+        <a href="vivienda-social.html" class="nav-link">Crédito VIS</a>
+        <a href="requisitos.html"      class="nav-link active">Requisitos</a>
       </div>
-
-      <div class="md:hidden">
-        <button onclick="toggleMenu()" class="p-2 rounded-xl text-white hover:bg-white/10 transition-colors">
-          <i data-lucide="menu" class="w-6 h-6" id="menuIcon"></i>
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="hidden sm:flex btn-gold py-2 px-4 text-sm" style="padding:8px 16px">
+          <i data-lucide="calculator" class="w-3.5 h-3.5"></i> Simular
+        </a>
+        <button onclick="toggleMenu()" class="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors">
+          <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
       </div>
     </div>
   </div>
-
-  <div id="mobileMenu" class="hidden flex-col bg-navy-950 border-t border-white/10 p-4 space-y-2 md:hidden">
-    <a href="index.html" class="block p-3 text-yellow-400 bg-white/5 rounded-xl font-medium">🧮 Calculadora</a>
-    <a href="tre.html" class="block p-3 text-white rounded-xl font-medium">📈 ¿Qué es la TRE?</a>
-    <a href="vivienda-social.html" class="block p-3 text-white rounded-xl font-medium">🏠 Vivienda Social</a>
-    <a href="requisitos.html" class="block p-3 text-white rounded-xl font-medium">📋 Requisitos</a>
+  <div id="mobileMenu" class="nav-mobile hidden">
+    <a href="index.html">🧮 Calculadora</a>
+    <a href="tre.html">📈 ¿Qué es la TRE?</a>
+    <a href="vivienda-social.html">🏠 Crédito VIS</a>
+    <a href="requisitos.html" class="active">📋 Requisitos</a>
   </div>
 </nav>
-
 
 <!-- ════════════════════════════════════════════
      MAIN
