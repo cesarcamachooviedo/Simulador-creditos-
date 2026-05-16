@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Qué es la TRE? | SimuladordeCreditos.com</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 50:'#EEF4FF', 100:'#DBEAFE', 700:'#1D4ED8', 800:'#0B2A56', 900:'#0A1F42', 950:'#06132B' },
+            gold: { 200:'#FEF3C7', 300:'#F5D98A', 400:'#D4A843', 500:'#B8860B', 600:'#9A6E00' }
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans:    ['Outfit', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Outfit',system-ui,sans-serif;background:#EEF2FA;color:#0A1F42}
+    .font-display{font-family:'Cormorant Garamond',Georgia,serif}
+    .font-mono-num{font-family:'DM Mono','Courier New',monospace;font-weight:500}
+
+    /* ── Core ── */
+    .hero-bg{background:linear-gradient(135deg,#060F1E 0%,#0A1F42 45%,#0D2860 100%)}
+    .gold-bg{background:linear-gradient(135deg,#D4A843 0%,#A87420 100%)}
+    .card{background:#fff;border-radius:16px;box-shadow:0 2px 18px rgba(10,31,66,.08)}
+    .card-hover{transition:transform .22s,box-shadow .22s}
+    .card-hover:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(10,31,66,.14)}
+
+    /* ── Nav ── */
+    .nav-link{font-size:13px;font-weight:500;color:rgba(255,255,255,.70);padding:6px 12px;
+              border-radius:8px;transition:all .2s;white-space:nowrap;text-decoration:none}
+    .nav-link:hover{color:#fff;background:rgba(255,255,255,.10)}
+    .nav-link.active{color:#D4A843;font-weight:600}
+    .nav-mobile{display:none;flex-direction:column;gap:4px;padding:12px 16px;
+                background:rgba(6,15,30,.97);border-top:1px solid rgba(255,255,255,.08)}
+    .nav-mobile a{color:rgba(255,255,255,.80);padding:10px 14px;border-radius:8px;
+                  font-size:14px;font-weight:500;text-decoration:none;transition:all .2s}
+    .nav-mobile a:hover,.nav-mobile a.active{background:rgba(212,168,67,.15);color:#D4A843}
+
+    /* ── Badges ── */
+    .badge-gold{background:rgba(212,168,67,.14);border:1px solid rgba(212,168,67,.40);
+                color:#A87420;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;
+                letter-spacing:.04em}
+    .badge-navy{background:rgba(10,31,66,.10);border:1px solid rgba(10,31,66,.18);
+                color:#0A1F42;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+    .badge-red{background:#FEE2E2;border:1px solid #FECACA;color:#991B1B;font-size:11px;
+               font-weight:600;padding:3px 10px;border-radius:20px}
+    .badge-green{background:#D1FAE5;border:1px solid #A7F3D0;color:#065F46;font-size:11px;
+                 font-weight:600;padding:3px 10px;border-radius:20px}
+
+    /* ── Formula ── */
+    .formula-box{border:2px solid rgba(212,168,67,.30);border-radius:20px;
+                 background:linear-gradient(135deg,rgba(212,168,67,.06) 0%,rgba(212,168,67,.02) 100%)}
+    .formula-op{font-size:32px;font-weight:300;color:#D4A843;line-height:1}
+    .formula-equals{font-size:32px;font-weight:700;color:#0A1F42;line-height:1}
+
+    /* ── Steps ── */
+    .step-line::after{content:'';position:absolute;left:19px;top:44px;width:2px;
+                      height:calc(100% + 8px);background:linear-gradient(to bottom,#D4A843,rgba(212,168,67,.1));
+                      z-index:0}
+    .step-line:last-child::after{display:none}
+
+    /* ── Simulator ── */
+    .inp{width:100%;padding:10px 13px;border:1.5px solid #D1DCF0;border-radius:10px;
+         font-family:'Outfit',sans-serif;font-size:14px;color:#0A1F42;background:#F7FAFF;
+         outline:none;transition:border-color .2s,box-shadow .2s}
+    .inp:focus{border-color:#D4A843;background:#fff;box-shadow:0 0 0 3px rgba(212,168,67,.15)}
+    input[type=range]{accent-color:#D4A843;width:100%}
+    input[type=number]{-moz-appearance:textfield}
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+
+    .btn-gold{background:linear-gradient(135deg,#D4A843 0%,#A87420 100%);color:#fff;
+              font-weight:600;padding:13px 28px;border-radius:12px;border:none;cursor:pointer;
+              font-family:'Outfit',sans-serif;font-size:14px;letter-spacing:.02em;
+              transition:all .2s;box-shadow:0 4px 16px rgba(212,168,67,.38)}
+    .btn-gold:hover{transform:translateY(-1px);box-shadow:0 7px 22px rgba(212,168,67,.50)}
+    .btn-outline{background:transparent;color:#0A1F42;font-weight:600;padding:13px 28px;
+                 border-radius:12px;border:2px solid #D1DCF0;cursor:pointer;
+                 font-family:'Outfit',sans-serif;font-size:14px;letter-spacing:.02em;transition:all .2s}
+    .btn-outline:hover{border-color:#D4A843;color:#A87420}
+
+    /* ── Alert pulse ── */
+    .alert-ring{animation:ring-pulse 2.4s ease-in-out infinite}
+    @keyframes ring-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.3)}
+                          50%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
+
+    /* ── Chart bars ── */
+    .bar-fill{transition:height .6s cubic-bezier(.34,1.56,.64,1)}
+
+    /* ── FAQ ── */
+    .faq-body{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .25s}
+    .faq-body.open{max-height:300px;padding-top:10px}
+    .faq-icon{transition:transform .3s}
+    .faq-icon.open{transform:rotate(45deg)}
+
+    /* ── Animations ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+    .fade-up{animation:fadeUp .5s ease forwards}
+    .d1{animation-delay:.06s;opacity:0}.d2{animation-delay:.14s;opacity:0}
+    .d3{animation-delay:.22s;opacity:0}.d4{animation-delay:.30s;opacity:0}
+    .d5{animation-delay:.38s;opacity:0}
+
+    /* ── Pulse dot ── */
+    .live-dot{width:8px;height:8px;border-radius:50%;background:#22C55E;
+              box-shadow:0 0 0 0 rgba(34,197,94,.4);animation:livepulse 2s infinite}
+    @keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}
+                         70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar{width:5px;height:5px}
+    ::-webkit-scrollbar-track{background:#EEF2FA}
+    ::-webkit-scrollbar-thumb{background:#D4A843;border-radius:3px}
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ NAV ══════════════════════ -->
+<nav class="hero-bg sticky top-0 z-50" style="box-shadow:0 2px 20px rgba(0,0,0,.35)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-2.5 flex-shrink-0">
+        <div class="w-9 h-9 rounded-xl gold-bg flex items-center justify-center">
+          <i data-lucide="landmark" class="w-4 h-4 text-white"></i>
+        </div>
+        <span class="font-display text-xl text-white font-semibold leading-none">
+          Simulador<span class="text-yellow-300">de</span>Créditos
+        </span>
+      </a>
+
+      <!-- Desktop links -->
+      <div class="hidden md:flex items-center gap-1">
+        <a href="index.html"           class="nav-link">Calculadora</a>
+        <a href="tre.html"             class="nav-link active">TRE</a>
+        <a href="vivienda-social.html" class="nav-link">Crédito VIS</a>
+        <a href="requisitos.html"      class="nav-link">Requisitos</a>
+      </div>
+
+      <!-- CTA + hamburger -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="hidden sm:flex items-center gap-1.5 btn-gold py-2 px-4 text-sm w-auto" style="width:auto">
+          <i data-lucide="calculator" class="w-3.5 h-3.5"></i> Simular Crédito
+        </a>
+        <button id="hamburger" onclick="toggleMenu()" class="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors">
+          <i data-lucide="menu" class="w-5 h-5" id="menuIcon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="nav-mobile hidden">
+    <a href="index.html">🧮 Calculadora de Créditos</a>
+    <a href="tre.html" class="active">📈 ¿Qué es la TRE?</a>
+    <a href="vivienda-social.html">🏠 Crédito VIS</a>
+    <a href="requisitos.html">📋 Requisitos</a>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<section class="hero-bg text-white overflow-hidden relative">
+  <!-- Background decoration -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div style="position:absolute;top:-60px;right:-60px;width:380px;height:380px;
+                border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.10) 0%,transparent 70%)"></div>
+    <div style="position:absolute;bottom:-80px;left:-40px;width:280px;height:280px;
+                border-radius:50%;background:radial-gradient(circle,rgba(29,78,216,.15) 0%,transparent 70%)"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative">
+    <div class="max-w-3xl">
+      <div class="flex items-center gap-2 mb-5 fade-up d1">
+        <div class="live-dot"></div>
+        <span class="text-green-400 text-xs font-semibold uppercase tracking-wider">TRE Vigente: 2.95% · BCB</span>
+      </div>
+      <h1 class="font-display text-4xl sm:text-6xl font-bold leading-tight mb-5 fade-up d2">
+        La TRE y cómo<br><span class="text-yellow-300">mueve tu cuota</span>
+      </h1>
+      <p class="text-blue-200 text-lg sm:text-xl leading-relaxed mb-8 fade-up d3 max-w-2xl">
+        La <strong class="text-white">Tasa de Referencia (TRE)</strong> del Banco Central de Bolivia es el termómetro del sistema financiero. Entender cómo funciona puede ahorrarte miles de bolivianos en tu crédito.
+      </p>
+      <div class="flex flex-wrap gap-3 fade-up d4">
+        <a href="#formula" class="btn-gold" style="width:auto;padding:13px 26px">
+          Ver la Fórmula
+        </a>
+        <a href="#simulador" class="btn-outline" style="border-color:rgba(255,255,255,.25);color:white;width:auto;padding:13px 26px">
+          Simular Impacto
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════ QUÉ ES (3 pilares) ══════════════════════ -->
+<section class="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="text-center mb-12">
+    <span class="badge-gold uppercase">Concepto</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-3">¿Qué es exactamente?</h2>
+    <p class="text-slate-500 mt-2 max-w-xl mx-auto">Tres ideas clave para entender la TRE antes de firmar cualquier contrato de crédito.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <!-- Card 1 -->
+    <div class="card card-hover p-7 fade-up d1">
+      <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:linear-gradient(135deg,#EEF4FF,#DBEAFE)">
+        <i data-lucide="activity" class="w-5 h-5 text-blue-700"></i>
+      </div>
+      <h3 class="font-display text-xl font-semibold mb-2">Tasa de Referencia</h3>
+      <p class="text-slate-500 text-sm leading-relaxed">
+        Es el piso mínimo que el Banco Central de Bolivia establece para las tasas activas en moneda nacional. Ningún banco puede prestar por debajo de ella.
+      </p>
+      <div class="mt-4 pt-4 border-t border-gray-100 flex items-center gap-2">
+        <span class="badge-navy">Decreto Supremo 2055</span>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card card-hover p-7 fade-up d2">
+      <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A)">
+        <i data-lucide="calendar-clock" class="w-5 h-5 text-yellow-600"></i>
+      </div>
+      <h3 class="font-display text-xl font-semibold mb-2">Se publica mensualmente</h3>
+      <p class="text-slate-500 text-sm leading-relaxed">
+        El BCB calcula y publica la TRE cada mes. En créditos de <strong>tasa variable o mixta</strong>, tu cuota se recalcula cada vez que la TRE cambia.
+      </p>
+      <div class="mt-4 pt-4 border-t border-gray-100 flex items-center gap-2">
+        <span class="badge-gold">Publicación mensual</span>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card card-hover p-7 fade-up d3">
+      <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:linear-gradient(135deg,#D1FAE5,#A7F3D0)">
+        <i data-lucide="shield-check" class="w-5 h-5 text-green-700"></i>
+      </div>
+      <h3 class="font-display text-xl font-semibold mb-2">Protege al prestatario</h3>
+      <p class="text-slate-500 text-sm leading-relaxed">
+        Limita el margen (spread) que los bancos pueden cobrar sobre la TRE, evitando tasas abusivas. Es parte de la política de democratización financiera.
+      </p>
+      <div class="mt-4 pt-4 border-t border-gray-100 flex items-center gap-2">
+        <span class="badge-green">Ley 393 · Art. 59</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════ FÓRMULA VISUAL ══════════════════════ -->
+<section id="formula" class="py-14 sm:py-20" style="background:linear-gradient(135deg,#0A1F42 0%,#0D2860 100%)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+    <div class="text-center mb-12">
+      <span class="badge-gold uppercase">Matemática Financiera</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mt-3">La Fórmula de tu Tasa</h2>
+      <p class="text-blue-300 mt-2">Así construye el banco la tasa que pagas cada mes</p>
+    </div>
+
+    <!-- Formula display -->
+    <div class="formula-box max-w-3xl mx-auto p-8 sm:p-12 text-center mb-10">
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8">
+
+        <div class="text-center">
+          <div class="font-mono-num text-5xl sm:text-6xl font-bold text-yellow-300 mb-2">TRE</div>
+          <div class="text-blue-300 text-xs uppercase tracking-widest">Banco Central de Bolivia</div>
+          <div class="font-mono-num text-2xl text-yellow-300 mt-2">2.95%</div>
+        </div>
+
+        <div class="formula-op">+</div>
+
+        <div class="text-center">
+          <div class="font-mono-num text-5xl sm:text-6xl font-bold text-white mb-2">Spread</div>
+          <div class="text-blue-300 text-xs uppercase tracking-widest">Margen del Banco</div>
+          <div class="font-mono-num text-2xl text-blue-200 mt-2">4.55% ~ 7%</div>
+        </div>
+
+        <div class="formula-equals">=</div>
+
+        <div class="text-center">
+          <div class="font-mono-num text-5xl sm:text-6xl font-bold text-green-300 mb-2">TNA</div>
+          <div class="text-blue-300 text-xs uppercase tracking-widest">Tu Tasa Nominal Anual</div>
+          <div class="font-mono-num text-2xl text-green-300 mt-2">7.5% ~ 9.95%</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+        <div class="rounded-xl p-4" style="background:rgba(212,168,67,.10);border:1px solid rgba(212,168,67,.20)">
+          <p class="text-yellow-300 text-xs font-semibold uppercase tracking-wide mb-1">TRE (Variable)</p>
+          <p class="text-blue-200 text-sm">Fijada por el BCB. Cambia mensualmente según las condiciones del mercado financiero nacional.</p>
+        </div>
+        <div class="rounded-xl p-4" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10)">
+          <p class="text-white text-xs font-semibold uppercase tracking-wide mb-1">Spread (Fijo)</p>
+          <p class="text-blue-200 text-sm">Lo define tu banco al firmar el contrato. Permanece <strong class="text-white">fijo durante toda la vida del crédito</strong>.</p>
+        </div>
+        <div class="rounded-xl p-4" style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.20)">
+          <p class="text-green-300 text-xs font-semibold uppercase tracking-wide mb-1">Resultado (Varía)</p>
+          <p class="text-blue-200 text-sm">Si la TRE sube, tu tasa sube. Si la TRE baja, tu cuota baja. El spread nunca cambia.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly conversion note -->
+    <div class="max-w-xl mx-auto text-center">
+      <div class="rounded-2xl p-5" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10)">
+        <p class="text-blue-300 text-sm mb-2">Conversión a tasa mensual (Sistema Francés)</p>
+        <p class="font-mono-num text-lg text-white">r_mes = TNA / 12</p>
+        <p class="text-blue-400 text-xs mt-2">Ej: 7.5% anual → <strong class="text-yellow-300">0.625% mensual</strong> sobre el saldo insoluto</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ PASO A PASO BCB ══════════════════════ -->
+<section class="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+    <!-- Left: text -->
+    <div>
+      <span class="badge-gold uppercase">Metodología BCB</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-3 mb-4">Cómo el BCB calcula la TRE</h2>
+      <p class="text-slate-500 mb-8 leading-relaxed">El Banco Central sigue un proceso técnico cada mes para determinar el valor de la TRE, basado en las operaciones reales del sistema financiero.</p>
+
+      <div class="space-y-6">
+
+        <!-- Step 1 -->
+        <div class="flex gap-4 relative step-line">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full gold-bg flex items-center justify-center z-10 shadow-lg">
+            <span class="text-white text-sm font-bold">1</span>
+          </div>
+          <div class="pb-6">
+            <h4 class="font-semibold text-navy-900 mb-1">Recolección de datos del sistema</h4>
+            <p class="text-slate-500 text-sm leading-relaxed">El BCB recopila todas las operaciones de crédito pactadas en moneda nacional durante el mes anterior en bancos, mutuales y cooperativas.</p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex gap-4 relative step-line">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center z-10 shadow-md" style="background:#0A1F42">
+            <span class="text-white text-sm font-bold">2</span>
+          </div>
+          <div class="pb-6">
+            <h4 class="font-semibold text-navy-900 mb-1">Ponderación por volumen</h4>
+            <p class="text-slate-500 text-sm leading-relaxed">No todas las operaciones pesan igual. Las de mayor volumen tienen más influencia en el cálculo. Se eliminan valores atípicos extremos.</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flex gap-4 relative step-line">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center z-10 shadow-md" style="background:#0A1F42">
+            <span class="text-white text-sm font-bold">3</span>
+          </div>
+          <div class="pb-6">
+            <h4 class="font-semibold text-navy-900 mb-1">Cálculo de la media ponderada</h4>
+            <p class="text-slate-500 text-sm leading-relaxed">Se obtiene la media ponderada de todas las tasas vigentes. Este valor representa el "precio promedio" del dinero en Bolivia ese mes.</p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="flex gap-4 relative">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center z-10 shadow-md" style="background:linear-gradient(135deg,#22C55E,#15803D)">
+            <i data-lucide="check" class="w-4 h-4 text-white"></i>
+          </div>
+          <div>
+            <h4 class="font-semibold text-navy-900 mb-1">Publicación oficial</h4>
+            <p class="text-slate-500 text-sm leading-relaxed">El resultado se publica en la Gaceta Oficial y en el sitio web del BCB. Entra en vigor el primer día hábil del mes siguiente.</p>
+            <a href="https://www.bcb.gob.bo" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-yellow-600 font-semibold mt-2 hover:text-yellow-700">
+              <i data-lucide="external-link" class="w-3 h-3"></i> bcb.gob.bo (sitio oficial)
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right: Historical chart (visual SVG) -->
+    <div class="card p-6">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h3 class="font-display text-xl font-semibold">Historial TRE Referencial</h3>
+          <p class="text-slate-400 text-xs mt-0.5">Últimos 12 meses · % anual</p>
+        </div>
+        <span class="badge-gold">BCB · 2024–2025</span>
+      </div>
+
+      <!-- Bar chart -->
+      <div class="flex items-end justify-between gap-1.5" style="height:160px">
+        <!-- Bars: approximate TRE historical values -->
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:52%;background:linear-gradient(to top,#0A1F42,#1D4ED8)"></div>
+          <span class="text-xs text-slate-400" style="font-size:9px">Jun</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:55%;background:linear-gradient(to top,#0A1F42,#1D4ED8)"></div>
+          <span class="text-xs text-slate-400" style="font-size:9px">Jul</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:50%;background:linear-gradient(to top,#0A1F42,#1D4ED8)"></div>
+          <span class="text-xs text-slate-400" style="font-size:9px">Ago</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:53%;background:linear-gradient(to top,#0A1F42,#1D4ED8)"></div>
+          <span class="text-xs text-slate-400" style="font-size:9px">Sep</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:48%;background:linear-gradient(to top,#0A1F42,#1D4ED8)"></div>
+          <span class="text-xs text-slate-400" style="font-size:9px">Oct</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:50%;background:linear-gradient(to top,#0A1F42,#1D4ED8)"></div>
+          <span class="text-xs text-slate-400" style="font-size:9px">Nov</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:47%;background:linear-gradient(to top,#0A1F42,#1D4ED8)"></div>
+          <span class="text-xs text-slate-400" style="font-size:9px">Dic</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:49%;background:linear-gradient(to top,#0A1F42,#1D4ED8)"></div>
+          <span class="text-xs text-slate-400" style="font-size:9px">Ene</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:51%;background:linear-gradient(to top,#0A1F42,#1D4ED8)"></div>
+          <span class="text-xs text-slate-400" style="font-size:9px">Feb</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:53%;background:linear-gradient(to top,#0A1F42,#1D4ED8)"></div>
+          <span class="text-xs text-slate-400" style="font-size:9px">Mar</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:50%;background:linear-gradient(to top,#0A1F42,#1D4ED8)"></div>
+          <span class="text-xs text-slate-400" style="font-size:9px">Abr</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-full rounded-t-lg bar-fill" style="height:52%;background:linear-gradient(to top,#D4A843,#A87420);box-shadow:0 0 12px rgba(212,168,67,.4)"></div>
+          <span class="font-bold" style="font-size:9px;color:#D4A843">May</span>
+        </div>
+      </div>
+
+      <!-- Reference lines -->
+      <div class="flex justify-between text-xs text-slate-400 mt-3 pt-3 border-t border-gray-100">
+        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background:#0A1F42"></span> Meses anteriores</div>
+        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background:#D4A843"></span> Vigente: <strong class="text-yellow-600">2.95%</strong></div>
+      </div>
+
+      <p class="text-slate-400 text-xs mt-3 italic">* Valores referenciales. Verifica siempre en bcb.gob.bo</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ SIMULADOR DE IMPACTO ══════════════════════ -->
+<section id="simulador" class="py-14 sm:py-20" style="background:#F0F4FB">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+
+    <div class="text-center mb-10">
+      <span class="badge-gold uppercase">Herramienta Interactiva</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-3">¿Cuánto mueve tu cuota?</h2>
+      <p class="text-slate-500 mt-2">Ajusta la TRE y ve en tiempo real cómo cambia tu pago mensual</p>
+    </div>
+
+    <div class="card p-6 sm:p-8">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+        <div>
+          <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Capital del Crédito (Bs.)</label>
+          <input type="number" id="simMonto" class="inp" value="500000" oninput="calcImpacto()">
+        </div>
+        <div>
+          <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Plazo (años)</label>
+          <input type="number" id="simPlazo" class="inp" value="20" min="1" max="30" oninput="calcImpacto()">
+        </div>
+        <div>
+          <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Spread del Banco (%)</label>
+          <input type="number" id="simSpread" class="inp" value="5.00" min="0" max="15" step="0.01" oninput="calcImpacto()">
+        </div>
+      </div>
+
+      <!-- TRE slider -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">TRE Proyectada</label>
+          <span class="font-mono-num text-2xl font-bold text-yellow-600" id="treDisplay">2.95%</span>
+        </div>
+        <input type="range" id="simTRE" min="1" max="8" step="0.05" value="2.95" oninput="calcImpacto(); document.getElementById('treDisplay').textContent=parseFloat(this.value).toFixed(2)+'%'">
+        <div class="flex justify-between text-xs text-slate-400 mt-1">
+          <span>1.00%</span>
+          <span class="text-green-500 font-semibold">▼ Cuota baja</span>
+          <span class="text-red-500 font-semibold">Cuota sube ▲</span>
+          <span>8.00%</span>
+        </div>
+      </div>
+
+      <!-- Result grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="rounded-2xl p-4 text-center" style="background:linear-gradient(135deg,#060F1E,#0A1F42)">
+          <p class="text-blue-300 text-xs uppercase tracking-wide mb-1">Tasa Total</p>
+          <p class="font-mono-num text-2xl font-bold text-white" id="rTasa">—</p>
+        </div>
+        <div class="rounded-2xl p-4 text-center" style="background:linear-gradient(135deg,#D4A843,#A87420)">
+          <p class="text-yellow-100 text-xs uppercase tracking-wide mb-1">Cuota Mensual</p>
+          <p class="font-mono-num text-2xl font-bold text-white" id="rCuota">—</p>
+        </div>
+        <div class="rounded-2xl p-4 text-center bg-white border border-gray-100">
+          <p class="text-slate-400 text-xs uppercase tracking-wide mb-1">Total Intereses</p>
+          <p class="font-mono-num text-2xl font-bold text-navy-900" id="rInt">—</p>
+        </div>
+        <div class="rounded-2xl p-4 text-center" id="rDiffCard" style="background:#F0FDF4">
+          <p class="text-slate-400 text-xs uppercase tracking-wide mb-1">vs TRE 2.95%</p>
+          <p class="font-mono-num text-2xl font-bold" id="rDiff">—</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════ ALERTA VISUAL ══════════════════════ -->
+<section class="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+
+    <!-- Big alert card -->
+    <div class="lg:col-span-3 rounded-2xl overflow-hidden" style="border:2px solid #EF4444">
+      <div class="p-5 flex items-center gap-3" style="background:#EF4444">
+        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 alert-ring">
+          <i data-lucide="alert-triangle" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg">Riesgo de Tasa Variable</h3>
+          <p class="text-red-100 text-sm">Lo que los bancos no siempre explican claramente</p>
+        </div>
+      </div>
+      <div class="bg-red-50 p-6 space-y-4">
+        <div class="flex gap-3">
+          <i data-lucide="circle-dot" class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"></i>
+          <p class="text-slate-700 text-sm leading-relaxed">Si la TRE <strong>sube 2 puntos</strong> (de 2.95% a 4.95%), en un crédito de Bs. 500,000 a 20 años tu cuota puede incrementarse en <strong class="text-red-600">más de Bs. 500 mensuales</strong>.</p>
+        </div>
+        <div class="flex gap-3">
+          <i data-lucide="circle-dot" class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"></i>
+          <p class="text-slate-700 text-sm leading-relaxed">El banco <strong>no necesita notificarte</strong> antes de cambiar tu cuota. El cambio es automático según el contrato.</p>
+        </div>
+        <div class="flex gap-3">
+          <i data-lucide="circle-dot" class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"></i>
+          <p class="text-slate-700 text-sm leading-relaxed">En créditos a <strong>30 años</strong>, una TRE alta desde el inicio puede costarte hasta <strong>40% más en intereses totales</strong>.</p>
+        </div>
+        <div class="rounded-xl p-4 mt-2" style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25)">
+          <p class="text-red-700 text-sm font-semibold">⚠️ Recomendación: Pide a tu banco el "stress test" de tu cuota con TRE al 6% antes de firmar.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips column -->
+    <div class="lg:col-span-2 space-y-4">
+      <h3 class="font-display text-2xl font-semibold">Cómo protegerte</h3>
+
+      <div class="card p-5 flex gap-4">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#D1FAE5">
+          <i data-lucide="lock" class="w-4 h-4 text-green-700"></i>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm mb-1">Pide tasa fija los primeros años</h4>
+          <p class="text-slate-500 text-xs leading-relaxed">Un crédito mixto con tasa fija 5-7 años te protege de subidas durante la fase más crítica.</p>
+        </div>
+      </div>
+
+      <div class="card p-5 flex gap-4">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#DBEAFE">
+          <i data-lucide="calculator" class="w-4 h-4 text-blue-700"></i>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm mb-1">Simula con TRE alta</h4>
+          <p class="text-slate-500 text-xs leading-relaxed">Usa nuestra calculadora con TRE al 5% o 6% para ver si tu ingreso soporta ese escenario.</p>
+        </div>
+      </div>
+
+      <div class="card p-5 flex gap-4">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#FEF3C7">
+          <i data-lucide="file-text" class="w-4 h-4 text-yellow-600"></i>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm mb-1">Lee el contrato sección "Tasa"</h4>
+          <p class="text-slate-500 text-xs leading-relaxed">Verifica que el spread esté expresamente fijado y no pueda ser modificado unilateralmente.</p>
+        </div>
+      </div>
+
+      <div class="card p-5 flex gap-4">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#EDE9FE">
+          <i data-lucide="trending-down" class="w-4 h-4 text-purple-700"></i>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm mb-1">La TRE también puede bajar</h4>
+          <p class="text-slate-500 text-xs leading-relaxed">Si la TRE cae, tu cuota baja. En contextos de política monetaria expansiva, esto puede ser una ventaja.</p>
+        </div>
+      </div>
+
+      <a href="index.html" class="btn-gold flex items-center justify-center gap-2 mt-2">
+        <i data-lucide="calculator" class="w-4 h-4"></i> Simular con TRE alta
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ FAQ ══════════════════════ -->
+<section class="py-14 sm:py-16 max-w-3xl mx-auto px-4 sm:px-6">
+  <div class="text-center mb-10">
+    <span class="badge-gold uppercase">Preguntas Frecuentes</span>
+    <h2 class="font-display text-3xl font-semibold mt-3">Lo que más nos preguntan</h2>
+  </div>
+
+  <div class="space-y-3" id="faqList">
+    <!-- FAQs generadas por JS -->
+  </div>
+</section>
+
+
+<!-- ══════════════════════ CTA FOOTER ══════════════════════ -->
+<section class="hero-bg py-16 text-center text-white">
+  <div class="max-w-2xl mx-auto px-4">
+    <h2 class="font-display text-4xl font-bold mb-4">¿Listo para simular?</h2>
+    <p class="text-blue-200 mb-8">Usa nuestra calculadora con los conceptos que acabas de aprender y toma una decisión informada.</p>
+    <a href="index.html" class="inline-flex items-center gap-2 btn-gold" style="width:auto;padding:16px 36px;font-size:16px">
+      <i data-lucide="calculator" class="w-5 h-5"></i> Ir a la Calculadora
+    </a>
+  </div>
+</section>
+
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer class="hero-bg border-t border-white/10 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <a href="index.html" class="font-display text-xl text-white font-semibold">Simulador<span class="text-yellow-300">de</span>Créditos</a>
+    <div class="flex gap-5 text-sm">
+      <a href="index.html"           class="text-blue-300 hover:text-white transition-colors">Calculadora</a>
+      <a href="tre.html"             class="text-blue-300 hover:text-white transition-colors">TRE</a>
+      <a href="vivienda-social.html" class="text-blue-300 hover:text-white transition-colors">Crédito VIS</a>
+      <a href="requisitos.html"      class="text-blue-300 hover:text-white transition-colors">Requisitos</a>
+    </div>
+    <p class="text-blue-400 text-xs">© 2025 SimuladordeCreditos.com · Bolivia</p>
+  </div>
+</footer>
+
+
+<script>
+  lucide.createIcons();
+
+  /* ─── Nav toggle ─── */
+  function toggleMenu() {
+    const m = document.getElementById('mobileMenu');
+    m.classList.toggle('hidden');
+    m.style.display = m.classList.contains('hidden') ? 'none' : 'flex';
+  }
+
+  /* ─── PMT helper ─── */
+  function pmt(pv, r, n) {
+    if (r === 0) return pv / n;
+    return pv * r / (1 - Math.pow(1 + r, -n));
+  }
+
+  const BASE_TRE = 2.95;
+
+  function calcImpacto() {
+    const monto  = +document.getElementById('simMonto').value  || 500000;
+    const plazo  = +document.getElementById('simPlazo').value  || 20;
+    const spread = +document.getElementById('simSpread').value || 5;
+    const tre    = +document.getElementById('simTRE').value    || 2.95;
+
+    const tna    = tre + spread;
+    const r      = tna / 100 / 12;
+    const n      = plazo * 12;
+    const cuota  = pmt(monto, r, n);
+    const totalI = cuota * n - monto;
+
+    /* Baseline (TRE = 2.95) */
+    const tnaBase = BASE_TRE + spread;
+    const rBase   = tnaBase / 100 / 12;
+    const cuotaBase = pmt(monto, rBase, n);
+    const diff    = cuota - cuotaBase;
+
+    const fmt = v => 'Bs. ' + v.toLocaleString('es-BO', {minimumFractionDigits:0, maximumFractionDigits:0});
+
+    document.getElementById('rTasa').textContent  = tna.toFixed(2) + '%';
+    document.getElementById('rCuota').textContent = fmt(cuota);
+    document.getElementById('rInt').textContent   = fmt(totalI);
+
+    const diffEl   = document.getElementById('rDiff');
+    const diffCard = document.getElementById('rDiffCard');
+    const sign = diff >= 0 ? '+' : '';
+    diffEl.textContent = sign + fmt(diff).replace('Bs. ','Bs. ');
+    diffEl.style.color = diff > 0 ? '#EF4444' : diff < 0 ? '#22C55E' : '#0A1F42';
+    diffCard.style.background = diff > 0 ? '#FEF2F2' : diff < 0 ? '#F0FDF4' : '#F8FAFC';
+  }
+  calcImpacto();
+
+  /* ─── FAQ ─── */
+  const faqs = [
+    { q: '¿Cada cuánto cambia la TRE?', a: 'El BCB publica la TRE mensualmente. Sin embargo, los bancos aplican el cambio en la siguiente cuota después de la publicación oficial.' },
+    { q: '¿La TRE aplica a créditos en dólares?', a: 'No. La TRE es exclusiva para créditos en Bolivianos (BOB) y UFV. Los créditos en dólares se rigen por tasas LIBOR/SOFR o tasas pactadas libremente.' },
+    { q: '¿El banco me avisa si mi cuota cambia?', a: 'No necesariamente. El contrato de crédito variable permite el ajuste automático. Por eso es fundamental que monitorees la TRE mensualmente en bcb.gob.bo.' },
+    { q: '¿Puedo cambiar a tasa fija después?', a: 'Depende de tu contrato. Algunos bancos ofrecen "switch" de tasa variable a fija, pero puede implicar una comisión o renegociación total del crédito.' },
+    { q: '¿La TRE puede bajar a cero o ser negativa?', a: 'Históricamente la TRE en Bolivia ha oscilado entre 1% y 5% anual. La regulación del BCB impide que llegue a cero ya que refleja el costo real del dinero en el mercado.' },
+  ];
+
+  const faqList = document.getElementById('faqList');
+  faqs.forEach((f, i) => {
+    const div = document.createElement('div');
+    div.className = 'card overflow-hidden';
+    div.innerHTML = `
+      <button onclick="toggleFaq(${i})" class="w-full flex items-center justify-between p-5 text-left">
+        <span class="font-semibold text-navy-900 pr-4 text-sm">${f.q}</span>
+        <i data-lucide="plus" class="w-4 h-4 text-yellow-600 flex-shrink-0 faq-icon" id="faqIcon${i}"></i>
+      </button>
+      <div class="faq-body px-5 pb-0 text-slate-500 text-sm leading-relaxed" id="faqBody${i}">${f.a}</div>`;
+    faqList.appendChild(div);
+  });
+  lucide.createIcons();
+
+  function toggleFaq(i) {
+    const body = document.getElementById(`faqBody${i}`);
+    const icon = document.getElementById(`faqIcon${i}`);
+    const open = body.classList.contains('open');
+    document.querySelectorAll('.faq-body').forEach(b => { b.classList.remove('open'); b.style.paddingBottom = '0'; });
+    document.querySelectorAll('.faq-icon').forEach(ic => ic.classList.remove('open'));
+    if (!open) {
+      body.classList.add('open');
+      body.style.paddingBottom = '20px';
+      icon.classList.add('open');
+    }
+  }
+</script>
+</body>
+</html>

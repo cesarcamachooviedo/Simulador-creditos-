@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crédito de Vivienda de Interés Social (VIS) | SimuladordeCreditos.com</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 50:'#EEF4FF', 100:'#DBEAFE', 700:'#1D4ED8', 800:'#0B2A56', 900:'#0A1F42', 950:'#06132B' },
+            gold: { 200:'#FEF3C7', 300:'#F5D98A', 400:'#D4A843', 500:'#B8860B', 600:'#9A6E00' }
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans:    ['Outfit', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Outfit',system-ui,sans-serif;background:#EEF2FA;color:#0A1F42}
+    .font-display{font-family:'Cormorant Garamond',Georgia,serif}
+    .font-mono-num{font-family:'DM Mono','Courier New',monospace;font-weight:500}
+
+    .hero-bg{background:linear-gradient(135deg,#060F1E 0%,#0A1F42 45%,#0D2860 100%)}
+    .gold-bg{background:linear-gradient(135deg,#D4A843 0%,#A87420 100%)}
+    .card{background:#fff;border-radius:16px;box-shadow:0 2px 18px rgba(10,31,66,.08)}
+
+    /* ── Nav ── */
+    .nav-link{font-size:13px;font-weight:500;color:rgba(255,255,255,.70);padding:6px 12px;
+              border-radius:8px;transition:all .2s;white-space:nowrap;text-decoration:none}
+    .nav-link:hover{color:#fff;background:rgba(255,255,255,.10)}
+    .nav-link.active{color:#D4A843;font-weight:600}
+    .nav-mobile{display:none;flex-direction:column;gap:4px;padding:12px 16px;
+                background:rgba(6,15,30,.97);border-top:1px solid rgba(255,255,255,.08)}
+    .nav-mobile a{color:rgba(255,255,255,.80);padding:10px 14px;border-radius:8px;
+                  font-size:14px;font-weight:500;text-decoration:none;transition:all .2s}
+    .nav-mobile a:hover,.nav-mobile a.active{background:rgba(212,168,67,.15);color:#D4A843}
+
+    /* ── Badges ── */
+    .badge-gold{background:rgba(212,168,67,.14);border:1px solid rgba(212,168,67,.40);
+                color:#A87420;font-size:11px;font-weight:600;padding:3px 10px;
+                border-radius:20px;letter-spacing:.04em;display:inline-block}
+    .badge-green{background:#D1FAE5;color:#065F46;font-size:11px;font-weight:700;
+                 padding:4px 12px;border-radius:20px;display:inline-flex;align-items:center;gap:4px}
+    .badge-blue{background:#DBEAFE;color:#1E40AF;font-size:11px;font-weight:700;
+                padding:4px 12px;border-radius:20px;display:inline-flex;align-items:center;gap:4px}
+    .badge-red{background:#FEE2E2;color:#991B1B;font-size:11px;font-weight:700;
+               padding:4px 12px;border-radius:20px;display:inline-flex;align-items:center;gap:4px}
+
+    /* ── Pricing cards ── */
+    .plan-card{border-radius:20px;overflow:hidden;transition:transform .25s,box-shadow .25s;position:relative}
+    .plan-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(10,31,66,.20)}
+    .plan-card.featured{transform:scale(1.03);box-shadow:0 12px 40px rgba(10,31,66,.22)}
+    .plan-card.featured:hover{transform:scale(1.03) translateY(-6px)}
+    .plan-badge{position:absolute;top:16px;right:16px}
+
+    /* ── Check list ── */
+    .check-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;
+                border-bottom:1px solid #F0F4FB}
+    .check-item:last-child{border-bottom:none}
+    .check-icon{width:20px;height:20px;border-radius:50%;background:#D1FAE5;
+                display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .cross-icon{width:20px;height:20px;border-radius:50%;background:#FEE2E2;
+                display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+    /* ── Comparison table ── */
+    .cmp-tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+    .cmp-tbl th{padding:12px 16px;text-align:left;font-size:10px;font-weight:700;
+                text-transform:uppercase;letter-spacing:.06em}
+    .cmp-tbl td{padding:12px 16px;border-bottom:1px solid #EDF2F9}
+    .cmp-tbl tbody tr:last-child td{border-bottom:none}
+    .cmp-tbl tbody tr:hover td{background:#F7FAFF}
+
+    /* ── Eligibility meter ── */
+    .elig-bar{height:8px;border-radius:4px;background:#E5EDF8;overflow:hidden}
+    .elig-fill{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.34,1.56,.64,1)}
+
+    /* ── Buttons ── */
+    .btn-gold{background:linear-gradient(135deg,#D4A843 0%,#A87420 100%);color:#fff;
+              font-weight:600;padding:13px 28px;border-radius:12px;border:none;cursor:pointer;
+              font-family:'Outfit',sans-serif;font-size:14px;letter-spacing:.02em;
+              transition:all .2s;box-shadow:0 4px 16px rgba(212,168,67,.38);text-decoration:none;
+              display:inline-flex;align-items:center;gap:6px}
+    .btn-gold:hover{transform:translateY(-1px);box-shadow:0 7px 22px rgba(212,168,67,.50)}
+    .btn-outline-white{background:transparent;color:white;font-weight:600;padding:13px 28px;
+                       border-radius:12px;border:2px solid rgba(255,255,255,.3);
+                       font-family:'Outfit',sans-serif;font-size:14px;transition:all .2s;
+                       text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+    .btn-outline-white:hover{background:rgba(255,255,255,.10);border-color:white}
+
+    /* ── Animations ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+    .fade-up{animation:fadeUp .5s ease forwards}
+    .d1{animation-delay:.06s;opacity:0}.d2{animation-delay:.16s;opacity:0}.d3{animation-delay:.26s;opacity:0}
+
+    /* ── UFV card glow ── */
+    .ufv-glow{box-shadow:0 0 0 2px rgba(212,168,67,.30),0 8px 32px rgba(212,168,67,.15)}
+
+    ::-webkit-scrollbar{width:5px;height:5px}
+    ::-webkit-scrollbar-track{background:#EEF2FA}
+    ::-webkit-scrollbar-thumb{background:#D4A843;border-radius:3px}
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ NAV ══════════════════════ -->
+<nav class="hero-bg sticky top-0 z-50" style="box-shadow:0 2px 20px rgba(0,0,0,.35)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16">
+      <a href="index.html" class="flex items-center gap-2.5 flex-shrink-0">
+        <div class="w-9 h-9 rounded-xl gold-bg flex items-center justify-center">
+          <i data-lucide="landmark" class="w-4 h-4 text-white"></i>
+        </div>
+        <span class="font-display text-xl text-white font-semibold leading-none">
+          Simulador<span class="text-yellow-300">de</span>Créditos
+        </span>
+      </a>
+      <div class="hidden md:flex items-center gap-1">
+        <a href="index.html"           class="nav-link">Calculadora</a>
+        <a href="tre.html"             class="nav-link">TRE</a>
+        <a href="vivienda-social.html" class="nav-link active">Crédito VIS</a>
+        <a href="requisitos.html"      class="nav-link">Requisitos</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="hidden sm:flex btn-gold py-2 px-4 text-sm" style="padding:8px 16px">
+          <i data-lucide="calculator" class="w-3.5 h-3.5"></i> Simular
+        </a>
+        <button onclick="toggleMenu()" class="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="mobileMenu" class="nav-mobile hidden">
+    <a href="index.html">🧮 Calculadora</a>
+    <a href="tre.html">📈 ¿Qué es la TRE?</a>
+    <a href="vivienda-social.html" class="active">🏠 Crédito VIS</a>
+    <a href="requisitos.html">📋 Requisitos</a>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<section class="hero-bg text-white relative overflow-hidden">
+  <div class="absolute inset-0 pointer-events-none overflow-hidden">
+    <div style="position:absolute;top:-80px;right:-100px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.08) 0%,transparent 65%)"></div>
+    <!-- House silhouette decoration -->
+    <svg class="absolute bottom-0 right-0 opacity-5" width="320" height="200" viewBox="0 0 320 200">
+      <polygon points="160,20 20,120 300,120" fill="white"/>
+      <rect x="60" y="120" width="200" height="80" fill="white"/>
+      <rect x="130" y="150" width="60" height="50" fill="#0A1F42"/>
+      <rect x="70" y="130" width="50" height="40" fill="#0A1F42"/>
+      <rect x="200" y="130" width="50" height="40" fill="#0A1F42"/>
+    </svg>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative">
+    <div class="max-w-3xl">
+      <div class="flex flex-wrap items-center gap-2 mb-5 fade-up d1">
+        <span class="badge-green"><i data-lucide="shield-check" class="w-3 h-3"></i> Ley 393 · Bolivia</span>
+        <span class="badge-blue">Tasa Regulada ASFI</span>
+        <span class="badge-gold uppercase">Vivienda Social</span>
+      </div>
+      <h1 class="font-display text-4xl sm:text-6xl font-bold leading-tight mb-5 fade-up d2">
+        Crédito de<br><span class="text-yellow-300">Vivienda de<br>Interés Social</span>
+      </h1>
+      <p class="text-blue-200 text-lg sm:text-xl leading-relaxed mb-8 fade-up d3 max-w-2xl">
+        El programa estatal boliviano que te permite acceder a financiamiento para tu primera vivienda con <strong class="text-white">tasas máximas fijadas por ley</strong>, sin importar el banco que elijas.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="#planes" class="btn-gold">Ver los Planes VIS</a>
+        <a href="index.html?tipo=hipotecario" class="btn-outline-white">Simular Crédito VIS</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════ STATS BAR ══════════════════════ -->
+<div class="bg-white border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="text-center">
+      <p class="font-mono-num text-2xl font-bold text-navy-900">5.5%</p>
+      <p class="text-slate-500 text-xs mt-0.5">Tasa mín. VIS Nivel 1</p>
+    </div>
+    <div class="text-center border-l border-gray-100">
+      <p class="font-mono-num text-2xl font-bold text-yellow-600">460k</p>
+      <p class="text-slate-500 text-xs mt-0.5">Máximo en UFV</p>
+    </div>
+    <div class="text-center border-l border-gray-100">
+      <p class="font-mono-num text-2xl font-bold text-navy-900">30</p>
+      <p class="text-slate-500 text-xs mt-0.5">Años máx. de plazo</p>
+    </div>
+    <div class="text-center border-l border-gray-100">
+      <p class="font-mono-num text-2xl font-bold text-green-600">Fija</p>
+      <p class="text-slate-500 text-xs mt-0.5">Tasa garantizada por ley</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════ QUIÉN CALIFICA ══════════════════════ -->
+<section class="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="text-center mb-12">
+    <span class="badge-gold uppercase">Elegibilidad</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-3">¿Calificas para el VIS?</h2>
+    <p class="text-slate-500 mt-2 max-w-xl mx-auto">Requisitos básicos que debes cumplir antes de aplicar a cualquier banco.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+    <!-- Conditions -->
+    <div class="card p-7">
+      <h3 class="font-display text-2xl font-semibold mb-6 flex items-center gap-2">
+        <span class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:#D1FAE5">
+          <i data-lucide="check-circle-2" class="w-4 h-4 text-green-700"></i>
+        </span>
+        Condiciones Obligatorias
+      </h3>
+      <div class="space-y-0">
+        <div class="check-item">
+          <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+          <div>
+            <p class="font-semibold text-sm text-navy-900">Primera y única vivienda</p>
+            <p class="text-slate-500 text-xs mt-0.5">No puedes tener otra propiedad a tu nombre ni de tu cónyuge en Bolivia.</p>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+          <div>
+            <p class="font-semibold text-sm text-navy-900">Vivienda para habitarla tú mismo</p>
+            <p class="text-slate-500 text-xs mt-0.5">No puede ser para alquiler, oficina o actividad comercial. Declaración jurada requerida.</p>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+          <div>
+            <p class="font-semibold text-sm text-navy-900">Valor dentro de los límites UFV</p>
+            <p class="text-slate-500 text-xs mt-0.5">El inmueble no puede superar 460,000 UFV (≈ Bs. 1,097,000 al valor UFV actual).</p>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+          <div>
+            <p class="font-semibold text-sm text-navy-900">Prestatario persona natural</p>
+            <p class="text-slate-500 text-xs mt-0.5">Solo para individuos bolivianos o con residencia legal. No aplica para empresas.</p>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+          <div>
+            <p class="font-semibold text-sm text-navy-900">Solvencia crediticia</p>
+            <p class="text-slate-500 text-xs mt-0.5">Sin calificación D o E en la central de riesgos ASFI al momento de la solicitud.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UFV Calculator -->
+    <div>
+      <div class="card p-7 ufv-glow mb-5">
+        <h3 class="font-display text-2xl font-semibold mb-2">Conversor UFV → Bolivianos</h3>
+        <p class="text-slate-500 text-xs mb-5">UFV vigente: Bs. 2.3847 por UFV</p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Valor del inmueble en UFV</label>
+            <div class="flex gap-3">
+              <input type="number" id="ufvInput" class="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-yellow-400 focus:outline-none font-mono-num text-lg" value="380000" oninput="convertUFV()">
+              <span class="flex items-center px-3 text-slate-400 text-sm font-semibold">UFV</span>
+            </div>
+          </div>
+          <div class="rounded-2xl p-5 text-center" style="background:linear-gradient(135deg,#060F1E,#0A1F42)">
+            <p class="text-blue-300 text-xs uppercase tracking-wider mb-1">Equivalente en Bolivianos</p>
+            <p class="font-mono-num text-4xl font-bold text-white" id="ufvResult">Bs. 906,186</p>
+            <p class="text-blue-400 text-xs mt-1" id="ufvTier">Nivel 2 · Tasa máx. 6.5%</p>
+          </div>
+        </div>
+
+        <!-- Quick buttons -->
+        <div class="grid grid-cols-3 gap-2 mt-4">
+          <button onclick="setUFV(255000)" class="py-2 px-3 rounded-xl text-xs font-semibold border-2 border-gray-200 hover:border-yellow-400 hover:text-yellow-600 transition-all">255k UFV</button>
+          <button onclick="setUFV(380000)" class="py-2 px-3 rounded-xl text-xs font-semibold border-2 border-yellow-400 text-yellow-600 hover:bg-yellow-50 transition-all">380k UFV</button>
+          <button onclick="setUFV(460000)" class="py-2 px-3 rounded-xl text-xs font-semibold border-2 border-gray-200 hover:border-yellow-400 hover:text-yellow-600 transition-all">460k UFV</button>
+        </div>
+      </div>
+
+      <!-- Ineligible cases -->
+      <div class="card p-5">
+        <h4 class="font-semibold text-sm mb-3 flex items-center gap-2 text-red-600">
+          <i data-lucide="x-circle" class="w-4 h-4"></i> Casos que NO califican
+        </h4>
+        <div class="space-y-2 text-sm">
+          <div class="flex gap-2 items-start">
+            <div class="cross-icon mt-0.5"><i data-lucide="x" class="w-3 h-3 text-red-600"></i></div>
+            <p class="text-slate-600">Inmueble con valor superior a 460,000 UFV</p>
+          </div>
+          <div class="flex gap-2 items-start">
+            <div class="cross-icon mt-0.5"><i data-lucide="x" class="w-3 h-3 text-red-600"></i></div>
+            <p class="text-slate-600">Propietario ya tiene otra vivienda a su nombre</p>
+          </div>
+          <div class="flex gap-2 items-start">
+            <div class="cross-icon mt-0.5"><i data-lucide="x" class="w-3 h-3 text-red-600"></i></div>
+            <p class="text-slate-600">Refinanciamiento de crédito hipotecario existente</p>
+          </div>
+          <div class="flex gap-2 items-start">
+            <div class="cross-icon mt-0.5"><i data-lucide="x" class="w-3 h-3 text-red-600"></i></div>
+            <p class="text-slate-600">Crédito para remodelación sin compra del inmueble</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ PLANES VIS (Pricing Cards) ══════════════════════ -->
+<section id="planes" class="py-14 sm:py-20" style="background:linear-gradient(135deg,#F0F4FF 0%,#EEF2FA 100%)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+    <div class="text-center mb-14">
+      <span class="badge-gold uppercase">Regulación ASFI</span>
+      <h2 class="font-display text-3xl sm:text-5xl font-bold mt-3">Planes de Crédito VIS</h2>
+      <p class="text-slate-500 mt-3 max-w-2xl mx-auto">Las tasas son <strong>topes máximos fijados por ley</strong>. Tu banco no puede cobrarte más. Algunos bancos ofrecen tasas menores para ser competitivos.</p>
+    </div>
+
+    <!-- UFV value note -->
+    <div class="max-w-lg mx-auto mb-10 rounded-2xl p-4 flex items-center gap-3" style="background:rgba(212,168,67,.10);border:1px solid rgba(212,168,67,.30)">
+      <i data-lucide="info" class="w-5 h-5 text-yellow-600 flex-shrink-0"></i>
+      <p class="text-sm text-yellow-800">UFV actual: <strong>Bs. 2.3847</strong> por UFV · Actualizado diariamente por el BCB</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+
+      <!-- ─── Plan 1: Nivel I ─── -->
+      <div class="plan-card fade-up d1" style="background:white;border:2px solid #E5EDF8">
+        <!-- Header -->
+        <div class="p-7 pb-5" style="background:linear-gradient(135deg,#EEF4FF 0%,#DBEAFE 100%)">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:#1D4ED8">
+              <i data-lucide="home" class="w-5 h-5 text-white"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-blue-700">Nivel I</p>
+              <p class="font-display text-lg font-semibold text-navy-900">Vivienda Básica</p>
+            </div>
+          </div>
+          <div class="mb-3">
+            <p class="text-slate-500 text-xs mb-1">Tasa Máxima Anual</p>
+            <div class="font-mono-num text-5xl font-bold text-navy-900">5.5<span class="text-2xl">%</span></div>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="badge-green"><i data-lucide="lock" class="w-3 h-3"></i> Tasa Fija</span>
+            <span class="badge-blue">Ley 393</span>
+          </div>
+        </div>
+
+        <!-- UFV limit -->
+        <div class="mx-5 mt-5 rounded-2xl p-4 text-center" style="background:linear-gradient(135deg,#0A1F42,#0D2860)">
+          <p class="text-blue-300 text-xs uppercase tracking-wide mb-1">Límite del Inmueble</p>
+          <p class="font-mono-num text-3xl font-bold text-white">255,000 <span class="text-lg text-yellow-300">UFV</span></p>
+          <p class="font-mono-num text-sm text-blue-300 mt-1">≈ Bs. 607,898</p>
+        </div>
+
+        <!-- Features -->
+        <div class="p-5 space-y-0">
+          <div class="check-item">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-navy-900">Plazo hasta <strong>30 años</strong></p>
+          </div>
+          <div class="check-item">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-navy-900">Financiamiento hasta <strong>80% del valor</strong></p>
+          </div>
+          <div class="check-item">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-navy-900">Sin penalidad por <strong>pago anticipado</strong></p>
+          </div>
+          <div class="check-item">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-navy-900">Seguro de desgravamen <strong>obligatorio</strong></p>
+          </div>
+          <div class="check-item">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-navy-900">En <strong>BOB o UFV</strong> (tu eliges)</p>
+          </div>
+        </div>
+
+        <div class="px-5 pb-6">
+          <a href="index.html" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm border-2 border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white transition-all">
+            <i data-lucide="calculator" class="w-4 h-4"></i> Simular Nivel I
+          </a>
+        </div>
+      </div>
+
+
+      <!-- ─── Plan 2: Nivel II (FEATURED) ─── -->
+      <div class="plan-card featured fade-up d2" style="background:#0A1F42;border:2px solid #D4A843">
+        <div class="plan-badge">
+          <span class="badge-gold uppercase">⭐ Más Solicitado</span>
+        </div>
+        <!-- Header -->
+        <div class="p-7 pb-5" style="background:linear-gradient(135deg,rgba(212,168,67,.18) 0%,rgba(212,168,67,.05) 100%)">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center gold-bg">
+              <i data-lucide="home" class="w-5 h-5 text-white"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-yellow-400">Nivel II</p>
+              <p class="font-display text-lg font-semibold text-white">Vivienda Media</p>
+            </div>
+          </div>
+          <div class="mb-3">
+            <p class="text-blue-300 text-xs mb-1">Tasa Máxima Anual</p>
+            <div class="font-mono-num text-5xl font-bold text-yellow-300">6.5<span class="text-2xl">%</span></div>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <span style="background:rgba(212,168,67,.20);border:1px solid rgba(212,168,67,.50);color:#F5D98A;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;display:inline-flex;align-items:center;gap:4px">
+              <i data-lucide="lock" class="w-3 h-3"></i> Tasa Fija
+            </span>
+            <span style="background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);color:#93C5FD;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px">Ley 393</span>
+          </div>
+        </div>
+
+        <!-- UFV limit -->
+        <div class="mx-5 mt-5 rounded-2xl p-4 text-center gold-bg">
+          <p class="text-yellow-100 text-xs uppercase tracking-wide mb-1">Límite del Inmueble</p>
+          <p class="font-mono-num text-3xl font-bold text-white">380,000 <span class="text-lg">UFV</span></p>
+          <p class="font-mono-num text-sm text-yellow-100 mt-1">≈ Bs. 906,186</p>
+        </div>
+
+        <!-- Features -->
+        <div class="p-5 space-y-0">
+          <div class="check-item" style="border-color:rgba(255,255,255,.08)">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-blue-100">Plazo hasta <strong class="text-white">30 años</strong></p>
+          </div>
+          <div class="check-item" style="border-color:rgba(255,255,255,.08)">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-blue-100">Financiamiento hasta <strong class="text-white">80% del valor</strong></p>
+          </div>
+          <div class="check-item" style="border-color:rgba(255,255,255,.08)">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-blue-100">Sin penalidad por <strong class="text-white">pago anticipado</strong></p>
+          </div>
+          <div class="check-item" style="border-color:rgba(255,255,255,.08)">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-blue-100">Seguro de desgravamen <strong class="text-white">obligatorio</strong></p>
+          </div>
+          <div class="check-item" style="border-color:rgba(255,255,255,.08)">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-blue-100">Disponible en <strong class="text-white">todos los bancos</strong> del sistema</p>
+          </div>
+          <div class="check-item" style="border-color:rgba(255,255,255,.08)">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-blue-100">Aplica en <strong class="text-white">cualquier ciudad</strong> de Bolivia</p>
+          </div>
+        </div>
+
+        <div class="px-5 pb-6">
+          <a href="index.html" class="btn-gold w-full justify-center" style="border-radius:12px">
+            <i data-lucide="calculator" class="w-4 h-4"></i> Simular Nivel II
+          </a>
+        </div>
+      </div>
+
+
+      <!-- ─── Plan 3: Nivel III ─── -->
+      <div class="plan-card fade-up d3" style="background:white;border:2px solid #E5EDF8">
+        <!-- Header -->
+        <div class="p-7 pb-5" style="background:linear-gradient(135deg,#F0FDF4 0%,#DCFCE7 100%)">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:#15803D">
+              <i data-lucide="building-2" class="w-5 h-5 text-white"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-green-700">Nivel III</p>
+              <p class="font-display text-lg font-semibold text-navy-900">Vivienda Superior</p>
+            </div>
+          </div>
+          <div class="mb-3">
+            <p class="text-slate-500 text-xs mb-1">Tasa Máxima Anual</p>
+            <div class="font-mono-num text-5xl font-bold text-navy-900">7.5<span class="text-2xl">%</span></div>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="badge-green"><i data-lucide="lock" class="w-3 h-3"></i> Tasa Fija</span>
+            <span class="badge-gold">Tope ASFI</span>
+          </div>
+        </div>
+
+        <!-- UFV limit -->
+        <div class="mx-5 mt-5 rounded-2xl p-4 text-center" style="background:linear-gradient(135deg,#15803D,#166534)">
+          <p class="text-green-200 text-xs uppercase tracking-wide mb-1">Límite del Inmueble</p>
+          <p class="font-mono-num text-3xl font-bold text-white">460,000 <span class="text-lg text-green-300">UFV</span></p>
+          <p class="font-mono-num text-sm text-green-200 mt-1">≈ Bs. 1,096,962</p>
+        </div>
+
+        <!-- Features -->
+        <div class="p-5 space-y-0">
+          <div class="check-item">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-navy-900">Plazo hasta <strong>30 años</strong></p>
+          </div>
+          <div class="check-item">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-navy-900">Financiamiento hasta <strong>80% del valor</strong></p>
+          </div>
+          <div class="check-item">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-navy-900">Aplica para <strong>departamentos y casas</strong></p>
+          </div>
+          <div class="check-item">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-navy-900">Construido y en planos (<strong>crédito puente</strong>)</p>
+          </div>
+          <div class="check-item">
+            <div class="check-icon"><i data-lucide="check" class="w-3 h-3 text-green-700"></i></div>
+            <p class="text-sm text-navy-900">En <strong>BOB o UFV</strong></p>
+          </div>
+        </div>
+
+        <div class="px-5 pb-6">
+          <a href="index.html" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white transition-all">
+            <i data-lucide="calculator" class="w-4 h-4"></i> Simular Nivel III
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /plans grid -->
+  </div>
+</section>
+
+
+<!-- ══════════════════════ COMPARACIÓN VIS vs NORMAL ══════════════════════ -->
+<section class="py-14 sm:py-20 max-w-5xl mx-auto px-4 sm:px-6">
+  <div class="text-center mb-10">
+    <span class="badge-gold uppercase">Comparativa</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-3">VIS vs Crédito Hipotecario Normal</h2>
+    <p class="text-slate-500 mt-2">¿Cuánto ahorras realmente eligiendo el programa VIS?</p>
+  </div>
+
+  <div class="card overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="cmp-tbl">
+        <thead>
+          <tr style="background:#F8FAFF">
+            <th style="color:#4B6A9B;border-bottom:2px solid #E5EDF8">Característica</th>
+            <th style="color:#0A1F42;border-bottom:2px solid #E5EDF8;text-align:center">
+              <div class="flex items-center justify-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-yellow-400"></span> Crédito VIS
+              </div>
+            </th>
+            <th style="color:#6B7280;border-bottom:2px solid #E5EDF8;text-align:center">
+              <div class="flex items-center justify-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-slate-400"></span> Crédito Normal
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-medium text-navy-900">Tasa de interés</td>
+            <td class="text-center"><span class="badge-green font-mono-num">5.5% – 7.5%</span></td>
+            <td class="text-center text-slate-500 font-mono-num">9% – 14%</td>
+          </tr>
+          <tr>
+            <td class="font-medium text-navy-900">Tipo de tasa</td>
+            <td class="text-center"><span class="badge-green"><i data-lucide="lock" class="w-3 h-3"></i> Fija por ley</span></td>
+            <td class="text-center text-slate-500">Variable (TRE + spread)</td>
+          </tr>
+          <tr>
+            <td class="font-medium text-navy-900">Plazo máximo</td>
+            <td class="text-center text-navy-900 font-semibold">30 años</td>
+            <td class="text-center text-slate-500">15 – 25 años</td>
+          </tr>
+          <tr>
+            <td class="font-medium text-navy-900">Penalidad prepago</td>
+            <td class="text-center"><span class="badge-green">Sin penalidad</span></td>
+            <td class="text-center text-slate-500">Hasta 3% del saldo</td>
+          </tr>
+          <tr>
+            <td class="font-medium text-navy-900">Cuota estimada (Bs. 500k, 20 años)</td>
+            <td class="text-center"><strong class="font-mono-num text-green-700">Bs. 3,874</strong></td>
+            <td class="text-center font-mono-num text-slate-500">Bs. 4,495 – Bs. 5,843</td>
+          </tr>
+          <tr>
+            <td class="font-medium text-navy-900">Ahorro en intereses totales</td>
+            <td class="text-center"><span class="badge-green">Hasta Bs. 240,000</span></td>
+            <td class="text-center text-slate-400">—</td>
+          </tr>
+          <tr>
+            <td class="font-medium text-navy-900">Regulado por ASFI</td>
+            <td class="text-center"><span class="badge-green"><i data-lucide="check" class="w-3 h-3"></i> Sí</span></td>
+            <td class="text-center text-slate-500">Parcialmente</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="p-4 text-center" style="background:#F0FDF4;border-top:2px solid #BBF7D0">
+      <p class="text-green-700 text-sm font-semibold">💡 Un crédito VIS Nivel II a 20 años puede ahorrarte hasta <strong>Bs. 240,000</strong> comparado con un crédito hipotecario a tasa de mercado.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════ CTA ══════════════════════ -->
+<section class="hero-bg py-16 text-center text-white">
+  <div class="max-w-2xl mx-auto px-4">
+    <div class="w-16 h-16 rounded-2xl gold-bg mx-auto mb-6 flex items-center justify-center">
+      <i data-lucide="home" class="w-8 h-8 text-white"></i>
+    </div>
+    <h2 class="font-display text-4xl font-bold mb-4">Simula tu crédito VIS ahora</h2>
+    <p class="text-blue-200 mb-8">Ingresa el valor de tu inmueble, selecciona el nivel que te corresponde y ve exactamente cuánto pagarás mes a mes.</p>
+    <div class="flex flex-wrap gap-3 justify-center">
+      <a href="index.html" class="btn-gold" style="padding:16px 36px;font-size:16px">
+        <i data-lucide="calculator" class="w-5 h-5"></i> Ir a la Calculadora
+      </a>
+      <a href="requisitos.html" class="btn-outline-white" style="padding:16px 36px;font-size:16px">
+        <i data-lucide="file-text" class="w-5 h-5"></i> Ver Requisitos
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer class="hero-bg border-t border-white/10 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <a href="index.html" class="font-display text-xl text-white font-semibold">Simulador<span class="text-yellow-300">de</span>Créditos</a>
+    <div class="flex gap-5 text-sm">
+      <a href="index.html"           class="text-blue-300 hover:text-white transition-colors">Calculadora</a>
+      <a href="tre.html"             class="text-blue-300 hover:text-white transition-colors">TRE</a>
+      <a href="vivienda-social.html" class="text-blue-300 hover:text-white transition-colors">Crédito VIS</a>
+      <a href="requisitos.html"      class="text-blue-300 hover:text-white transition-colors">Requisitos</a>
+    </div>
+    <p class="text-blue-400 text-xs">© 2025 SimuladordeCreditos.com · Bolivia</p>
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+  function toggleMenu() {
+    const m = document.getElementById('mobileMenu');
+    const hidden = m.classList.toggle('hidden');
+    m.style.display = hidden ? 'none' : 'flex';
+  }
+
+  const UFV_VALUE = 2.3847;
+  const tiers = [
+    { max: 255000, tasa: '5.5%', nivel: 'Nivel 1 · Tasa máx. 5.5%' },
+    { max: 380000, tasa: '6.5%', nivel: 'Nivel 2 · Tasa máx. 6.5%' },
+    { max: 460000, tasa: '7.5%', nivel: 'Nivel 3 · Tasa máx. 7.5%' },
+    { max: Infinity, tasa: '—', nivel: '⚠️ Supera el límite VIS (460,000 UFV)' },
+  ];
+
+  function convertUFV() {
+    const ufv = +document.getElementById('ufvInput').value || 0;
+    const bs  = ufv * UFV_VALUE;
+    document.getElementById('ufvResult').textContent =
+      'Bs. ' + bs.toLocaleString('es-BO', { maximumFractionDigits: 0 });
+    const tier = tiers.find(t => ufv <= t.max);
+    const tierEl = document.getElementById('ufvTier');
+    tierEl.textContent = tier.nivel;
+    tierEl.style.color = tier.max === Infinity ? '#F87171' : '#93C5FD';
+  }
+
+  function setUFV(val) {
+    document.getElementById('ufvInput').value = val;
+    convertUFV();
+  }
+
+  convertUFV();
+</script>
+</body>
+</html>
