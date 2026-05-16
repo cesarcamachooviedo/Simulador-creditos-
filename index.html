@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simulador de Créditos Bolivia | SimuladordeCreditos.com</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">  <script>
     tailwind.config = {
       theme: {
@@ -148,35 +149,43 @@
 <!-- ════════════════════════════════════════════
      HEADER
 ════════════════════════════════════════════ -->
-<header class="hero-bg text-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+<nav class="hero-bg sticky top-0 z-50 shadow-2xl">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-20">
+      <a href="index.html" class="flex items-center gap-3 flex-shrink-0">
+        <div class="w-10 h-10 rounded-xl gold-bg flex items-center justify-center shadow-lg">
+          <i data-lucide="landmark" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <h1 class="font-display text-2xl text-white font-semibold leading-none">
+            Simulador<span class="text-yellow-300">de</span>Créditos
+          </h1>
+          <p class="text-blue-300 text-[10px] tracking-widest uppercase font-light mt-1">Bolivia · Sistema Francés</p>
+        </div>
+      </a>
 
-    <div class="flex items-center gap-3">
-      <div class="w-11 h-11 rounded-xl gold-bg flex items-center justify-center shadow-lg flex-shrink-0">
-        <!-- coin icon -->
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.8"/>
-          <path d="M12 7v1m0 8v1M9.5 9.5C9.5 8.67 10.67 8 12 8s2.5.67 2.5 1.5S13.33 11 12 11s-2.5.67-2.5 1.5S10.67 14 12 14s2.5.67 2.5 1.5" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
+      <div class="hidden md:flex items-center gap-2">
+        <a href="index.html" class="px-4 py-2 text-sm font-medium text-yellow-400 bg-white/10 rounded-lg">Calculadora</a>
+        <a href="tre.html" class="px-4 py-2 text-sm font-medium text-blue-100 hover:text-white hover:bg-white/5 rounded-lg transition-all">¿Qué es la TRE?</a>
+        <a href="vivienda-social.html" class="px-4 py-2 text-sm font-medium text-blue-100 hover:text-white hover:bg-white/5 rounded-lg transition-all">Vivienda Social</a>
+        <a href="requisitos.html" class="px-4 py-2 text-sm font-medium text-blue-100 hover:text-white hover:bg-white/5 rounded-lg transition-all">Requisitos</a>
       </div>
-      <div>
-        <h1 class="font-display text-2xl sm:text-3xl font-semibold tracking-tight leading-none">
-          Simulador<span class="text-yellow-300">de</span>Créditos
-        </h1>
-        <p class="text-blue-300 text-xs tracking-widest uppercase font-light mt-0.5">Bolivia · Sistema Francés · Norma ASFI</p>
+
+      <div class="md:hidden">
+        <button onclick="toggleMenu()" class="p-2 rounded-xl text-white hover:bg-white/10 transition-colors">
+          <i data-lucide="menu" class="w-6 h-6" id="menuIcon"></i>
+        </button>
       </div>
     </div>
-
-    <div class="flex items-center gap-3 flex-wrap">
-      <div class="tre-pill" title="Tasa de Referencia – Banco Central de Bolivia">
-        <div class="tre-dot"></div>
-        TRE Vigente:&nbsp;<strong id="hdrTRE">2.95</strong>%
-      </div>
-      <span class="text-blue-300 text-xs hidden md:block">Bs. · US$ · UFV</span>
-    </div>
-
   </div>
-</header>
+
+  <div id="mobileMenu" class="hidden flex-col bg-navy-950 border-t border-white/10 p-4 space-y-2 md:hidden">
+    <a href="index.html" class="block p-3 text-yellow-400 bg-white/5 rounded-xl font-medium">🧮 Calculadora</a>
+    <a href="tre.html" class="block p-3 text-white rounded-xl font-medium">📈 ¿Qué es la TRE?</a>
+    <a href="vivienda-social.html" class="block p-3 text-white rounded-xl font-medium">🏠 Vivienda Social</a>
+    <a href="requisitos.html" class="block p-3 text-white rounded-xl font-medium">📋 Requisitos</a>
+  </div>
+</nav>
 
 
 <!-- ════════════════════════════════════════════
@@ -1207,6 +1216,28 @@ function fmtCompact(n, moneda = 'BOB') {
 function fmtFecha(date) {
   return date.toLocaleDateString('es-BO', { day:'2-digit', month:'2-digit', year:'numeric' });
 }
+  // Estas líneas deben ir al final de tu bloque de scripts actual
+function toggleMenu() {
+  const m = document.getElementById('mobileMenu');
+  const icon = document.getElementById('menuIcon');
+  const isHidden = m.classList.contains('hidden');
+  
+  if (isHidden) {
+    m.classList.remove('hidden');
+    m.classList.add('flex');
+    icon.setAttribute('data-lucide', 'x');
+  } else {
+    m.classList.add('hidden');
+    m.classList.remove('flex');
+    icon.setAttribute('data-lucide', 'menu');
+  }
+  lucide.createIcons();
+}
+
+// Inicializar iconos al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+});
 </script>
 </body>
 </html>
