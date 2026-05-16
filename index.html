@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simulador de Créditos Bolivia | SimuladordeCreditos.com</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">  <script>
     tailwind.config = {
       theme: {
         extend: {
@@ -27,7 +26,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Outfit', system-ui, sans-serif; background: #EEF2FA; color: #0A1F42; }
     .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
-
+    .font-amount  { font-family: 'DM Mono', 'Courier New', monospace; font-weight: 500; letter-spacing: -0.02em; }
     /* ── Gradients ── */
     .hero-bg  { background: linear-gradient(135deg, #060F1E 0%, #0A1F42 45%, #0D2860 100%); }
     .gold-bg  { background: linear-gradient(135deg, #D4A843 0%, #A87420 100%); }
@@ -442,25 +441,25 @@
 
         <div class="sum-card hero-bg text-white fade-up d1">
           <p class="text-blue-300 text-xs uppercase tracking-wider mb-1">Cuota Cap+Int</p>
-          <p class="font-display text-2xl font-semibold" id="sC">—</p>
+          <p class="font-amount text-2xl" id="sC">—</p>
           <p class="text-blue-400 text-xs mt-1">Sistema Francés</p>
         </div>
 
         <div class="sum-card gold-bg text-white fade-up d2">
           <p class="text-yellow-100 text-xs uppercase tracking-wider mb-1">Cuota Total</p>
-          <p class="font-display text-2xl font-semibold" id="sCT">—</p>
+          <p class="font-amount text-2xl" id="sCT">—</p>
           <p class="text-yellow-100 text-xs mt-1">Incluye seguros</p>
         </div>
 
         <div class="sum-card card-bg border border-gray-100 fade-up d3">
           <p class="text-blue-400 text-xs uppercase tracking-wider mb-1">Total Intereses</p>
-          <p class="font-display text-2xl font-semibold text-navy-900" id="sI">—</p>
+          <p class="font-amount text-2xl text-navy-900" id="sI">—</p>
           <p class="text-blue-400 text-xs mt-1" id="sIPct">% del capital</p>
         </div>
 
         <div class="sum-card card-bg border border-gray-100 fade-up d4">
           <p class="text-blue-400 text-xs uppercase tracking-wider mb-1">Total a Pagar</p>
-          <p class="font-display text-2xl font-semibold text-navy-900" id="sTP">—</p>
+          <p class="font-amount text-2xl text-navy-900" id="sTP">—</p>
           <p class="text-blue-400 text-xs mt-1">Capital+Int+Seg</p>
         </div>
 
