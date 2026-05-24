@@ -1,0 +1,8 @@
+#:schema https://api.cloudflare.com/schemas/v2/build-config.json
+
+[build]
+command = "npm run build"
+output_dir = "dist"
+
+[build.environment]
+NODE_VERSION = "20.x"
