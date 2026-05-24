@@ -426,127 +426,136 @@ import Layout from '../layouts/Layout.astro';
   </section>
 </Layout>
 
-<!-- LOGICA JAVASCRIPT RE-ADAPTADA AL ESTÁNDAR SEGURO DE ASTRO -->
+
+<!-- LOGICA JAVASCRIPT RE-ADAPTADA Y OPTIMIZADA PARA ASTRO -->
 <script>
   import { createIcons, Landmark, Calculator, Menu, Activity, CalendarClock, ShieldCheck, Check, ExternalLink, AlertTriangle, Lock, FileText, Plus } from 'lucide';
 
-  // Inicializar Lucide Icons
-  createIcons({
-    icons: { Landmark, Calculator, Menu, Activity, CalendarClock, ShieldCheck, Check, ExternalLink, AlertTriangle, Lock, FileText, Plus }
-  });
+  // Ejecutar todo el código SOLO cuando el DOM esté completamente cargado y listo
+  document.addEventListener('DOMContentLoaded', () => {
+    
+    // Inicializar Lucide Icons
+    createIcons({
+      icons: { Landmark, Calculator, Menu, Activity, CalendarClock, ShieldCheck, Check, ExternalLink, AlertTriangle, Lock, FileText, Plus }
+    });
 
-  /* ─── PMT Helper ─── */
-  function pmt(pv: number, r: number, n: number) {
-    if (r === 0) return pv / n;
-    return (pv * r) / (1 - Math.pow(1 + r, -n));
-  }
-
-  const BASE_TRE = 2.95;
-
-  /* ─── Cálculo de Impacto ─── */
-  function calcImpacto() {
-    const simMonto = document.getElementById('simMonto') as HTMLInputElement;
-    const simPlazo = document.getElementById('simPlazo') as HTMLInputElement;
-    const simSpread = document.getElementById('simSpread') as HTMLInputElement;
-    const simTRE = document.getElementById('simTRE') as HTMLInputElement;
-
-    const monto = +simMonto?.value || 500000;
-    const plazo = +simPlazo?.value || 20;
-    const spread = +simSpread?.value || 5;
-    const tre = +simTRE?.value || 2.95;
-
-    const tna = tre + spread;
-    const r = tna / 100 / 12;
-    const n = plazo * 12;
-    const cuota = pmt(monto, r, n);
-    const totalI = cuota * n - monto;
-
-    const tnaBase = BASE_TRE + spread;
-    const rBase = tnaBase / 100 / 12;
-    const cuotaBase = pmt(monto, rBase, n);
-    const diff = cuota - cuotaBase;
-
-    const fmt = (v: number) => 'Bs. ' + v.toLocaleString('es-BO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-
-    const rTasa = document.getElementById('rTasa');
-    const rCuota = document.getElementById('rCuota');
-    const rInt = document.getElementById('rInt');
-    const rDiff = document.getElementById('rDiff');
-    const rDiffCard = document.getElementById('rDiffCard');
-
-    if (rTasa) rTasa.textContent = tna.toFixed(2) + '%';
-    if (rCuota) rCuota.textContent = fmt(cuota);
-    if (rInt) rInt.textContent = fmt(totalI);
-
-    if (rDiff && rDiffCard) {
-      const sign = diff >= 0 ? '+' : '';
-      rDiff.textContent = sign + fmt(diff);
-      rDiff.style.color = diff > 0 ? '#EF4444' : diff < 0 ? '#22C55E' : '#0A1F42';
-      rDiffCard.style.backgroundColor = diff > 0 ? '#FEF2F2' : diff < 0 ? '#F0FDF4' : '#F8FAFC';
+    /* ─── PMT Helper ─── */
+    function pmt(pv: number, r: number, n: number) {
+      if (r === 0) return pv / n;
+      return (pv * r) / (1 - Math.pow(1 + r, -n));
     }
-  }
 
-  // Escuchadores de eventos para los inputs del simulador
-  ['simMonto', 'simPlazo', 'simSpread'].forEach(id => {
-    document.getElementById(id)?.addEventListener('input', calcImpacto);
-  });
+    const BASE_TRE = 2.95;
 
-  document.getElementById('simTRE')?.addEventListener('input', (e) => {
-    const target = e.target as HTMLInputElement;
-    const treDisplay = document.getElementById('treDisplay');
-    if (treDisplay) treDisplay.textContent = parseFloat(target.value).toFixed(2) + '%';
+    /* ─── Cálculo de Impacto ─── */
+    function calcImpacto() {
+      const simMonto = document.getElementById('simMonto') as HTMLInputElement;
+      const simPlazo = document.getElementById('simPlazo') as HTMLInputElement;
+      const simSpread = document.getElementById('simSpread') as HTMLInputElement;
+      const simTRE = document.getElementById('simTRE') as HTMLInputElement;
+
+      // Si los elementos no existen en esta página, detenemos la ejecución para evitar errores
+      if (!simMonto || !simPlazo || !simSpread || !simTRE) return;
+
+      const monto = +simMonto.value || 500000;
+      const plazo = +simPlazo.value || 20;
+      const spread = +simSpread.value || 5;
+      const tre = +simTRE.value || 2.95;
+
+      const tna = tre + spread;
+      const r = tna / 100 / 12;
+      const n = plazo * 12;
+      const cuota = pmt(monto, r, n);
+      const totalI = cuota * n - monto;
+
+      const tnaBase = BASE_TRE + spread;
+      const rBase = tnaBase / 100 / 12;
+      const cuotaBase = pmt(monto, rBase, n);
+      const diff = cuota - cuotaBase;
+
+      const fmt = (v: number) => 'Bs. ' + v.toLocaleString('es-BO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+      const rTasa = document.getElementById('rTasa');
+      const rCuota = document.getElementById('rCuota');
+      const rInt = document.getElementById('rInt');
+      const rDiff = document.getElementById('rDiff');
+      const rDiffCard = document.getElementById('rDiffCard');
+
+      if (rTasa) rTasa.textContent = tna.toFixed(2) + '%';
+      if (rCuota) rCuota.textContent = fmt(cuota);
+      if (rInt) rInt.textContent = fmt(totalI);
+
+      if (rDiff && rDiffCard) {
+        const sign = diff >= 0 ? '+' : '';
+        rDiff.textContent = sign + fmt(diff);
+        rDiff.style.color = diff > 0 ? '#EF4444' : diff < 0 ? '#22C55E' : '#0A1F42';
+        rDiffCard.style.backgroundColor = diff > 0 ? '#FEF2F2' : diff < 0 ? '#F0FDF4' : '#F8FAFC';
+      }
+    }
+
+    // Escuchadores de eventos seguros para los inputs del simulador
+    ['simMonto', 'simPlazo', 'simSpread'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', calcImpacto);
+    });
+
+    document.getElementById('simTRE')?.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement;
+      const treDisplay = document.getElementById('treDisplay');
+      if (treDisplay) treDisplay.textContent = parseFloat(target.value).toFixed(2) + '%';
+      calcImpacto();
+    });
+
+    // Render inicial del simulador
     calcImpacto();
-  });
 
-  // Render inicial del simulador
-  calcImpacto();
+    /* ─── Renderizado y Lógica de FAQs ─── */
+    const faqs = [
+      { q: '¿Cada cuánto cambia la TRE?', a: 'El BCB publica la TRE mensualmente. Sin embargo, los bancos aplican el cambio en la siguiente cuota después de la publicación oficial.' },
+      { q: '¿La TRE aplica a créditos en dólares?', a: 'No. La TRE es exclusiva para créditos en Bolivianos (BOB) y UFV. Los créditos en dólares se rigen por tasas LIBOR/SOFR o tasas pactadas libremente.' },
+      { q: '¿El banco me avisa si mi cuota cambia?', a: 'No necesariamente. El contrato de crédito variable permite el ajuste automático. Por eso es fundamental que monitorees la TRE mensualmente en bcb.gob.bo.' },
+      { q: '¿Puedo cambiar a tasa fija después?', a: 'Depende de tu contrato. Algunos bancos ofrecen "switch" de tasa variable a fija, pero puede implicar una comisión o renegociación total del crédito.' },
+      { q: '¿La TRE puede bajar a cero o ser negativa?', a: 'Históricamente la TRE en Bolivia ha oscilado entre 1% y 5% anual. La regulación del BCB impide que llegue a cero ya que refleja el costo real del dinero en el mercado.' },
+    ];
 
-  /* ─── Renderizado y Lógica de FAQs ─── */
-  const faqs = [
-    { q: '¿Cada cuánto cambia la TRE?', a: 'El BCB publica la TRE mensualmente. Sin embargo, los bancos aplican el cambio en la siguiente cuota después de la publicación oficial.' },
-    { q: '¿La TRE aplica a créditos en dólares?', a: 'No. La TRE es exclusiva para créditos en Bolivianos (BOB) y UFV. Los créditos en dólares se rigen por tasas LIBOR/SOFR o tasas pactadas libremente.' },
-    { q: '¿El banco me avisa si mi cuota cambia?', a: 'No necesariamente. El contrato de crédito variable permite el ajuste automático. Por eso es fundamental que monitorees la TRE mensualmente en bcb.gob.bo.' },
-    { q: '¿Puedo cambiar a tasa fija después?', a: 'Depende de tu contrato. Algunos bancos ofrecen "switch" de tasa variable a fija, pero puede implicar una comisión o renegociación total del crédito.' },
-    { q: '¿La TRE puede bajar a cero o ser negativa?', a: 'Históricamente la TRE en Bolivia ha oscilado entre 1% y 5% anual. La regulación del BCB impide que llegue a cero ya que refleja el costo real del dinero en el mercado.' },
-  ];
-
-  const faqList = document.getElementById('faqList');
-  if (faqList) {
-    faqs.forEach((f, i) => {
-      const div = document.createElement('div');
-      div.className = 'card overflow-hidden';
-      div.innerHTML = `
-        <button data-index="${i}" class="faq-btn w-full flex items-center justify-between p-5 text-left">
-          <span class="font-semibold text-navy-900 pr-4 text-sm">${f.q}</span>
-          <i data-lucide="plus" class="w-4 h-4 text-yellow-600 flex-shrink-0 faq-icon" id="faqIcon${i}"></i>
-        </button>
-        <div class="faq-body px-5 pb-0 text-slate-500 text-sm leading-relaxed" id="faqBody${i}">${f.a}</div>`;
-      faqList.appendChild(div);
-    });
-
-    // Re-renderizar iconos inyectados dinámicamente
-    createIcons({ icons: { Plus } });
-
-    // Delegación de eventos para el colapsable
-    faqList.querySelectorAll('.faq-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const index = btn.getAttribute('data-index');
-        const body = document.getElementById(`faqBody${index}`);
-        const icon = document.getElementById(`faqIcon${index}`);
-        const open = body?.classList.contains('open');
-
-        document.querySelectorAll('.faq-body').forEach(b => {
-          b.classList.remove('open');
-          (b as HTMLElement).style.paddingBottom = '0';
-        });
-        document.querySelectorAll('.faq-icon').forEach(ic => ic.classList.remove('open'));
-
-        if (!open && body && icon) {
-          body.classList.add('open');
-          body.style.paddingBottom = '20px';
-          icon.classList.add('open');
-        }
+    const faqList = document.getElementById('faqList');
+    if (faqList) {
+      faqList.innerHTML = ''; // Limpiar por seguridad
+      faqs.forEach((f, i) => {
+        const div = document.createElement('div');
+        div.className = 'card overflow-hidden';
+        div.innerHTML = `
+          <button data-index="${i}" class="faq-btn w-full flex items-center justify-between p-5 text-left">
+            <span class="font-semibold text-navy-900 pr-4 text-sm">${f.q}</span>
+            <i data-lucide="plus" class="w-4 h-4 text-yellow-600 flex-shrink-0 faq-icon" id="faqIcon${i}"></i>
+          </button>
+          <div class="faq-body px-5 pb-0 text-slate-500 text-sm leading-relaxed" id="faqBody${i}">${f.a}</div>`;
+        faqList.appendChild(div);
       });
-    });
-  }
+
+      // Re-renderizar iconos inyectados dinámicamente
+      createIcons({ icons: { Plus } });
+
+      // Delegación de eventos para el colapsable
+      faqList.querySelectorAll('.faq-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const index = btn.getAttribute('data-index');
+          const body = document.getElementById(`faqBody${index}`);
+          const icon = document.getElementById(`faqIcon${index}`);
+          const open = body?.classList.contains('open');
+
+          document.querySelectorAll('.faq-body').forEach(b => {
+            b.classList.remove('open');
+            (b as HTMLElement).style.paddingBottom = '0';
+          });
+          document.querySelectorAll('.faq-icon').forEach(ic => ic.classList.remove('open'));
+
+          if (!open && body && icon) {
+            body.classList.add('open');
+            body.style.paddingBottom = '20px';
+            icon.classList.add('open');
+          }
+        });
+      });
+    }
+  });
 </script>
