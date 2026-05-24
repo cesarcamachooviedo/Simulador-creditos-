@@ -1,0 +1,264 @@
+---
+/**
+ * Header.astro
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Navegación unificada y sticky para todas las páginas del sitio.
+ *
+ * Notas de implementación:
+ *  · El elemento <strong id="hdrTRE"> es referenciado por el JS de la
+ *    calculadora (index.astro) para mostrar la TRE vigente desde DB_CONFIG.
+ *    No renombrar ese id.
+ *  · Astro.url.pathname determina el enlace activo en cada ruta.
+ *  · La lógica del menú hamburguesa vive en el <script> al final del archivo.
+ */
+
+const pathname = Astro.url.pathname;
+
+// Helper para detectar si una ruta está activa
+// Soporta rutas con y sin trailing slash
+const isActive = (href: string): boolean => {
+  if (href === '/') return pathname === '/' || pathname === '/index';
+  return pathname.startsWith(href);
+};
+---
+
+<nav
+  class="hero-bg sticky top-0 z-50"
+  style="box-shadow: 0 2px 20px rgba(0,0,0,.35);"
+  aria-label="Navegación principal"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- ── Logotipo ── -->
+      <a href="/" class="flex items-center gap-2.5 flex-shrink-0" aria-label="SimuladordeCreditos.com — Inicio">
+        <div class="w-9 h-9 rounded-xl gold-bg flex items-center justify-center shadow-lg">
+          <!-- Icono moneda / banco (SVG inline para no depender de Lucide en el header) -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.8"/>
+            <path
+              d="M12 7v1m0 8v1M9.5 9.5C9.5 8.67 10.67 8 12 8s2.5.67 2.5 1.5S13.33 11 12 11s-2.5.67-2.5 1.5S10.67 14 12 14s2.5.67 2.5 1.5"
+              stroke="white" stroke-width="1.6" stroke-linecap="round"
+            />
+          </svg>
+        </div>
+        <span class="font-display text-xl text-white font-semibold leading-none">
+          Simulador<span class="text-yellow-300">de</span>Créditos
+        </span>
+      </a>
+
+      <!-- ── Links de escritorio ── -->
+      <div class="hidden md:flex items-center gap-1" role="menubar">
+        <a
+          href="/"
+          class={`nav-link ${isActive('/') ? 'active' : ''}`}
+          role="menuitem"
+        >
+          Calculadora
+        </a>
+        <a
+          href="/tre"
+          class={`nav-link ${isActive('/tre') ? 'active' : ''}`}
+          role="menuitem"
+        >
+          ¿Qué es la TRE?
+        </a>
+        <a
+          href="/vivienda-social"
+          class={`nav-link ${isActive('/vivienda-social') ? 'active' : ''}`}
+          role="menuitem"
+        >
+          Crédito VIS
+        </a>
+        <a
+          href="/requisitos"
+          class={`nav-link ${isActive('/requisitos') ? 'active' : ''}`}
+          role="menuitem"
+        >
+          Requisitos
+        </a>
+      </div>
+
+      <!-- ── Área derecha: TRE pill + CTA + hamburger ── -->
+      <div class="flex items-center gap-3">
+
+        <!-- TRE Vigente — id referenciado por la calculadora JS -->
+        <div
+          class="tre-pill hidden sm:inline-flex"
+          title="Tasa de Referencia – Banco Central de Bolivia"
+        >
+          <div class="tre-dot" aria-hidden="true"></div>
+          TRE:&nbsp;<strong id="hdrTRE">2.95</strong>%
+        </div>
+
+        <!-- CTA: oculto solo en la home (ya están en la calculadora) -->
+        {!isActive('/') && (
+          <a
+            href="/"
+            class="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-white
+                   bg-yellow-500 hover:bg-yellow-400 transition-colors
+                   px-4 py-2 rounded-xl"
+            style="background: linear-gradient(135deg,#D4A843 0%,#A87420 100%);
+                   box-shadow: 0 3px 12px rgba(212,168,67,.40);"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/>
+            </svg>
+            Simular Crédito
+          </a>
+        )}
+
+        <!-- Botón hamburger (mobile) -->
+        <button
+          id="hamburger"
+          aria-controls="mobileMenu"
+          aria-expanded="false"
+          aria-label="Abrir menú de navegación"
+          class="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+        >
+          <!-- Ícono menú -->
+          <svg id="iconMenu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="6"  x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+          <!-- Ícono cerrar (oculto por defecto) -->
+          <svg id="iconClose" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="hidden">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+    </div><!-- /flex row -->
+  </div><!-- /max-w -->
+
+  <!-- ── Menú móvil desplegable ── -->
+  <div
+    id="mobileMenu"
+    role="menu"
+    aria-label="Menú móvil"
+    class="hidden md:hidden"
+    style="background: rgba(6,15,30,.97); border-top: 1px solid rgba(255,255,255,.08);"
+  >
+    <div class="flex flex-col gap-1 px-4 py-3">
+      <a
+        href="/"
+        role="menuitem"
+        class={`mobile-link ${isActive('/') ? 'mobile-link-active' : ''}`}
+      >
+        🧮 Calculadora de Créditos
+      </a>
+      <a
+        href="/tre"
+        role="menuitem"
+        class={`mobile-link ${isActive('/tre') ? 'mobile-link-active' : ''}`}
+      >
+        📈 ¿Qué es la TRE?
+      </a>
+      <a
+        href="/vivienda-social"
+        role="menuitem"
+        class={`mobile-link ${isActive('/vivienda-social') ? 'mobile-link-active' : ''}`}
+      >
+        🏠 Crédito VIS
+      </a>
+      <a
+        href="/requisitos"
+        role="menuitem"
+        class={`mobile-link ${isActive('/requisitos') ? 'mobile-link-active' : ''}`}
+      >
+        📋 Requisitos
+      </a>
+      <!-- TRE en mobile -->
+      <div class="tre-pill mt-2 self-start">
+        <div class="tre-dot"></div>
+        TRE Vigente:&nbsp;<strong id="hdrTREMobile">2.95</strong>%
+      </div>
+    </div>
+  </div>
+
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     ESTILOS SCOPED del componente Header
+════════════════════════════════════════════════════════════════════════════ -->
+<style>
+  .mobile-link {
+    color: rgba(255,255,255,.80);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all .2s;
+    display: block;
+  }
+  .mobile-link:hover,
+  .mobile-link-active {
+    background: rgba(212,168,67,.15);
+    color: #D4A843;
+  }
+</style>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     LÓGICA DEL MENÚ HAMBURGUESA
+     Se usa is:inline para disponibilidad inmediata sin bundling de Astro.
+     Las funciones NO necesitan ser globales; el event listener es suficiente.
+════════════════════════════════════════════════════════════════════════════ -->
+<script is:inline>
+  (function () {
+    const hamburger  = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const iconMenu   = document.getElementById('iconMenu');
+    const iconClose  = document.getElementById('iconClose');
+
+    if (!hamburger || !mobileMenu) return;
+
+    /**
+     * toggleMenu — abre/cierra el menú móvil
+     * Alterna la clase 'hidden' de Tailwind y actualiza aria-expanded
+     */
+    function toggleMenu() {
+      const isOpen = !mobileMenu.classList.contains('hidden');
+
+      if (isOpen) {
+        // Cerrar
+        mobileMenu.classList.add('hidden');
+        hamburger.setAttribute('aria-expanded', 'false');
+        iconMenu.classList.remove('hidden');
+        iconClose.classList.add('hidden');
+      } else {
+        // Abrir
+        mobileMenu.classList.remove('hidden');
+        hamburger.setAttribute('aria-expanded', 'true');
+        iconMenu.classList.add('hidden');
+        iconClose.classList.remove('hidden');
+      }
+    }
+
+    hamburger.addEventListener('click', toggleMenu);
+
+    // Cerrar al hacer click fuera del menú
+    document.addEventListener('click', function (e) {
+      if (
+        !mobileMenu.classList.contains('hidden') &&
+        !mobileMenu.contains(e.target) &&
+        !hamburger.contains(e.target)
+      ) {
+        mobileMenu.classList.add('hidden');
+        hamburger.setAttribute('aria-expanded', 'false');
+        iconMenu.classList.remove('hidden');
+        iconClose.classList.add('hidden');
+      }
+    });
+
+    // Cerrar al redimensionar a escritorio
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 768) {
+        mobileMenu.classList.add('hidden');
+        hamburger.setAttribute('aria-expanded', 'false');
+        iconMenu.classList.remove('hidden');
+        iconClose.classList.add('hidden');
+      }
+    });
+  })();
+</script>
