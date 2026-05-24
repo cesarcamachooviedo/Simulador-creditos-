@@ -1,0 +1,72 @@
+---
+/**
+ * Footer.astro
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Pie de página compartido por todas las páginas del sitio.
+ *
+ * Contiene:
+ *  · Descripción del producto y aviso de resultados referenciales
+ *  · Normativa aplicada (ASFI, Ley 393, TRE BCB, Sistema Francés)
+ *  · Aviso legal para consultas con entidades financieras
+ *  · Copyright © 2026 · versión del sistema
+ *  · Links de navegación secundaria
+ */
+---
+
+<footer class="hero-bg text-white mt-14 py-9">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+    <!-- ── Tres columnas informativas ── -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
+
+      <!-- Columna 1: Descripción -->
+      <div>
+        <a href="/" class="font-display text-xl mb-2 block hover:text-yellow-300 transition-colors">
+          SimuladordeCreditos.com
+        </a>
+        <p class="text-blue-300 text-xs leading-relaxed">
+          Herramienta de simulación financiera para el mercado boliviano.
+          Los resultados son <em>referenciales</em> y no constituyen oferta de crédito.
+        </p>
+      </div>
+
+      <!-- Columna 2: Normativa aplicada -->
+      <div>
+        <p class="font-semibold text-yellow-300 mb-2">Normativa Aplicada</p>
+        <ul class="text-blue-300 text-xs space-y-1">
+          <li>· Sistema Francés de Amortización</li>
+          <li>· Circular ASFI/DN/CR-7539/2022</li>
+          <li>· Ley 393 de Servicios Financieros</li>
+          <li>· TRE — Banco Central de Bolivia</li>
+        </ul>
+      </div>
+
+      <!-- Columna 3: Aviso legal -->
+      <div>
+        <p class="font-semibold text-yellow-300 mb-2">Aviso Legal</p>
+        <p class="text-blue-300 text-xs leading-relaxed">
+          Consulte con su entidad financiera para condiciones definitivas.
+          Tasas, seguros y plazos pueden variar según banco e historial crediticio.
+        </p>
+
+        <!-- Links de navegación secundaria -->
+        <nav aria-label="Navegación del footer" class="mt-4 flex flex-wrap gap-x-4 gap-y-1">
+          <a href="/"                class="text-blue-400 hover:text-white transition-colors text-xs">Calculadora</a>
+          <a href="/tre"             class="text-blue-400 hover:text-white transition-colors text-xs">TRE</a>
+          <a href="/vivienda-social" class="text-blue-400 hover:text-white transition-colors text-xs">Crédito VIS</a>
+          <a href="/requisitos"      class="text-blue-400 hover:text-white transition-colors text-xs">Requisitos</a>
+        </nav>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- ── Línea divisoria + copyright ── -->
+    <div
+      class="border-t border-white border-opacity-10 mt-7 pt-4
+             text-center text-blue-400 text-xs"
+    >
+      © 2026 SimuladordeCreditos.com · Bolivia · v1.0.0 · Sistema Francés
+    </div>
+
+  </div>
+</footer>
