@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="¿Qué es la TRE? | SimuladordeCreditos.com">
-  <style is:global>
+  <style>
     .font-mono-num { font-family: 'DM Mono', 'Courier New', monospace; font-weight: 500; }
     .hero-bg { background: linear-gradient(135deg, #060F1E 0%, #0A1F42 45%, #0D2860 100%); }
     .gold-bg { background: linear-gradient(135deg, #D4A843 0%, #A87420 100%); }
@@ -358,7 +358,7 @@ import Layout from '../layouts/Layout.astro';
         <div class="bg-red-50 p-6 space-y-4">
           <div class="flex gap-3">
             <i data-lucide="circle-dot" class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"></i>
-            <p class="text-slate-700 text-sm leading-relaxed">Si la TRE <strong>sube 2 puntos</strong> (de 2.95% a 4.95%), en un crédito de Bs. 500,000 a 20 años tu cuota puede incrementarse en <strong class="text-red-600">más de Bs. 500 mensuales</strong>.</p>
+            <p class="text-slate-700 text-sm leading-relaxed">Si la TRE <strong>sube 2 puntos</strong> (de 2.95% a 4.95%), en un crédito de Bs. 500,000 a 20 years tu cuota puede incrementarse en <strong class="text-red-600">más de Bs. 500 mensuales</strong>.</p>
           </div>
           <div class="flex gap-3">
             <i data-lucide="circle-dot" class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"></i>
@@ -412,11 +412,9 @@ import Layout from '../layouts/Layout.astro';
       <span class="badge-gold uppercase">Preguntas Frecuentes</span>
       <h2 class="font-display text-3xl font-semibold mt-3">Lo que más nos preguntan</h2>
     </div>
-    <div class="space-y-3" id="faqList">
-      </div>
+    <div class="space-y-3" id="faqList"></div>
   </section>
 </Layout>
-
 
 <script>
   import { createIcons, Landmark, Calculator, Menu, Activity, CalendarClock, ShieldCheck, Check, ExternalLink, AlertTriangle, Lock, FileText, Plus, CircleDot } from 'lucide';
@@ -513,31 +511,11 @@ import Layout from '../layouts/Layout.astro';
             <span class="font-semibold text-navy-900 pr-4 text-sm">${f.q}</span>
             <i data-lucide="plus" class="w-4 h-4 text-yellow-600 flex-shrink-0 faq-icon" id="faqIcon${i}"></i>
           </button>
-          <div class="faq-body px-5 pb-0 text-slate-500 text-sm leading-relaxed" id="faqBody${i}">${f.a}</div>`;
+          <div class="faq-body px-5 pb-5 text-slate-500 text-xs sm:text-sm leading-relaxed" id="faqBody${i}">
+            ${f.a}
+          </div>
+        `;
         faqList.appendChild(div);
-      });
-
-      createIcons({ icons: { Plus } });
-
-      faqList.querySelectorAll('.faq-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const index = btn.getAttribute('data-index');
-          const body = document.getElementById(`faqBody${index}`);
-          const icon = document.getElementById(`faqIcon${index}`);
-          const open = body?.classList.contains('open');
-
-          document.querySelectorAll('.faq-body').forEach(b => {
-            b.classList.remove('open');
-            (b as HTMLElement).style.paddingBottom = '0';
-          });
-          document.querySelectorAll('.faq-icon').forEach(ic => ic.classList.remove('open'));
-
-          if (!open && body && icon) {
-            body.classList.add('open');
-            body.style.paddingBottom = '20px';
-            icon.classList.add('open');
-          }
-        });
       });
     }
   });
