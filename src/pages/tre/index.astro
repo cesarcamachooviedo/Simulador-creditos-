@@ -3,7 +3,6 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="¿Qué es la TRE? | SimuladordeCreditos.com">
-  <!-- CSS específico de la página (estilos personalizados que venían en tu HTML) -->
   <style is:global>
     .font-mono-num { font-family: 'DM Mono', 'Courier New', monospace; font-weight: 500; }
     .hero-bg { background: linear-gradient(135deg, #060F1E 0%, #0A1F42 45%, #0D2860 100%); }
@@ -24,10 +23,10 @@ import Layout from '../layouts/Layout.astro';
     .inp:focus { border-color: #D4A843; background: #fff; box-shadow: 0 0 0 3px rgba(212,168,67,.15); }
     input[type=range] { accent-color: #D4A843; width: 100%; }
     
-    /* CORREGIDO: Se cambiaron las palabras clave flotantes por propiedades CSS nativas válidas */
-    .btn-gold { background: linear-gradient(135deg, #D4A843 0%, #A87420 100%); color: #fff; font-weight: 600; padding: 13px 28px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: .02em; transition: all .2s; box-shadow: 0 4px 16px rgba(212,168,67,.38); display: inline-flex; align-items: center; justify-content: center; }
+    /* MODIFICADO: Estilos limpios sin propiedades inválidas de alineación para evitar errores de PostCSS */
+    .btn-gold { background: linear-gradient(135deg, #D4A843 0%, #A87420 100%); color: #fff; font-weight: 600; padding: 13px 28px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: .02em; transition: all .2s; box-shadow: 0 4px 16px rgba(212,168,67,.38); }
     .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 7px 22px rgba(212,168,67,.50); }
-    .btn-outline { background: transparent; color: #0A1F42; font-weight: 600; padding: 13px 28px; border-radius: 12px; border: 2px solid #D1DCF0; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: .02em; transition: all .2s; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-outline { background: transparent; color: #0A1F42; font-weight: 600; padding: 13px 28px; border-radius: 12px; border: 2px solid #D1DCF0; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: .02em; transition: all .2s; }
     .btn-outline:hover { border-color: #D4A843; color: #A87420; }
     
     .alert-ring { animation: ring-pulse 2.4s ease-in-out infinite; }
@@ -41,7 +40,6 @@ import Layout from '../layouts/Layout.astro';
     @keyframes livepulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,.5) } 70% { box-shadow: 0 0 0 8px rgba(34,197,94,0) } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0) } }
   </style>
 
-  <!-- HERO -->
   <section class="hero-bg text-white overflow-hidden relative">
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
       <div style="position:absolute;top:-60px;right:-60px;width:380px;height:380px; border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.10) 0%,transparent 70%)"></div>
@@ -60,14 +58,13 @@ import Layout from '../layouts/Layout.astro';
           La <strong class="text-white">Tasa de Referencia (TRE)</strong> del Banco Central de Bolivia es el termómetro del sistema financiero. Entender cómo funciona puede ahorrarte miles de bolivianos en tu crédito.
         </p>
         <div class="flex flex-wrap gap-3">
-          <a href="#formula" class="btn-gold" style="width:auto;padding:13px 26px">Ver la Fórmula</a>
-          <a href="#simulador" class="btn-outline" style="border-color:rgba(255,255,255,.25);color:white;width:auto;padding:13px 26px">Simular Impacto</a>
+          <a href="#formula" class="btn-gold inline-flex items-center justify-center" style="width:auto;padding:13px 26px">Ver la Fórmula</a>
+          <a href="#simulador" class="btn-outline inline-flex items-center justify-center" style="border-color:rgba(255,255,255,.25);color:white;width:auto;padding:13px 26px">Simular Impacto</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CONCEPT -->
   <section class="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-12">
       <span class="badge-gold uppercase">Concepto</span>
@@ -111,7 +108,6 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- FÓRMULA -->
   <section id="formula" class="py-14 sm:py-20" style="background:linear-gradient(135deg,#0A1F42 0%,#0D2860 100%)">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-12">
@@ -167,7 +163,6 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- CALCULOS BCB Y GRÁFICO -->
   <section class="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       <div>
@@ -221,7 +216,6 @@ import Layout from '../layouts/Layout.astro';
         </div>
       </div>
 
-      <!-- HISTORIAL GRÁFICO -->
       <div class="card p-6">
         <div class="flex items-center justify-between mb-6">
           <div>
@@ -291,7 +285,6 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- INTERACTIVE SIMULATOR -->
   <section id="simulador" class="py-14 sm:py-20" style="background:#F0F4FB">
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-10">
@@ -352,7 +345,6 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- ALERTAS -->
   <section class="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6">
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
       <div class="lg:col-span-3 rounded-2xl overflow-hidden" style="border:2px solid #EF4444">
@@ -417,28 +409,22 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- FAQ -->
   <section class="py-14 sm:py-16 max-w-3xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-10">
       <span class="badge-gold uppercase">Preguntas Frecuentes</span>
       <h2 class="font-display text-3xl font-semibold mt-3">Lo que más nos preguntan</h2>
     </div>
     <div class="space-y-3" id="faqList">
-      <!-- Se inyectarán dinámicamente mediante JS -->
-    </div>
+      </div>
   </section>
 </Layout>
 
 
-<!-- LOGICA JAVASCRIPT RE-ADAPTADA Y OPTIMIZADA PARA ASTRO -->
 <script>
-  // Importamos "CircleDot" de lucide para evitar fallos de resolución en la compilación
   import { createIcons, Landmark, Calculator, Menu, Activity, CalendarClock, ShieldCheck, Check, ExternalLink, AlertTriangle, Lock, FileText, Plus, CircleDot } from 'lucide';
 
-  // Ejecutar todo el código SOLO cuando el DOM esté completamente cargado y listo
   document.addEventListener('DOMContentLoaded', () => {
     
-    // Inicializamos Lucide incluyendo la referencia a CircleDot
     createIcons({
       icons: { Landmark, Calculator, Menu, Activity, CalendarClock, ShieldCheck, Check, ExternalLink, AlertTriangle, Lock, FileText, Plus, CircleDot }
     });
@@ -458,7 +444,6 @@ import Layout from '../layouts/Layout.astro';
       const simSpread = document.getElementById('simSpread') as HTMLInputElement;
       const simTRE = document.getElementById('simTRE') as HTMLInputElement;
 
-      // Si los elementos no existen en esta página, detenemos la ejecución para evitar errores
       if (!simMonto || !simPlazo || !simSpread || !simTRE) return;
 
       const monto = +simMonto.value || 500000;
@@ -497,7 +482,6 @@ import Layout from '../layouts/Layout.astro';
       }
     }
 
-    // Escuchadores de eventos seguros para los inputs del simulador
     ['simMonto', 'simPlazo', 'simSpread'].forEach(id => {
       document.getElementById(id)?.addEventListener('input', calcImpacto);
     });
@@ -509,13 +493,12 @@ import Layout from '../layouts/Layout.astro';
       calcImpacto();
     });
 
-    // Render inicial del simulador
     calcImpacto();
 
     /* ─── Renderizado y Lógica de FAQs ─── */
     const faqs = [
       { q: '¿Cada cuánto cambia la TRE?', a: 'El BCB publica la TRE mensualmente. Sin embargo, los bancos aplican el cambio en la siguiente cuota después de la publicación oficial.' },
-      { q: '¿La TRE aplica a créditos en dólares?', a: 'No. La TRE es exclusiva para créditos en Bolivianos (BOB) y UFV. Los créditos en dólares se rigen por tasas LIBOR/SOFR o tasas pactadas libremente.' },
+      { q: '¿La TRE aplica a créditos en dólares?', a: 'No. La TRE is exclusiva para créditos en Bolivianos (BOB) y UFV. Los créditos en dólares se rigen por tasas LIBOR/SOFR o tasas pactadas libremente.' },
       { q: '¿El banco me avisa si mi cuota cambia?', a: 'No necesariamente. El contrato de crédito variable permite el ajuste automático. Por eso es fundamental que monitorees la TRE mensualmente en bcb.gob.bo.' },
       { q: '¿Puedo cambiar a tasa fija después?', a: 'Depende de tu contrato. Algunos bancos ofrecen "switch" de tasa variable a fija, pero puede implicar una comisión o renegociación total del crédito.' },
       { q: '¿La TRE puede bajar a cero o ser negativa?', a: 'Históricamente la TRE en Bolivia ha oscilado entre 1% y 5% anual. La regulación del BCB impide que llegue a cero ya que refleja el costo real del dinero en el mercado.' },
@@ -523,7 +506,7 @@ import Layout from '../layouts/Layout.astro';
 
     const faqList = document.getElementById('faqList');
     if (faqList) {
-      faqList.innerHTML = ''; // Limpiar por seguridad
+      faqList.innerHTML = '';
       faqs.forEach((f, i) => {
         const div = document.createElement('div');
         div.className = 'card overflow-hidden';
@@ -536,10 +519,8 @@ import Layout from '../layouts/Layout.astro';
         faqList.appendChild(div);
       });
 
-      // Re-renderizar iconos inyectados dinámicamente
       createIcons({ icons: { Plus } });
 
-      // Delegación de eventos para el colapsable
       faqList.querySelectorAll('.faq-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const index = btn.getAttribute('data-index');
