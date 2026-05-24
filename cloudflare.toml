@@ -2,6 +2,7 @@
 
 [build]
 command = "npm run build"
+deploy_command = ""
 output_dir = "dist"
 
 [build.environment]
