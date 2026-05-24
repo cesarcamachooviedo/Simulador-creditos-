@@ -365,7 +365,7 @@ import Layout from '../layouts/Layout.astro';
         <div class="bg-red-50 p-6 space-y-4">
           <div class="flex gap-3">
             <i data-lucide="circle-dot" class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"></i>
-            <p class="text-slate-700 text-sm leading-relaxed">Si la TRE <strong>sube 2 puntos</strong> (de 2.95% a 4.95%), en un crédito de Bs. 500,000 a 20 años tu cuota puede incrementarse en <strong class="text-red-600">más de Bs. 500 mensuales</strong>.</p>
+            <p class="text-slate-700 text-sm leading-relaxed">Si la TRE <strong>sube 2 puntos</strong> (de 2.95% a 4.95%), en un crédito de Bs. 500,000 a 20 years tu cuota puede incrementarse en <strong class="text-red-600">más de Bs. 500 mensuales</strong>.</p>
           </div>
           <div class="flex gap-3">
             <i data-lucide="circle-dot" class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"></i>
@@ -373,7 +373,7 @@ import Layout from '../layouts/Layout.astro';
           </div>
           <div class="flex gap-3">
             <i data-lucide="circle-dot" class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"></i>
-            <p class="text-slate-700 text-sm leading-relaxed">En créditos a <strong>30 años</strong>, una TRE alta desde el inicio puede costarte hasta <strong>40% más en intereses totales</strong>.</p>
+            <p class="text-slate-700 text-sm leading-relaxed">En créditos a <strong>30 years</strong>, una TRE alta desde el inicio puede costarte hasta <strong>40% más en intereses totales</strong>.</p>
           </div>
           <div class="rounded-xl p-4 mt-2" style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25)">
             <p class="text-red-700 text-sm font-semibold">⚠️ Recomendación: Pide a tu banco el "stress test" de tu cuota con TRE al 6% antes de firmar.</p>
@@ -388,8 +388,8 @@ import Layout from '../layouts/Layout.astro';
             <i data-lucide="lock" class="w-4 h-4 text-green-700"></i>
           </div>
           <div>
-            <h4 class="font-semibold text-sm mb-1">Pide tasa fija los primeros años</h4>
-            <p class="text-slate-500 text-xs leading-relaxed">Un crédito mixto con tasa fija 5-7 años te protege de subidas durante la fase más crítica.</p>
+            <h4 class="font-semibold text-sm mb-1">Pide tasa fija los primeros years</h4>
+            <p class="text-slate-500 text-xs leading-relaxed">Un crédito mixto con tasa fija 5-7 years te protege de subidas durante la fase más crítica.</p>
           </div>
         </div>
         <div class="card p-5 flex gap-4">
@@ -429,14 +429,15 @@ import Layout from '../layouts/Layout.astro';
 
 <!-- LOGICA JAVASCRIPT RE-ADAPTADA Y OPTIMIZADA PARA ASTRO -->
 <script>
-  import { createIcons, Landmark, Calculator, Menu, Activity, CalendarClock, ShieldCheck, Check, ExternalLink, AlertTriangle, Lock, FileText, Plus } from 'lucide';
+  // CORREGIDO: Importamos "CircleDot" de lucide para evitar fallos de resolución en la compilación
+  import { createIcons, Landmark, Calculator, Menu, Activity, CalendarClock, ShieldCheck, Check, ExternalLink, AlertTriangle, Lock, FileText, Plus, CircleDot } from 'lucide';
 
   // Ejecutar todo el código SOLO cuando el DOM esté completamente cargado y listo
   document.addEventListener('DOMContentLoaded', () => {
     
-    // Inicializar Lucide Icons
+    // CORREGIDO: Inicializamos Lucide incluyendo la referencia a CircleDot
     createIcons({
-      icons: { Landmark, Calculator, Menu, Activity, CalendarClock, ShieldCheck, Check, ExternalLink, AlertTriangle, Lock, FileText, Plus }
+      icons: { Landmark, Calculator, Menu, Activity, CalendarClock, ShieldCheck, Check, ExternalLink, AlertTriangle, Lock, FileText, Plus, CircleDot }
     });
 
     /* ─── PMT Helper ─── */
