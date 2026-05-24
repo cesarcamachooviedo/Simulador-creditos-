@@ -2,13 +2,13 @@
   "name": "simulador-creditos-bolivia",
   "type": "module",
   "version": "1.0.0",
-  "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
+"scripts": {
+  "dev": "astro dev",
+  "start": "astro dev",
+  "build": "astro build",
+  "preview": "astro preview",
+  "deploy": "astro build && wrangler deploy --non-interactive"
+},
   "dependencies": {
     "@astrojs/tailwind": "^5.1.0",
     "astro": "^4.8.0",
