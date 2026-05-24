@@ -23,12 +23,6 @@ import Layout from '../layouts/Layout.astro';
     .inp:focus { border-color: #D4A843; background: #fff; box-shadow: 0 0 0 3px rgba(212,168,67,.15); }
     input[type=range] { accent-color: #D4A843; width: 100%; }
     
-    /* MODIFICADO: Estilos limpios sin propiedades inválidas de alineación para evitar errores de PostCSS */
-    .btn-gold { background: linear-gradient(135deg, #D4A843 0%, #A87420 100%); color: #fff; font-weight: 600; padding: 13px 28px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: .02em; transition: all .2s; box-shadow: 0 4px 16px rgba(212,168,67,.38); }
-    .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 7px 22px rgba(212,168,67,.50); }
-    .btn-outline { background: transparent; color: #0A1F42; font-weight: 600; padding: 13px 28px; border-radius: 12px; border: 2px solid #D1DCF0; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: .02em; transition: all .2s; }
-    .btn-outline:hover { border-color: #D4A843; color: #A87420; }
-    
     .alert-ring { animation: ring-pulse 2.4s ease-in-out infinite; }
     @keyframes ring-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,.3) } 50% { box-shadow: 0 0 0 10px rgba(239,68,68,0) } }
     .bar-fill { transition: height .6s cubic-bezier(.34,1.56,.64,1); }
@@ -58,8 +52,12 @@ import Layout from '../layouts/Layout.astro';
           La <strong class="text-white">Tasa de Referencia (TRE)</strong> del Banco Central de Bolivia es el termómetro del sistema financiero. Entender cómo funciona puede ahorrarte miles de bolivianos en tu crédito.
         </p>
         <div class="flex flex-wrap gap-3">
-          <a href="#formula" class="btn-gold inline-flex items-center justify-center" style="width:auto;padding:13px 26px">Ver la Fórmula</a>
-          <a href="#simulador" class="btn-outline inline-flex items-center justify-center" style="border-color:rgba(255,255,255,.25);color:white;width:auto;padding:13px 26px">Simular Impacto</a>
+          <a href="#formula" class="inline-flex items-center justify-center bg-gradient-to-br from-[#D4A843] to-[#A87420] text-white font-semibold py-3 px-7 rounded-xl text-sm tracking-wide shadow-[0_4px_16px_rgba(212,168,67,0.38)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_7px_22px_rgba(212,168,67,0.5)] w-auto">
+            Ver la Fórmula
+          </a>
+          <a href="#simulador" class="inline-flex items-center justify-center bg-transparent text-white font-semibold py-3 px-7 rounded-xl text-sm tracking-wide border-2 border-white/25 transition-all duration-200 hover:border-[#D4A843] hover:text-[#D4A843] w-auto">
+            Simular Impacto
+          </a>
         </div>
       </div>
     </div>
@@ -384,7 +382,7 @@ import Layout from '../layouts/Layout.astro';
           </div>
           <div>
             <h4 class="font-semibold text-sm mb-1">Pide tasa fija los primeros años</h4>
-            <p class="text-slate-500 text-xs leading-relaxed">Un crédito mixto con tasa fija 5-7 años te protege de subidas durante la fase más crítica.</p>
+            <p class="text-slate-500 text-xs leading-relaxed">Un crédito mixto con tasa fija 5-7 años te protege de subidas durante la phase más crítica.</p>
           </div>
         </div>
         <div class="card p-5 flex gap-4">
@@ -498,7 +496,7 @@ import Layout from '../layouts/Layout.astro';
     /* ─── Renderizado y Lógica de FAQs ─── */
     const faqs = [
       { q: '¿Cada cuánto cambia la TRE?', a: 'El BCB publica la TRE mensualmente. Sin embargo, los bancos aplican el cambio en la siguiente cuota después de la publicación oficial.' },
-      { q: '¿La TRE aplica a créditos en dólares?', a: 'No. La TRE is exclusiva para créditos en Bolivianos (BOB) y UFV. Los créditos en dólares se rigen por tasas LIBOR/SOFR o tasas pactadas libremente.' },
+      { q: '¿La TRE aplica a créditos en dólares?', a: 'No. La TRE es exclusiva para créditos en Bolivianos (BOB) y UFV. Los créditos en dólares se rigen por tasas LIBOR/SOFR o tasas pactadas libremente.' },
       { q: '¿El banco me avisa si mi cuota cambia?', a: 'No necesariamente. El contrato de crédito variable permite el ajuste automático. Por eso es fundamental que monitorees la TRE mensualmente en bcb.gob.bo.' },
       { q: '¿Puedo cambiar a tasa fija después?', a: 'Depende de tu contrato. Algunos bancos ofrecen "switch" de tasa variable a fija, pero puede implicar una comisión o renegociación total del crédito.' },
       { q: '¿La TRE puede bajar a cero o ser negativa?', a: 'Históricamente la TRE en Bolivia ha oscilado entre 1% y 5% anual. La regulación del BCB impide que llegue a cero ya que refleja el costo real del dinero en el mercado.' },
