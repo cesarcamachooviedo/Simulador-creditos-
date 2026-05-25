@@ -1,0 +1,283 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<BaseLayout title="Requisitos para Crédito | SimuladordeCreditos.com">
+  <Header />
+
+  <style>
+    .font-mono-num { font-family: 'DM Mono', 'Courier New', monospace; font-weight: 500; }
+    .hero-bg { background: linear-gradient(135deg, #060F1E 0%, #0A1F42 45%, #0D2860 100%); }
+    .gold-bg { background: linear-gradient(135deg, #D4A843 0%, #A87420 100%); }
+    .card { background: #fff; border-radius: 16px; box-shadow: 0 2px 18px rgba(10,31,66,.08); }
+    .badge-gold { background: rgba(212,168,67,.14); border: 1px solid rgba(212,168,67,.40); color: #A87420; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: .04em; }
+    
+    /* Estilos específicos de la lista de requisitos */
+    .doc-item { transition: background-color 0.2s, border-color 0.2s; }
+    .doc-item.done { background-color: #F0FDF4; border-color: #BBF7D0; }
+    .doc-item.done .doc-title { color: #166534; text-decoration: line-through; opacity: 0.75; }
+    .doc-item.done .doc-desc { color: #15803D; opacity: 0.7; }
+    
+    .check-box { transition: background-color 0.2s, border-color 0.2s, transform 0.1s; }
+    .check-box:active { transform: scale(0.92); }
+    .check-box.checked { background-color: #22C55E; border-color: #22C55E; }
+    
+    #progressRing { transition: stroke-dasharray 0.35s cubic-bezier(0.4, 0, 0.2, 1); transform: rotate(-90deg); transform-origin: 50% 50%; }
+    
+    .tab-btn { transition: all 0.2s; }
+    .tab-btn.active { background-color: #0A1F42; color: #ffffff; box-shadow: 0 4px 12px rgba(10,31,66,0.15); }
+  </style>
+
+  <section class="hero-bg text-white overflow-hidden relative">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div style="position:absolute;top:-60px;right:-60px;width:380px;height:380px; border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.10) 0%,transparent 70%)"></div>
+      <div style="position:absolute;bottom:-80px;left:-40px;width:280px;height:280px; border-radius:50%;background:radial-gradient(circle,rgba(29,78,216,.15) 0%,transparent 70%)"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20 relative">
+      <div class="max-w-3xl">
+        <span class="badge-gold uppercase text-yellow-400 mb-3 inline-block">Guía de Preparación</span>
+        <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4">
+          Requisitos para tu<br><span class="text-yellow-300">Crédito Bancario</span>
+        </h1>
+        <p class="text-blue-200 text-base sm:text-lg leading-relaxed max-w-2xl">
+          Evita observaciones y retrasos. Utiliza nuestra lista interactiva para organizar y marcar los documentos obligatorios exigidos por la normativa de ASFI en Bolivia.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12 max-w-7xl mx-auto px-4 sm:px-6 bg-slate-50/50">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      
+      <div class="lg:col-span-1 lg:sticky lg:top-24 space-y-6">
+        <div class="card p-6 bg-white border border-slate-100">
+          <h3 class="font-display text-lg font-semibold text-slate-900 mb-4 text-center">Tu Progreso</h3>
+          
+          <div class="flex justify-center mb-4 relative">
+            <svg class="w-28 h-28">
+              <circle cx="56" cy="56" r="40" stroke="#E2E8F0" stroke-width="8" fill="transparent"/>
+              <circle id="progressRing" cx="56" cy="56" r="40" stroke="#22C55E" stroke-width="8" fill="transparent" stroke-dasharray="0 251.2"/>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span id="progressPct" class="font-mono-num text-2xl font-bold text-slate-800">0%</span>
+              <span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Completado</span>
+            </div>
+          </div>
+
+          <div class="text-center mb-6">
+            <h4 id="progressLabel" class="font-semibold text-sm text-slate-800 mb-0.5">Sin documentos</h4>
+            <p id="progressSub" class="text-xs text-slate-500">Empieza a marcar tus documentos</p>
+          </div>
+
+          <div class="flex justify-between items-center text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100 mb-4">
+            <div>Documentos listos:</div>
+            <div class="font-mono-num font-bold text-slate-900"><span id="doneCount">0</span> de <span id="totalCount">0</span></div>
+          </div>
+
+          <button id="btnReset" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-600 text-xs font-semibold rounded-xl transition-colors duration-150 flex items-center justify-center gap-2">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reiniciar Lista
+          </button>
+        </div>
+
+        <div class="rounded-2xl p-5 bg-gradient-to-br from-[#0A1F42] to-[#0D2860] text-white">
+          <div class="flex gap-3 items-start">
+            <div class="p-2 rounded-xl bg-white/10 text-yellow-400 mt-0.5">
+              <i data-lucide="shield-check" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-sm text-yellow-300 mb-1">Privacidad Asegurada</h4>
+              <p class="text-xs text-blue-200 leading-relaxed">Tu progreso se guarda automáticamente de forma local en tu navegador. Ningún dato personal o documento se envía ni se almacena en servidores externos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2 space-y-6">
+        <div class="flex p-1.5 bg-slate-200/70 rounded-2xl gap-1 overflow-x-auto">
+          <button data-type="dependiente" class="tab-btn active flex-1 py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-slate-900 whitespace-nowrap flex items-center justify-center gap-2">
+            <i data-lucide="briefcase" class="w-4 h-4"></i> Asalariado / Dependiente
+          </button>
+          <button data-type="independiente" class="tab-btn flex-1 py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-slate-900 whitespace-nowrap flex items-center justify-center gap-2">
+            <i data-lucide="store" class="w-4 h-4"></i> Independiente / Consultor
+          </button>
+        </div>
+
+        <div id="checklistContainer" class="space-y-3">
+          </div>
+      </div>
+
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  // Datos Estructurados de los Requisitos (Copia fiel del HTML original)
+  const dataRequisitos = {
+    dependiente: [
+      { id: 'dep_id', cat: 'Identificación', title: 'Cédula de Identidad (C.I.)', desc: 'Fotocopia vigente y legible del solicitante y cónyuge (si corresponde).' },
+      { id: 'dep_aviso', cat: 'Domicilio', title: 'Aviso de Cobranza de Luz o Agua', desc: 'Último mes pagado del domicilio actual (sirve para verificar la dirección exacta).' },
+      { id: 'dep_croquis', cat: 'Domicilio', title: 'Croquis de Ubicación', desc: 'Dibujo detallado de la ubicación de tu domicilio y de tu fuente laboral.' },
+      { id: 'dep_boletas', cat: 'Ingresos', title: '3 Últimas Boletas de Pago', desc: 'Originales y firmadas/selladas por la empresa.' },
+      { id: 'dep_afp', cat: 'Ingresos', title: 'Extracto de AFP / Gestora', desc: 'Histórico de aportes actualizado (mínimo los últimos 12 meses).' },
+      { id: 'dep_banco', cat: 'Ingresos', title: 'Extracto Bancario de Cuenta de Sueldos', desc: 'Movimientos de los últimos 6 meses donde se refleje el abono del salario.' },
+      { id: 'dep_antiguedad', cat: 'Laboral', title: 'Certificado de Trabajo', desc: 'Original indicando cargo, antigüedad (mínimo 1 año), sueldo básico y tipo de contrato.' }
+    ],
+    independiente: [
+      { id: 'ind_id', cat: 'Identificación', title: 'Cédula de Identidad (C.I.)', desc: 'Fotocopia vigente y legible del solicitante y cónyuge (si corresponde).' },
+      { id: 'ind_aviso', cat: 'Domicilio', title: 'Aviso de Cobranza de Luz o Agua', desc: 'Último mes pagado de tu domicilio y del local comercial o negocio.' },
+      { id: 'ind_croquis', cat: 'Domicilio', title: 'Croquis de Ubicación', desc: 'Detalle de ubicación exacto de tu residencia y del lugar del negocio.' },
+      { id: 'ind_nit', cat: 'Legal Negocio', title: 'NIT y Certificado de Inscripción', desc: 'Si corresponde al rubro. Régimen General o Simplificado debidamente actualizado.' },
+      { id: 'ind_licencia', cat: 'Legal Negocio', title: 'Licencia de Funcionamiento', desc: 'Emitida por el Gobierno Autónomo Municipal correspondiente.' },
+      { id: 'ind_impuestos', cat: 'Impuestos', title: 'Formularios de Impuestos (IVA/IT/IUE)', desc: 'Pagos de los últimos 3 meses o última gestión anual según el régimen.' },
+      { id: 'ind_extractos', cat: 'Ingresos', title: 'Extractos Bancarios de Cuentas', desc: 'Últimos 6 meses de cuentas personales y/o del negocio que demuestren flujo constante.' },
+      { id: 'ind_respaldos', cat: 'Ingresos', title: 'Cuadernos de Venta / Facturas / Contratos', desc: 'Documentación que respalde el movimiento diario de caja o inventarios de mercadería.' }
+    ]
+  };
+
+  let currentType = 'dependiente';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar iconos de Lucide cargados globalmente por el BaseLayout
+    if ((window as any).lucide) {
+      (window as any).lucide.createIcons();
+    }
+
+    renderChecklist();
+
+    // Eventos para cambiar entre Dependiente e Independiente
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        const type = target.getAttribute('data-type');
+        if (!type || type === currentType) return;
+
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        target.classList.add('active');
+        currentType = type;
+        renderChecklist();
+      });
+    });
+
+    // Evento para reiniciar la lista
+    document.getElementById('btnReset')?.addEventListener('click', resetChecklist);
+  });
+
+  function renderChecklist() {
+    const container = document.getElementById('checklistContainer');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const items = dataRequisitos[currentType as 'dependiente' | 'independiente'];
+
+    items.forEach(item => {
+      const isDone = localStorage.getItem(`req_${item.id}`) === 'true';
+      
+      const row = document.createElement('div');
+      row.id = `row_${item.id}`;
+      row.className = `doc-item card p-4 border border-slate-100 bg-white flex items-start gap-4 select-none cursor-pointer ${isDone ? 'done' : ''}`;
+      
+      row.innerHTML = `
+        <div class="mt-0.5">
+          <div id="check_${item.id}" class="check-box w-5 h-5 rounded-md border-2 border-slate-300 bg-white flex items-center justify-center flex-shrink-0 ${isDone ? 'checked' : ''}">
+            <svg class="w-3.5 h-3.5 text-white stroke-2 fill-none stroke-current" viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-0.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-slate-100 rounded text-slate-500">${item.cat}</span>
+          </div>
+          <h4 class="doc-title font-display font-semibold text-slate-800 text-sm">${item.title}</h4>
+          <p class="doc-desc text-xs text-slate-500 leading-relaxed mt-0.5">${item.desc}</p>
+        </div>
+      `;
+
+      row.addEventListener('click', () => toggleItem(item.id));
+      container.appendChild(row);
+    });
+
+    updateProgress();
+  }
+
+  function toggleItem(id: string) {
+    const row = document.getElementById(`row_${id}`);
+    const box = document.getElementById(`check_${id}`);
+    if (!row || !box) return;
+
+    const isCurrentlyDone = row.classList.contains('done');
+    
+    if (isCurrentlyDone) {
+      row.classList.remove('done');
+      box.classList.remove('checked');
+      localStorage.removeItem(`req_${id}`);
+    } else {
+      row.classList.add('done');
+      box.classList.add('checked');
+      localStorage.setItem(`req_${id}`, 'true');
+    }
+
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = dataRequisitos[currentType as 'dependiente' | 'independiente'];
+    const total = items.length;
+    
+    let done = 0;
+    items.forEach(item => {
+      if (localStorage.getItem(`req_${item.id}`) === 'true') done++;
+    });
+
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    const circumference = 2 * Math.PI * 40; // r=40 es 251.2
+
+    const progressRing = document.getElementById('progressRing');
+    if (progressRing) {
+      progressRing.style.strokeDasharray = `${(pct / 100) * circumference} ${circumference}`;
+    }
+
+    const progressPct = document.getElementById('progressPct');
+    const doneCount = document.getElementById('doneCount');
+    const totalCount = document.getElementById('totalCount');
+    
+    if (progressPct) progressPct.textContent = pct + '%';
+    if (doneCount) doneCount.textContent = done.toString();
+    if (totalCount) totalCount.textContent = total.toString();
+
+    let label = 'Sin documentos';
+    let sub = 'Empieza a marcar tus documentos';
+
+    if (pct > 0 && pct < 40) {
+      label = 'Iniciando';
+      sub = 'Buen comienzo, sigue reuniendo';
+    } else if (pct >= 40 && pct < 70) {
+      label = 'En progreso';
+      sub = 'Ya tienes lo más importante';
+    } else if (pct >= 70 && pct < 100) {
+      label = 'Casi listo';
+      sub = 'Solo faltan algunos documentos';
+    } else if (pct === 100) {
+      label = '¡Listo para el banco!';
+      sub = 'Tienes todo para presentar';
+    }
+
+    const progressLabel = document.getElementById('progressLabel');
+    const progressSub = document.getElementById('progressSub');
+    
+    if (progressLabel) progressLabel.textContent = label;
+    if (progressSub) progressSub.textContent = sub;
+  }
+
+  function resetChecklist() {
+    const items = dataRequisitos[currentType as 'dependiente' | 'independiente'];
+    items.forEach(item => {
+      localStorage.removeItem(`req_${item.id}`);
+    });
+    renderChecklist();
+  }
+</script>
