@@ -1,7 +1,7 @@
 #:schema https://api.cloudflare.com/schemas/v2/build-config.json
 
 [build]
-command = "npm run build"
+command = "bun run build"
 deploy_command = ""
 output_dir = "dist"
 
