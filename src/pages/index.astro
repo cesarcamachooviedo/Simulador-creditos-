@@ -5,40 +5,30 @@
  * Página principal: Calculadora de Créditos · SimuladordeCreditos.com
  *
  * ⚠️  REGLA DE ORO: Todo el bloque <script is:inline> es el JavaScript
- *     original del index.html sin modificar una sola línea de lógica.
- *     Sistema Francés, fases de tasa, DB_CONFIG, donut chart SVG,
- *     exportación CSV y normativa ASFI se mantienen 100% intactos.
+ * original del index.html sin modificar una sola línea de lógica.
+ * Sistema Francés, fases de tasa, DB_CONFIG, donut chart SVG,
+ * exportación CSV y normativa ASFI se mantienen 100% intactos.
  *
  * Lo que sí se delegó a componentes:
- *  · <Header />  → src/components/Header.astro  (nav sticky + hamburger)
- *  · <Footer />  → src/components/Footer.astro  (normativa + copyright)
- *  · CSS global  → src/layouts/BaseLayout.astro (<style is:global>)
- *  · Google Fonts, Lucide CDN, GA4 → BaseLayout <head>
+ * · <Header />  → src/components/Header.astro  (nav sticky + hamburger)
+ * · <Footer />  → src/components/Footer.astro  (normativa + copyright)
+ * · CSS global  → src/layouts/BaseLayout.astro (<style is:global>)
+ * · Google Fonts, Lucide CDN, GA4 → BaseLayout <head>
  */
 ---
-import Layout from '../layouts/BaseLayout.astro'; // Solo dos puntos, porque sube un nivel
+import BaseLayout from '../layouts/BaseLayout.astro'; // Corregido: Coincide con la etiqueta de abajo
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-
-// El resto de tu código de lógica (si tienes variables, funciones, etc.)
----
 ---
 
 <BaseLayout title="Simulador de Créditos Bolivia | SimuladordeCreditos.com">
 
-<!-- ════════════════════════════════════════════
-     MAIN
-════════════════════════════════════════════ -->
 <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 <div class="grid grid-cols-1 xl:grid-cols-5 gap-6 items-start">
 
 
-  <!-- ─────────────────────────────────────────
-       PANEL IZQUIERDO: FORMULARIO (2 / 5)
-  ───────────────────────────────────────── -->
   <div class="xl:col-span-2 space-y-5">
 
-    <!-- ① Datos del crédito -->
     <div class="card-bg p-6">
       <h2 class="font-display text-xl font-semibold mb-4 flex items-center gap-2">
         <span class="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
@@ -49,7 +39,6 @@ import Footer from '../components/Footer.astro';
 
       <div class="space-y-4">
 
-        <!-- Tipo crédito -->
         <div>
           <label class="lbl">Tipo de Crédito</label>
           <select id="tipoCredito" class="inp" onchange="actualizarUI()">
@@ -60,7 +49,6 @@ import Footer from '../components/Footer.astro';
           </select>
         </div>
 
-        <!-- Moneda -->
         <div>
           <label class="lbl">Moneda</label>
           <select id="moneda" class="inp" onchange="onMonedaChange()">
@@ -70,7 +58,6 @@ import Footer from '../components/Footer.astro';
           </select>
         </div>
 
-        <!-- Monto -->
         <div>
           <label class="lbl">Monto del Préstamo</label>
           <div class="relative">
@@ -84,7 +71,6 @@ import Footer from '../components/Footer.astro';
           </div>
         </div>
 
-        <!-- Plazo -->
         <div>
           <label class="lbl">Plazo del Crédito (años)</label>
           <input type="number" id="plazo" class="inp" value="15" min="1" max="30"
@@ -96,18 +82,13 @@ import Footer from '../components/Footer.astro';
           </div>
         </div>
 
-        <!-- Fecha primer pago -->
         <div>
           <label class="lbl">Fecha del Primer Pago</label>
           <input type="date" id="fechaInicio" class="inp">
         </div>
 
       </div>
-    </div><!-- /card datos -->
-
-
-    <!-- ② Tipo de Tasa -->
-    <div class="card-bg p-6">
+    </div><div class="card-bg p-6">
       <h2 class="font-display text-xl font-semibold mb-4 flex items-center gap-2">
         <span class="w-7 h-7 rounded-lg bg-yellow-50 flex items-center justify-center">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
@@ -121,7 +102,6 @@ import Footer from '../components/Footer.astro';
         <button class="rtab"        id="tab-mixta"    onclick="setTasa('mixta')">Mixta</button>
       </div>
 
-      <!-- Panel Fija -->
       <div id="pnl-fija" class="space-y-3">
         <div>
           <label class="lbl">Tasa Nominal Anual (%)</label>
@@ -130,7 +110,6 @@ import Footer from '../components/Footer.astro';
         </div>
       </div>
 
-      <!-- Panel Variable -->
       <div id="pnl-variable" class="space-y-3 hidden">
         <div class="bg-yellow-50 rounded-xl p-3 text-xs text-yellow-800">
           ⚡ Tasa = <strong>TRE + Spread (margen del banco)</strong>
@@ -142,7 +121,6 @@ import Footer from '../components/Footer.astro';
                    oninput="calcTasaVar()">
             <span class="absolute right-3 top-1/2 -translate-y-1/2 tre-pill py-0.5 text-[10px]">BCB</span>
           </div>
-          <!-- TODO: SQL → SELECT valor FROM tre_bcb WHERE vigente=1 ORDER BY fecha DESC LIMIT 1 -->
           <p class="text-xs text-blue-400 mt-1">📡 Valor manual · Puede conectarse automáticamente a la BCB.</p>
         </div>
         <div>
@@ -156,7 +134,6 @@ import Footer from '../components/Footer.astro';
         </div>
       </div>
 
-      <!-- Panel Mixta -->
       <div id="pnl-mixta" class="space-y-3 hidden">
         <div class="bg-blue-50 rounded-xl p-3 text-xs text-blue-700">
           💡 Período inicial con <strong>tasa fija</strong>, luego cambia a <strong>TRE + margen</strong>.
@@ -192,11 +169,7 @@ import Footer from '../components/Footer.astro';
         </div>
       </div>
 
-    </div><!-- /card tasa -->
-
-
-    <!-- ③ Seguros -->
-    <div class="card-bg p-6">
+    </div><div class="card-bg p-6">
       <h2 class="font-display text-xl font-semibold mb-4 flex items-center gap-2">
         <span class="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -205,7 +178,6 @@ import Footer from '../components/Footer.astro';
       </h2>
       <div class="space-y-5">
 
-        <!-- Desgravamen -->
         <div class="flex items-start gap-3">
           <input type="checkbox" id="chkDesgrav" checked class="mt-1 w-4 h-4 rounded" style="accent-color:#B8860B">
           <div class="flex-1">
@@ -218,7 +190,6 @@ import Footer from '../components/Footer.astro';
           </div>
         </div>
 
-        <!-- Seguro inmueble / vehicular -->
         <div id="segOtroWrap" class="flex items-start gap-3">
           <input type="checkbox" id="chkSegOtro" checked class="mt-1 w-4 h-4 rounded" style="accent-color:#B8860B">
           <div class="flex-1">
@@ -232,11 +203,7 @@ import Footer from '../components/Footer.astro';
         </div>
 
       </div>
-    </div><!-- /card seguros -->
-
-
-    <!-- ④ Capacidad de Pago (input) -->
-    <div class="card-bg p-6">
+    </div><div class="card-bg p-6">
       <h2 class="font-display text-xl font-semibold mb-4 flex items-center gap-2">
         <span class="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
@@ -253,20 +220,12 @@ import Footer from '../components/Footer.astro';
       </div>
     </div>
 
-    <!-- Calcular -->
     <button class="btn-gold" onclick="calcular()">
-      ⚡&nbsp; Calcular Amortización
+      ⚡&nbsp;Calcular Amortización
     </button>
 
-  </div><!-- /col izquierda -->
+  </div><div class="xl:col-span-3" id="colResultados">
 
-
-  <!-- ─────────────────────────────────────────
-       PANEL DERECHO: RESULTADOS (3 / 5)
-  ───────────────────────────────────────── -->
-  <div class="xl:col-span-3" id="colResultados">
-
-    <!-- Placeholder -->
     <div id="placeholder" class="card-bg p-14 flex flex-col items-center justify-center text-center gap-4" style="min-height:320px">
       <div class="w-20 h-20 rounded-full gold-bg flex items-center justify-center opacity-20">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
@@ -280,10 +239,8 @@ import Footer from '../components/Footer.astro';
       </div>
     </div>
 
-    <!-- Resultados (ocultos hasta calcular) -->
     <div id="resultados" class="hidden space-y-5">
 
-      <!-- Resumen 4 cards -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sum-grid">
 
         <div class="sum-card hero-bg text-white fade-up d1">
@@ -312,11 +269,9 @@ import Footer from '../components/Footer.astro';
 
       </div>
 
-      <!-- Gráfico composición primera cuota -->
       <div class="card-bg p-5 fade-up" id="chartCard">
         <h3 class="font-display text-lg font-semibold mb-4">Composición del Pago</h3>
         <div class="flex flex-col sm:flex-row items-center gap-6">
-          <!-- Donut -->
           <svg id="donutSvg" width="140" height="140" viewBox="0 0 140 140" class="flex-shrink-0">
             <circle cx="70" cy="70" r="52" fill="none" stroke="#EEF2FA" stroke-width="22"/>
             <circle id="dArc1" cx="70" cy="70" r="52" fill="none" stroke="#0A1F42" stroke-width="22"
@@ -331,7 +286,6 @@ import Footer from '../components/Footer.astro';
             <text x="70" y="66" text-anchor="middle" class="donut-label" id="donutPct">—</text>
             <text x="70" y="80" text-anchor="middle" class="donut-sub">CAPITAL</text>
           </svg>
-          <!-- Legend -->
           <div class="space-y-2 w-full">
             <div class="flex items-center justify-between text-sm">
               <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm" style="background:#0A1F42"></span>Capital Amortizado</div>
@@ -363,19 +317,16 @@ import Footer from '../components/Footer.astro';
         </div>
       </div>
 
-      <!-- Análisis de Capacidad -->
       <div id="capSection" class="card-bg p-5 hidden fade-up">
         <h3 class="font-display text-lg font-semibold mb-3">📊 Análisis de Capacidad de Pago</h3>
         <div id="capContent"></div>
       </div>
 
-      <!-- Indicador de fases (mixta) -->
       <div id="faseInd" class="hidden flex gap-5 text-xs text-blue-500 font-medium">
         <span><span class="phase-dot p1-dot"></span>Fase 1 – Tasa Fija</span>
         <span><span class="phase-dot p2-dot"></span>Fase 2 – Tasa Variable (TRE + Spread)</span>
       </div>
 
-      <!-- Tabla amortización -->
       <div class="card-bg p-5 fade-up">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
@@ -407,7 +358,6 @@ import Footer from '../components/Footer.astro';
           </table>
         </div>
 
-        <!-- Paginación -->
         <div class="flex items-center justify-between mt-4 flex-wrap gap-2" id="pgSection">
           <p class="text-xs text-blue-400" id="pgInfo">—</p>
           <div class="flex gap-2">
@@ -417,24 +367,12 @@ import Footer from '../components/Footer.astro';
         </div>
       </div>
 
-    </div><!-- /resultados -->
-  </div><!-- /col derecha -->
-
-</div>
+    </div></div></div>
 </main>
 
 
-<!-- ════════════════════════════════════════════════════════════════════════════
-     JAVASCRIPT DE LA CALCULADORA
-     ⚠️  CÓDIGO ORIGINAL INTACTO — No modificar ninguna función.
-         Se usa is:inline para:
-           1. Exponer funciones al scope global (necesario para onclick="...")
-           2. Evitar que Astro procese o module-wrap el script
-           3. Garantizar ejecución en el mismo orden que el HTML original
-════════════════════════════════════════════════════════════════════════════ -->
 <script is:inline>
 "use strict";
-
 /* ══════════════════════════════════════════
    ⚙️  CONFIGURACIÓN DEL SISTEMA — BD SQL
    ══════════════════════════════════════════
@@ -446,7 +384,6 @@ import Footer from '../components/Footer.astro';
      AND  fecha_vigencia <= CURDATE()
    ORDER  BY codigo, fecha_vigencia DESC
    LIMIT  10;
-   
    Reemplaza DB_CONFIG con la respuesta del servidor.
    ══════════════════════════════════════════ */
 const DB_CONFIG = {
@@ -592,7 +529,6 @@ function generarTabla(p) {
 
   /* ── Determinar tasas y fases ── */
   let r1, r2 = null, mesesF1;
-
   if (p.tipoTasa === 'fija') {
     r1      = p.tasaFija / 100 / 12;
     mesesF1 = totalMeses;
@@ -607,7 +543,7 @@ function generarTabla(p) {
 
   /* PMT Fase 1: calculado sobre el plazo TOTAL (francés puro) */
   const PMT1 = pmt(p.monto, r1, totalMeses);
-  let PMT2   = null;
+  let PMT2 = null;
 
   let fecha = new Date(p.fechaInicio + 'T00:00:00');
 
@@ -615,18 +551,19 @@ function generarTabla(p) {
     /* Avanzar exactamente un mes */
     fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 1, fecha.getDate());
 
-    const fase2  = (p.tipoTasa === 'mixta') && (i > mesesF1);
-    const rMes   = fase2 ? r2 : r1;
+    const fase2 = (p.tipoTasa === 'mixta') && (i > mesesF1);
+    const rMes  = fase2 ? r2 : r1;
 
     /* Recalcular PMT al inicio de la Fase 2 */
     if (fase2 && i === mesesF1 + 1) {
       PMT2 = pmt(saldo, r2, totalMeses - mesesF1);
     }
+
     const cuotaCI = fase2 ? PMT2 : PMT1;
 
     /* Interés y capital del período */
     const interes = saldo * rMes;
-    let   capital = cuotaCI - interes;
+    let capital   = cuotaCI - interes;
 
     /* Última cuota: liquidar saldo exacto */
     if (i === totalMeses || capital >= saldo) {
@@ -635,8 +572,7 @@ function generarTabla(p) {
 
     /* ── Seguros (sobre saldo insoluto) ── */
     const segDesgrav = p.chkDesgrav ? saldo * (p.tasaDesgrav / 100) : 0;
-    const segOtro    = p.chkSegOtro ? saldo * (p.tasaSegOtro  / 100) : 0;
-
+    const segOtro    = p.chkSegOtro ? saldo * (p.tasaSegOtro / 100) : 0;
     const cuotaTotal = capital + interes + segDesgrav + segOtro;
 
     saldo = Math.max(0, saldo - capital);
@@ -644,15 +580,18 @@ function generarTabla(p) {
     tabla.push({
       nro: i,
       fecha: fmtFecha(fecha),
-      capital, interes, segDesgrav, segOtro,
-      cuotaCI: capital + interes,   // cuota pura capital+interés
-      cuotaTotal, saldo,
+      capital,
+      interes,
+      segDesgrav,
+      segOtro,
+      cuotaCI: capital + interes, // cuota pura capital+interés
+      cuotaTotal,
+      saldo,
       fase2
     });
 
     if (saldo === 0) break;
   }
-
   return tabla;
 }
 
@@ -667,9 +606,9 @@ function calcular() {
   const plazoAnios  = parseInt(document.getElementById('plazo').value);
   const fechaInicio = document.getElementById('fechaInicio').value;
 
-  if (!monto      || monto     <= 0) return alert('Ingrese un monto válido.');
+  if (!monto || monto <= 0) return alert('Ingrese un monto válido.');
   if (!plazoAnios || plazoAnios <= 0) return alert('Ingrese un plazo válido (1–30 años).');
-  if (!fechaInicio)                   return alert('Seleccione la fecha del primer pago.');
+  if (!fechaInicio) return alert('Seleccione la fecha del primer pago.');
 
   /* ── Tasas ── */
   let tasaFija=0, treVar=0, spreadVar=0;
@@ -678,38 +617,39 @@ function calcular() {
   if (ST.tipoTasa === 'fija') {
     tasaFija = parseFloat(document.getElementById('tasaFija').value) || 0;
   } else if (ST.tipoTasa === 'variable') {
-    treVar    = parseFloat(document.getElementById('treVar').value)    || DB_CONFIG.TRE;
+    treVar    = parseFloat(document.getElementById('treVar').value) || DB_CONFIG.TRE;
     spreadVar = parseFloat(document.getElementById('spreadVar').value) || 0;
   } else {
     tasaMixtaFija = parseFloat(document.getElementById('tasaMixtaFija').value) || 0;
-    aniosFijos    = parseInt(document.getElementById('aniosFijos').value)       || 0;
-    treMixta      = parseFloat(document.getElementById('treMixta').value)       || DB_CONFIG.TRE;
-    spreadMixta   = parseFloat(document.getElementById('spreadMixta').value)    || 0;
+    aniosFijos    = parseInt(document.getElementById('aniosFijos').value) || 0;
+    treMixta      = parseFloat(document.getElementById('treMixta').value) || DB_CONFIG.TRE;
+    spreadMixta   = parseFloat(document.getElementById('spreadMixta').value) || 0;
 
-    if (aniosFijos <= 0 || aniosFijos >= plazoAnios)
+    if (aniosFijos <= 0 || aniosFijos >= plazoAnios) {
       return alert(`El período fijo debe estar entre 1 y ${plazoAnios - 1} años.`);
+    }
   }
 
   /* ── Seguros ── */
-  const chkDesgrav = document.getElementById('chkDesgrav').checked;
+  const chkDesgrav  = document.getElementById('chkDesgrav').checked;
   const tasaDesgrav = parseFloat(document.getElementById('tasaDesgrav').value) || 0;
-  const chkSegOtro  = document.getElementById('chkSegOtro').checked &&
-                      !document.getElementById('segOtroWrap').classList.contains('hidden');
+
+  const chkSegOtro  = document.getElementById('chkSegOtro').checked && 
+                     !document.getElementById('segOtroWrap').classList.contains('hidden');
   const tasaSegOtro = parseFloat(document.getElementById('tasaSegOtro').value) || 0;
 
   const params = {
     monto, plazoAnios, tipoTasa: ST.tipoTasa,
     tasaFija, treVar, spreadVar,
     tasaMixtaFija, aniosFijos, treMixta, spreadMixta,
-    chkDesgrav, tasaDesgrav,
-    chkSegOtro,  tasaSegOtro,
+    chkDesgrav, tasaDesgrav, chkSegOtro, tasaSegOtro,
     fechaInicio, tipoCredito, moneda,
   };
 
-  ST.params  = params;
-  ST.moneda  = moneda;
-  ST.tabla   = generarTabla(params);
-  ST.pagina  = 1;
+  ST.params = params;
+  ST.moneda = moneda;
+  ST.tabla  = generarTabla(params);
+  ST.pagina = 1;
   ST.verTodo = false;
 
   mostrarResultados();
@@ -719,17 +659,17 @@ function calcular() {
    📊  MOSTRAR RESULTADOS
    ══════════════════════════════════════════ */
 function mostrarResultados() {
-  const t    = ST.tabla;
-  const p    = ST.params;
+  const t = ST.tabla;
+  const p = ST.params;
   if (!t.length) return;
 
-  const r0  = t[0];  // primera fila
+  const r0 = t[0]; // primera fila
   const tot = (key) => t.reduce((s, r) => s + r[key], 0);
 
-  const totalInt    = tot('interes');
-  const totalDesgr  = tot('segDesgrav');
-  const totalOtro   = tot('segOtro');
-  const totalPagar  = p.monto + totalInt + totalDesgr + totalOtro;
+  const totalInt   = tot('interes');
+  const totalDesgr = tot('segDesgrav');
+  const totalOtro  = tot('segOtro');
+  const totalPagar = p.monto + totalInt + totalDesgr + totalOtro;
 
   /* ── Summary cards ── */
   const f = (n) => fmtMoneda(n, ST.moneda);
@@ -764,270 +704,5 @@ function mostrarResultados() {
   /* ── Mostrar panel ── */
   $('placeholder').classList.add('hidden');
   $('resultados').classList.remove('hidden');
-
-  /* Scroll en mobile */
-  if (window.innerWidth < 1280) {
-    setTimeout(() => $('resultados').scrollIntoView({ behavior:'smooth', block:'start' }), 80);
-  }
-}
-
-/* ── Donut chart ── */
-function actualizarDonut(r0) {
-  const total = r0.cuotaTotal;
-  const capPct  = total ? r0.capital    / total : 0;
-  const intPct  = total ? r0.interes    / total : 0;
-  const segPct  = total ? (r0.segDesgrav + r0.segOtro) / total : 0;
-
-  /* circunferencia ≈ 327 (2π × 52) */
-  const C = 2 * Math.PI * 52;
-  const seg1 = capPct * C;
-  const seg2 = intPct * C;
-  const seg3 = segPct * C;
-
-  /* Arco 1: capital (navy) */
-  const a1 = $('dArc1');
-  a1.setAttribute('stroke-dasharray', `${seg1} ${C - seg1}`);
-
-  /* Arco 2: interés (gold) — offset tras arco 1 */
-  const off2 = -seg1 * (C / (2 * Math.PI * 52));  // reuse ratio
-  const a2 = $('dArc2');
-  a2.setAttribute('stroke-dasharray', `${seg2} ${C - seg2}`);
-  a2.setAttribute('stroke-dashoffset', -seg1 + 81.75);
-
-  /* Arco 3: seguros (blue) */
-  const a3 = $('dArc3');
-  a3.setAttribute('stroke-dasharray', `${seg3} ${C - seg3}`);
-  a3.setAttribute('stroke-dashoffset', -(seg1 + seg2) + 81.75);
-
-  $('donutPct').textContent = (capPct * 100).toFixed(0) + '%';
-
-  /* Leyenda + barras */
-  const f = (n) => fmtMoneda(n, ST.moneda);
-  $('lgCap').textContent    = f(r0.capital);
-  $('lgCapPct').textContent = (capPct * 100).toFixed(1) + '%';
-  $('barCap').style.width   = (capPct * 100) + '%';
-
-  $('lgInt').textContent    = f(r0.interes);
-  $('lgIntPct').textContent = (intPct * 100).toFixed(1) + '%';
-  $('barInt').style.width   = (intPct * 100) + '%';
-
-  const segTotal = r0.segDesgrav + r0.segOtro;
-  $('lgSeg').textContent    = f(segTotal);
-  $('lgSegPct').textContent = (segPct * 100).toFixed(1) + '%';
-  $('barSeg').style.width   = (segPct * 100) + '%';
-}
-
-/* ── Capacidad de pago ── */
-function mostrarCapacidad(cuota, ingreso) {
-  const pct     = (cuota / ingreso) * 100;
-  const section = $('capSection');
-  section.classList.remove('hidden');
-
-  let badgeCls, borderCls, bgCls, textCls, titulo, msg;
-
-  if (pct <= DB_CONFIG.LIMITE_OPTIMO) {
-    badgeCls  = 'badge-ok'; borderCls = 'border-green-500';
-    bgCls     = 'bg-green-50'; textCls = 'text-green-800';
-    titulo    = '✅ Capacidad Óptima';
-    msg       = 'Tu cuota está dentro del límite óptimo del 25%. Los bancos consideran esta situación de <strong>bajo riesgo crediticio</strong>. Tienes excelentes probabilidades de aprobación.';
-  } else if (pct <= DB_CONFIG.LIMITE_MAXIMO) {
-    badgeCls  = 'badge-warn'; borderCls = 'border-yellow-500';
-    bgCls     = 'bg-yellow-50'; textCls = 'text-yellow-800';
-    titulo    = '⚠️ Capacidad Aceptable';
-    msg       = 'Tu cuota supera el 25% pero está dentro del límite del 30%. Puede aprobarse con <strong>análisis adicional</strong>. Considera ampliar el plazo o reducir el monto.';
-  } else {
-    badgeCls  = 'badge-danger'; borderCls = 'border-red-500';
-    bgCls     = 'bg-red-50'; textCls = 'text-red-800';
-    titulo    = '❌ Riesgo Alto';
-    msg       = 'Tu cuota supera el 30% de tus ingresos. La mayoría de entidades financieras <strong>rechazarían este crédito</strong>. Reduce el monto o extiende el plazo.';
-  }
-
-  const f  = (n) => fmtMoneda(n, ST.moneda);
-  const bw = Math.min(pct, 100);
-  const bc = pct <= 25 ? '#22C55E' : pct <= 30 ? '#F59E0B' : '#EF4444';
-  const libre = Math.max(0, ingreso - cuota);
-
-  $('capContent').innerHTML = `
-    <div class="flex flex-col sm:flex-row sm:items-start gap-5">
-      <div class="flex-1">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-semibold text-navy-900">Cuota / Ingreso</span>
-          <span class="px-3 py-1 rounded-full text-sm font-bold ${badgeCls}">${pct.toFixed(1)}%</span>
-        </div>
-        <div class="pbar mb-1">
-          <div class="pbar-fill" style="width:${bw}%; background:${bc}"></div>
-        </div>
-        <div class="flex justify-between text-xs text-blue-400 mt-1">
-          <span>0%</span>
-          <span class="text-green-600 font-semibold">25% Óptimo</span>
-          <span class="text-yellow-600 font-semibold">30% Límite</span>
-          <span>50%+</span>
-        </div>
-      </div>
-      <div class="flex flex-col items-center text-center sm:w-36">
-        <p class="text-3xl mb-1">${pct <= 25 ? '🟢' : pct <= 30 ? '🟡' : '🔴'}</p>
-        <p class="font-semibold text-sm text-navy-900 leading-tight">${titulo.replace(/[✅⚠️❌]\s*/,'')}</p>
-      </div>
-    </div>
-
-    <div class="mt-4 bg-gray-50 rounded-xl p-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-      <div><p class="text-blue-400 text-xs">Ingreso Mensual</p><p class="font-semibold">${f(ingreso)}</p></div>
-      <div><p class="text-blue-400 text-xs">Cuota Total</p><p class="font-semibold">${f(cuota)}</p></div>
-      <div><p class="text-blue-400 text-xs">% del Ingreso</p>
-           <p class="font-semibold ${pct>30?'text-red-600':pct>25?'text-yellow-600':'text-green-600'}">${pct.toFixed(2)}%</p></div>
-      <div><p class="text-blue-400 text-xs">Límite 25% (Óptimo)</p><p class="font-semibold">${f(ingreso*0.25)}</p></div>
-      <div><p class="text-blue-400 text-xs">Límite 30% (Máximo)</p><p class="font-semibold">${f(ingreso*0.30)}</p></div>
-      <div><p class="text-blue-400 text-xs">Ingreso Disponible</p>
-           <p class="font-semibold ${libre===0?'text-red-600':'text-green-600'}">${f(libre)}</p></div>
-    </div>
-
-    <div class="mt-3 p-3 rounded-xl border-l-4 ${borderCls} ${bgCls}">
-      <p class="text-sm ${textCls}">${msg}</p>
-    </div>`;
-}
-
-/* ══════════════════════════════════════════
-   📋  RENDER TABLA
-   ══════════════════════════════════════════ */
-function renderTabla() {
-  const t   = ST.tabla;
-  const body = $('tblBody');
-  const foot = $('tblFoot');
-
-  let filas;
-  if (ST.verTodo) {
-    filas = t;
-  } else {
-    const ini = (ST.pagina - 1) * ST.porPagina;
-    filas = t.slice(ini, ini + ST.porPagina);
-  }
-
-  body.innerHTML = filas.map(r => `
-    <tr class="${r.fase2 ? 'fase2' : ''}">
-      <td>
-        <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;
-              border-radius:50%;font-size:11px;font-weight:600;
-              background:${r.fase2 ? 'rgba(212,168,67,.18)' : '#EEF4FF'};
-              color:${r.fase2 ? '#A87420' : '#0A1F42'}">${r.nro}</span>
-      </td>
-      <td>${r.fecha}</td>
-      <td>${fmtNum(r.capital)}</td>
-      <td>${fmtNum(r.interes)}</td>
-      <td>${fmtNum(r.segDesgrav)}</td>
-      <td>${fmtNum(r.segOtro)}</td>
-      <td><strong>${fmtNum(r.cuotaTotal)}</strong></td>
-      <td>${fmtNum(r.saldo)}</td>
-    </tr>`).join('');
-
-  /* Totales */
-  const sm = (k) => t.reduce((s,r)=>s+r[k],0);
-  foot.innerHTML = `<tr>
-    <td colspan="2">TOTALES</td>
-    <td>${fmtNum(sm('capital'))}</td>
-    <td>${fmtNum(sm('interes'))}</td>
-    <td>${fmtNum(sm('segDesgrav'))}</td>
-    <td>${fmtNum(sm('segOtro'))}</td>
-    <td><strong>${fmtNum(sm('cuotaTotal'))}</strong></td>
-    <td>—</td>
-  </tr>`;
-
-  /* Paginación */
-  const total = t.length;
-  const ini   = (ST.pagina - 1) * ST.porPagina + 1;
-  const fin   = Math.min(ST.pagina * ST.porPagina, total);
-
-  if (ST.verTodo) {
-    $('pgInfo').textContent = `Mostrando todas las ${total} cuotas`;
-    $('btnPrev').style.display = 'none';
-    $('btnNext').style.display = 'none';
-  } else {
-    $('pgInfo').textContent = `Cuotas ${ini}–${fin} de ${total}`;
-    $('btnPrev').style.display = '';
-    $('btnNext').style.display = '';
-    $('btnPrev').disabled = ST.pagina === 1;
-    $('btnNext').disabled = fin >= total;
-  }
-}
-
-function cambiarPg(dir) {
-  const max = Math.ceil(ST.tabla.length / ST.porPagina);
-  ST.pagina = Math.max(1, Math.min(ST.pagina + dir, max));
-  renderTabla();
-  $('resultados').scrollIntoView({ behavior:'smooth', block:'start' });
-}
-
-function toggleAll() {
-  ST.verTodo = !ST.verTodo;
-  $('btnAll').textContent = ST.verTodo ? 'Paginar' : 'Ver todo';
-  renderTabla();
-}
-
-/* ══════════════════════════════════════════
-   📥  EXPORTAR CSV
-   ══════════════════════════════════════════ */
-function exportCSV() {
-  if (!ST.tabla.length) return;
-  const p = ST.params;
-
-  const meta = [
-    [`SimuladordeCreditos.com — Tabla de Amortización Sistema Francés`],
-    [`Tipo:${p.tipoCredito}`,`Monto:${p.monto} ${ST.moneda}`,`Plazo:${p.plazoAnios} años`,
-     `Tasa:${ST.tipoTasa}`,`Fecha:${new Date().toLocaleDateString('es-BO')}`],
-    [],
-  ];
-
-  const hdr = ['Cuota','Fecha','Capital','Interes','Seg.Desgravamen','Seg.Otro',
-                'Cuota Cap+Int','Cuota Total','Saldo','Fase'];
-
-  const rows = ST.tabla.map(r => [
-    r.nro, r.fecha,
-    r.capital.toFixed(2), r.interes.toFixed(2),
-    r.segDesgrav.toFixed(2), r.segOtro.toFixed(2),
-    r.cuotaCI.toFixed(2), r.cuotaTotal.toFixed(2),
-    r.saldo.toFixed(2), r.fase2 ? 2 : 1,
-  ]);
-
-  const csv = [
-    ...meta.map(r => r.join(',')),
-    hdr.join(','),
-    ...rows.map(r => r.join(',')),
-  ].join('\n');
-
-  const blob = new Blob(['\uFEFF' + csv], { type:'text/csv;charset=utf-8;' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = `amortizacion_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-/* ══════════════════════════════════════════
-   🛠️  UTILIDADES
-   ══════════════════════════════════════════ */
-const $ = id => document.getElementById(id);
-
-function fmtNum(n) {
-  return n.toLocaleString('es-BO', { minimumFractionDigits:2, maximumFractionDigits:2 });
-}
-
-function fmtMoneda(n, moneda = 'BOB') {
-  const s = { BOB:'Bs. ', USD:'US$ ', UFV:'UFV ' }[moneda] || 'Bs. ';
-  if (n >= 1_000_000) return s + (n / 1_000_000).toFixed(3) + 'M';
-  if (n >= 100_000)   return s + (n / 1_000).toFixed(1)     + 'k';
-  return s + fmtNum(n);
-}
-
-function fmtCompact(n, moneda = 'BOB') {
-  const s = { BOB:'Bs.', USD:'US$', UFV:'UFV' }[moneda] || 'Bs.';
-  if (n >= 1_000_000) return `${s} ${(n/1_000_000).toFixed(2)}M`;
-  if (n >= 1_000)     return `${s} ${(n/1_000).toFixed(0)}k`;
-  return `${s} ${n}`;
-}
-
-function fmtFecha(date) {
-  return date.toLocaleDateString('es-BO', { day:'2-digit', month:'2-digit', year:'numeric' });
 }
 </script>
-
-</BaseLayout>
