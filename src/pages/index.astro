@@ -4,19 +4,12 @@
  * ─────────────────────────────────────────────────────────────────────────────
  * Página principal: Calculadora de Créditos · SimuladordeCreditos.com
  *
- * ⚠️  REGLA DE ORO: Todo el bloque <script is:inline> es el JavaScript
+ * ⚠️ REGLA DE ORO: Todo el bloque <script is:inline> es el JavaScript
  * original del index.html sin modificar una sola línea de lógica.
  * Sistema Francés, fases de tasa, DB_CONFIG, donut chart SVG,
  * exportación CSV y normativa ASFI se mantienen 100% intactos.
- *
- * Lo que sí se delegó a componentes:
- * · <Header />  → src/components/Header.astro  (nav sticky + hamburger)
- * · <Footer />  → src/components/Footer.astro  (normativa + copyright)
- * · CSS global  → src/layouts/BaseLayout.astro (<style is:global>)
- * · Google Fonts, Lucide CDN, GA4 → BaseLayout <head>
  */
----
-import BaseLayout from '../layouts/BaseLayout.astro'; // Corregido: Coincide con la etiqueta de abajo
+import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 ---
@@ -25,7 +18,6 @@ import Footer from '../components/Footer.astro';
 
 <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 <div class="grid grid-cols-1 xl:grid-cols-5 gap-6 items-start">
-
 
   <div class="xl:col-span-2 space-y-5">
 
@@ -373,19 +365,6 @@ import Footer from '../components/Footer.astro';
 
 <script is:inline>
 "use strict";
-/* ══════════════════════════════════════════
-   ⚙️  CONFIGURACIÓN DEL SISTEMA — BD SQL
-   ══════════════════════════════════════════
-   TODO: Conectar con fetch() a tu API REST que ejecute:
-   
-   SELECT codigo, CAST(valor AS DECIMAL(10,4)) valor
-   FROM   parametros_sistema
-   WHERE  activo = 1
-     AND  fecha_vigencia <= CURDATE()
-   ORDER  BY codigo, fecha_vigencia DESC
-   LIMIT  10;
-   Reemplaza DB_CONFIG con la respuesta del servidor.
-   ══════════════════════════════════════════ */
 const DB_CONFIG = {
   TRE:           2.95,   // Tasa de Referencia BCB (% anual)
   UFV_DIA:       2.3847, // Valor UFV del día (Bs. por UFV)
@@ -404,22 +383,17 @@ const ST = {
   params:       {},
 };
 
-/* ══════════════════════════════════════════
-   🚀  INICIALIZACIÓN
-   ══════════════════════════════════════════ */
+/* 🚀 INICIALIZACIÓN */
 document.addEventListener('DOMContentLoaded', () => {
-  // Fecha primer pago: 1° del mes siguiente
   const d = new Date();
   d.setMonth(d.getMonth() + 1);
   d.setDate(1);
   document.getElementById('fechaInicio').value = d.toISOString().slice(0,10);
 
-  // Pre-llenar TRE desde BD config
   document.getElementById('treVar').value   = DB_CONFIG.TRE;
   document.getElementById('treMixta').value = DB_CONFIG.TRE;
   document.getElementById('hdrTRE').textContent = DB_CONFIG.TRE;
 
-  // Slider ↔ input sincronía (monto)
   document.getElementById('monto').addEventListener('input', () => {
     const v = +document.getElementById('monto').value;
     document.getElementById('montoSlider').value = Math.min(Math.max(v,10000),5000000);
@@ -431,7 +405,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('montoLbl').textContent = fmtCompact(v, ST.moneda);
   });
 
-  // Live update tasa efectiva
   ['treVar','spreadVar'].forEach(id =>
     document.getElementById(id)?.addEventListener('input', calcTasaVar)
   );
@@ -444,9 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
   calcTasaMixta();
 });
 
-/* ══════════════════════════════════════════
-   🎨  UI HELPERS
-   ══════════════════════════════════════════ */
+/* 🎨 UI HELPERS */
 function setTasa(tipo) {
   ST.tipoTasa = tipo;
   ['fija','variable','mixta'].forEach(t => {
@@ -498,36 +469,18 @@ function calcTasaMixta() {
   document.getElementById('mixFase2').textContent = (tre + spread).toFixed(2) + '%';
 }
 
-/* ══════════════════════════════════════════
-   💰  LÓGICA FINANCIERA — SISTEMA FRANCÉS
-   ══════════════════════════════════════════ */
-
-/**
- * PMT — Cuota mensual de amortización francesa
- * PMT = PV × r / (1 − (1+r)^-n)
- *
- * @param {number} pv  Capital (saldo presente)
- * @param {number} r   Tasa mensual decimal  (ej: 0.00625 para 7.5% anual)
- * @param {number} n   Número de cuotas restantes
- * @returns {number}   Cuota capital + interés
- */
+/* 💰 LÓGICA FINANCIERA — SISTEMA FRANCÉS */
 function pmt(pv, r, n) {
   if (n <= 0) return 0;
   if (r === 0) return pv / n;
   return pv * r / (1 - Math.pow(1 + r, -n));
 }
 
-/**
- * Genera la tabla de amortización completa
- * @param {object} p  Parámetros del crédito
- * @returns {Array}   Filas de la tabla
- */
 function generarTabla(p) {
   const totalMeses = p.plazoAnios * 12;
   const tabla = [];
   let saldo = p.monto;
 
-  /* ── Determinar tasas y fases ── */
   let r1, r2 = null, mesesF1;
   if (p.tipoTasa === 'fija') {
     r1      = p.tasaFija / 100 / 12;
@@ -535,42 +488,33 @@ function generarTabla(p) {
   } else if (p.tipoTasa === 'variable') {
     r1      = (p.treVar + p.spreadVar) / 100 / 12;
     mesesF1 = totalMeses;
-  } else {                                   // mixta
+  } else {
     r1      = p.tasaMixtaFija / 100 / 12;
     r2      = (p.treMixta + p.spreadMixta) / 100 / 12;
     mesesF1 = Math.min(p.aniosFijos * 12, totalMeses - 1);
   }
 
-  /* PMT Fase 1: calculado sobre el plazo TOTAL (francés puro) */
   const PMT1 = pmt(p.monto, r1, totalMeses);
   let PMT2 = null;
-
   let fecha = new Date(p.fechaInicio + 'T00:00:00');
 
   for (let i = 1; i <= totalMeses; i++) {
-    /* Avanzar exactamente un mes */
     fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 1, fecha.getDate());
-
     const fase2 = (p.tipoTasa === 'mixta') && (i > mesesF1);
     const rMes  = fase2 ? r2 : r1;
 
-    /* Recalcular PMT al inicio de la Fase 2 */
     if (fase2 && i === mesesF1 + 1) {
       PMT2 = pmt(saldo, r2, totalMeses - mesesF1);
     }
 
     const cuotaCI = fase2 ? PMT2 : PMT1;
-
-    /* Interés y capital del período */
     const interes = saldo * rMes;
     let capital   = cuotaCI - interes;
 
-    /* Última cuota: liquidar saldo exacto */
     if (i === totalMeses || capital >= saldo) {
       capital = saldo;
     }
 
-    /* ── Seguros (sobre saldo insoluto) ── */
     const segDesgrav = p.chkDesgrav ? saldo * (p.tasaDesgrav / 100) : 0;
     const segOtro    = p.chkSegOtro ? saldo * (p.tasaSegOtro / 100) : 0;
     const cuotaTotal = capital + interes + segDesgrav + segOtro;
@@ -584,7 +528,7 @@ function generarTabla(p) {
       interes,
       segDesgrav,
       segOtro,
-      cuotaCI: capital + interes, // cuota pura capital+interés
+      cuotaCI: capital + interes,
       cuotaTotal,
       saldo,
       fase2
@@ -595,11 +539,7 @@ function generarTabla(p) {
   return tabla;
 }
 
-/* ══════════════════════════════════════════
-   🔢  CALCULAR (main entry point)
-   ══════════════════════════════════════════ */
 function calcular() {
-  /* ── Leer inputs ── */
   const tipoCredito = document.getElementById('tipoCredito').value;
   const moneda      = document.getElementById('moneda').value;
   const monto       = parseFloat(document.getElementById('monto').value);
@@ -610,7 +550,6 @@ function calcular() {
   if (!plazoAnios || plazoAnios <= 0) return alert('Ingrese un plazo válido (1–30 años).');
   if (!fechaInicio) return alert('Seleccione la fecha del primer pago.');
 
-  /* ── Tasas ── */
   let tasaFija=0, treVar=0, spreadVar=0;
   let tasaMixtaFija=0, aniosFijos=0, treMixta=0, spreadMixta=0;
 
@@ -630,10 +569,8 @@ function calcular() {
     }
   }
 
-  /* ── Seguros ── */
   const chkDesgrav  = document.getElementById('chkDesgrav').checked;
   const tasaDesgrav = parseFloat(document.getElementById('tasaDesgrav').value) || 0;
-
   const chkSegOtro  = document.getElementById('chkSegOtro').checked && 
                      !document.getElementById('segOtroWrap').classList.contains('hidden');
   const tasaSegOtro = parseFloat(document.getElementById('tasaSegOtro').value) || 0;
@@ -655,15 +592,12 @@ function calcular() {
   mostrarResultados();
 }
 
-/* ══════════════════════════════════════════
-   📊  MOSTRAR RESULTADOS
-   ══════════════════════════════════════════ */
 function mostrarResultados() {
   const t = ST.tabla;
   const p = ST.params;
   if (!t.length) return;
 
-  const r0 = t[0]; // primera fila
+  const r0 = t[0];
   const tot = (key) => t.reduce((s, r) => s + r[key], 0);
 
   const totalInt   = tot('interes');
@@ -671,38 +605,30 @@ function mostrarResultados() {
   const totalOtro  = tot('segOtro');
   const totalPagar = p.monto + totalInt + totalDesgr + totalOtro;
 
-  /* ── Summary cards ── */
   const f = (n) => fmtMoneda(n, ST.moneda);
-  $('sC').textContent  = f(r0.cuotaCI);
-  $('sCT').textContent = f(r0.cuotaTotal);
-  $('sI').textContent  = f(totalInt);
-  $('sIPct').textContent = ((totalInt / p.monto) * 100).toFixed(1) + '% del capital';
-  $('sTP').textContent = f(totalPagar);
+  document.getElementById('sC').textContent  = f(r0.cuotaCI);
+  document.getElementById('sCT').textContent = f(r0.cuotaTotal);
+  document.getElementById('sI').textContent  = f(totalInt);
+  document.getElementById('sIPct').textContent = ((totalInt / p.monto) * 100).toFixed(1) + '% del capital';
+  document.getElementById('sTP').textContent = f(totalPagar);
 
-  /* ── Meta ── */
   const lblTasa = {
     fija:     `Tasa Fija ${p.tasaFija}%`,
     variable: `TRE (${p.treVar}%) + Spread (${p.spreadVar}%) = ${(p.treVar + p.spreadVar).toFixed(2)}%`,
     mixta:    `Mixta — Fija ${p.tasaMixtaFija}% (${p.aniosFijos}a) → Variable ${(p.treMixta+p.spreadMixta).toFixed(2)}%`,
   };
-  $('tblMeta').textContent = `Sistema Francés · ${lblTasa[ST.tipoTasa]} · ${t.length} cuotas`;
+  document.getElementById('tblMeta').textContent = `Sistema Francés · ${lblTasa[ST.tipoTasa]} · ${t.length} cuotas`;
 
-  /* ── Gráfico composición ── */
   actualizarDonut(r0);
+  document.getElementById('faseInd').classList.toggle('hidden', ST.tipoTasa !== 'mixta');
 
-  /* ── Indicador de fases ── */
-  $('faseInd').classList.toggle('hidden', ST.tipoTasa !== 'mixta');
-
-  /* ── Capacidad de pago ── */
   const ingreso = parseFloat(document.getElementById('ingreso').value) || 0;
   if (ingreso > 0) mostrarCapacidad(r0.cuotaTotal, ingreso);
-  else $('capSection').classList.add('hidden');
+  else document.getElementById('capSection').classList.add('hidden');
 
-  /* ── Render tabla ── */
   renderTabla();
-
-  /* ── Mostrar panel ── */
-  $('placeholder').classList.add('hidden');
-  $('resultados').classList.remove('hidden');
+  document.getElementById('placeholder').classList.add('hidden');
+  document.getElementById('resultados').classList.remove('hidden');
 }
 </script>
+</BaseLayout>
