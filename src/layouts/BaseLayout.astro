@@ -1,13 +1,4 @@
 ---
-/**
- * BaseLayout.astro
- * ─────────────────────────────────────────────────────────────────────────────
- * Layout maestro compartido por todas las páginas de SimuladordeCreditos.com
- *
- * Props:
- *   title       {string}  — Título de la página (tag <title> + og:title)
- *   description {string}  — Meta description (opcional)
- */
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
@@ -27,37 +18,23 @@ const {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- ── SEO básico ── -->
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta name="robots"      content="index, follow" />
   <link rel="canonical"    href={Astro.url.href} />
-
-  <!-- ── Open Graph ── -->
   <meta property="og:type"        content="website" />
   <meta property="og:title"       content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:locale"      content="es_BO" />
-
-  <!-- ── Favicon ── -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-  <!-- ── Google Fonts ────────────────────────────────────────────────────────
-       Cormorant Garamond → display financiero
-       DM Mono            → cifras y montos (numerales tabulares)
-       Outfit             → interfaz y cuerpo de texto
-  ─────────────────────────────────────────────────────────────────────────── -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Mono:wght@400;500&display=swap"
     rel="stylesheet"
   />
 
-  <!-- ── Google Analytics (GA4) ──────────────────────────────────────────────
-       Tag original del proyecto — mantener intacto
-  ─────────────────────────────────────────────────────────────────────────── -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1VMS0TC5C2"></script>
   <script is:inline>
     window.dataLayer = window.dataLayer || [];
@@ -66,61 +43,55 @@ const {
     gtag('config', 'G-1VMS0TC5C2');
   </script>
 
-  <!-- ── Lucide Icons (CDN) ──────────────────────────────────────────────────
-       Cargado en el head para disponibilidad inmediata en todos los componentes
-  ─────────────────────────────────────────────────────────────────────────── -->
   <script is:inline src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <script is:inline>
+    window.TRE_VIGENTE = 2.95;
+  </script>
 </head>
 
 <body>
-
-  <!-- Componente de navegación unificada (sticky) -->
   <Header />
-
-  <!-- ── Contenido dinámico de cada página ── -->
   <slot />
-
-  <!-- Componente de pie de página -->
   <Footer />
 
-  <!-- Inicializar íconos Lucide tras cargar el DOM -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
       if (typeof lucide !== 'undefined') lucide.createIcons();
+      const treEls = document.querySelectorAll('.tre-value');
+      treEls.forEach(el => {
+        el.textContent = window.TRE_VIGENTE;
+      });
     });
   </script>
-
 </body>
 </html>
 
-<!-- ════════════════════════════════════════════════════════════════════════════
-     ESTILOS GLOBALES
-     Clases utilitarias personalizadas compartidas por todas las páginas.
-     Se usan <style is:global> para que no sean encapsuladas por Astro.
-════════════════════════════════════════════════════════════════════════════ -->
 <style is:global>
-  /* ── Reset base ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Outfit', system-ui, sans-serif; background: #EEF2FA; color: #0A1F42; }
 
-  /* ── Familias tipográficas helper ── */
-  .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: #EEF2FA;
+    color: #0A1F42;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .font-display { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
   .font-amount  { font-family: 'DM Mono', 'Courier New', monospace; font-weight: 500; letter-spacing: -0.02em; }
 
-  /* ── Gradients corporativos ── */
   .hero-bg { background: linear-gradient(135deg, #060F1E 0%, #0A1F42 45%, #0D2860 100%); }
   .gold-bg { background: linear-gradient(135deg, #D4A843 0%, #A87420 100%); }
   .card-bg { background: #ffffff; border-radius: 16px; box-shadow: 0 2px 18px rgba(10,31,66,.08); }
 
-  /* ── Inputs ── */
   .lbl {
-    display: block; font-size: 11px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: .06em; color: #4B6A9B; margin-bottom: 5px;
+    display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .07em; color: #4B6A9B; margin-bottom: 5px;
   }
   .inp {
     width: 100%; padding: 10px 13px; border: 1.5px solid #D1DCF0; border-radius: 10px;
-    font-family: 'Outfit', sans-serif; font-size: 14px; color: #0A1F42; background: #F7FAFF;
-    transition: border-color .2s, box-shadow .2s; outline: none;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: #0A1F42;
+    background: #F7FAFF; transition: border-color .2s, box-shadow .2s; outline: none;
   }
   .inp:focus { border-color: #D4A843; background: #fff; box-shadow: 0 0 0 3px rgba(212,168,67,.15); }
   select.inp {
@@ -128,93 +99,81 @@ const {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234B6A9B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 11px center; padding-right: 34px;
   }
-  input[type=range] { accent-color: #D4A843; width: 100%; }
+  input[type=range]  { accent-color: #D4A843; width: 100%; }
   input[type=number] { -moz-appearance: textfield; }
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
-  /* ── Buttons ── */
   .btn-gold {
     background: linear-gradient(135deg, #D4A843 0%, #A87420 100%); color: #fff;
-    font-weight: 600; padding: 14px 28px; border-radius: 12px; border: none; cursor: pointer;
-    font-family: 'Outfit', sans-serif; font-size: 15px; letter-spacing: .02em;
+    font-weight: 700; padding: 14px 28px; border-radius: 12px; border: none; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; letter-spacing: .02em;
     transition: all .2s; box-shadow: 0 4px 16px rgba(212,168,67,.38); width: 100%;
   }
   .btn-gold:hover  { transform: translateY(-1px); box-shadow: 0 7px 22px rgba(212,168,67,.50); }
   .btn-gold:active { transform: translateY(0); }
   .btn-sm {
-    background: #fff; color: #0A1F42; font-weight: 500; padding: 8px 16px; border-radius: 9px;
-    border: 1.5px solid #D1DCF0; cursor: pointer; font-family: 'Outfit', sans-serif;
+    background: #fff; color: #0A1F42; font-weight: 600; padding: 8px 16px; border-radius: 9px;
+    border: 1.5px solid #D1DCF0; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 12px; transition: all .2s; white-space: nowrap;
   }
   .btn-sm:hover    { border-color: #D4A843; color: #A87420; }
   .btn-sm:disabled { opacity: .45; cursor: not-allowed; }
 
-  /* ── Rate Tabs ── */
   .rate-tabs { display: flex; gap: 3px; background: #F0F4FB; padding: 4px; border-radius: 11px; }
   .rtab {
-    flex: 1; padding: 8px 6px; border-radius: 8px; font-size: 13px; font-weight: 500;
+    flex: 1; padding: 8px 6px; border-radius: 8px; font-size: 13px; font-weight: 600;
     cursor: pointer; border: none; background: transparent; color: #4B6A9B;
-    transition: all .2s; font-family: 'Outfit', sans-serif;
+    transition: all .2s; font-family: 'Plus Jakarta Sans', sans-serif;
   }
   .rtab.active { background: #0A1F42; color: #fff; box-shadow: 0 2px 8px rgba(10,31,66,.25); }
 
-  /* ── TRE pulse pill ── */
   .tre-pill {
     display: inline-flex; align-items: center; gap: 6px;
     background: rgba(212,168,67,.12); border: 1px solid rgba(212,168,67,.35);
-    border-radius: 20px; padding: 4px 11px; font-size: 11px; color: #C9A840; font-weight: 600;
+    border-radius: 20px; padding: 4px 11px; font-size: 11px; color: #C9A840; font-weight: 700;
   }
   .tre-dot {
     width: 6px; height: 6px; border-radius: 50%; background: #D4A843;
-    animation: pulse 2s infinite;
+    animation: trepulse 2s infinite;
   }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+  @keyframes trepulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 
-  /* ── Summary cards ── */
   .sum-card { border-radius: 14px; padding: 18px 20px; transition: transform .2s; }
   .sum-card:hover { transform: translateY(-2px); }
 
-  /* ── Capacity badges ── */
   .badge-ok     { background: #D1FAE5; color: #065F46; }
   .badge-warn   { background: #FEF3C7; color: #92400E; }
   .badge-danger { background: #FEE2E2; color: #991B1B; }
 
-  /* ── Progress bar ── */
   .pbar      { height: 7px; border-radius: 4px; background: #E5EDF8; overflow: hidden; }
   .pbar-fill { height: 100%; border-radius: 4px; transition: width .5s ease; }
 
-  /* ── Amortization Table ── */
   .tbl-wrap  { overflow-x: auto; border-radius: 12px; border: 1px solid #E5EDF8; }
   .amort-tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12.5px; min-width: 680px; }
   .amort-tbl thead th {
     background: #0A1F42; color: #fff; padding: 11px 10px; text-align: right;
-    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
   }
   .amort-tbl thead th:first-child { text-align: center; border-radius: 10px 0 0 0; }
   .amort-tbl thead th:last-child  { border-radius: 0 10px 0 0; }
-  .amort-tbl tbody td {
-    padding: 9px 10px; text-align: right;
-    border-bottom: 1px solid #EDF2F9; color: #1A3558;
-  }
+  .amort-tbl tbody td { padding: 9px 10px; text-align: right; border-bottom: 1px solid #EDF2F9; color: #1A3558; }
   .amort-tbl tbody td:first-child  { text-align: center; }
   .amort-tbl tbody td:nth-child(2) { text-align: left; font-size: 11px; white-space: nowrap; }
   .amort-tbl tbody tr:hover td     { background: #F5F9FF; }
   .amort-tbl tbody tr.fase2 td     { background: rgba(212,168,67,.04); }
   .amort-tbl tbody tr.fase2:hover td { background: rgba(212,168,67,.09); }
   .amort-tbl tfoot td {
-    padding: 10px; font-weight: 600; font-size: 12px; background: #F0F5FC;
+    padding: 10px; font-weight: 700; font-size: 12px; background: #F0F5FC;
     text-align: right; color: #0A1F42; border-top: 2px solid #D1DCF0;
   }
   .amort-tbl tfoot td:first-child { text-align: center; border-radius: 0 0 0 10px; }
   .amort-tbl tfoot td:last-child  { border-radius: 0 0 10px 0; }
 
-  /* ── Phase legend dots ── */
   .phase-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
   .p1-dot { background: #0A1F42; }
   .p2-dot { background: #D4A843; }
 
-  /* ── Fade-up animations ── */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
   .fade-up { animation: fadeUp .45s ease forwards; }
   .d1 { animation-delay: .08s; opacity: 0; }
@@ -222,26 +181,22 @@ const {
   .d3 { animation-delay: .24s; opacity: 0; }
   .d4 { animation-delay: .32s; opacity: 0; }
 
-  /* ── Donut chart SVG text ── */
-  .donut-label { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; fill: #0A1F42; }
-  .donut-sub   { font-family: 'Outfit', sans-serif; font-size: 10px; fill: #6B7A8D; letter-spacing: .04em; }
+  .donut-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; fill: #0A1F42; }
+  .donut-sub   { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 600; fill: #6B7A8D; letter-spacing: .06em; }
 
-  /* ── Scrollbar corporativa ── */
   ::-webkit-scrollbar       { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: #EEF2FA; }
   ::-webkit-scrollbar-thumb { background: #D4A843; border-radius: 3px; }
 
-  /* ── Responsive sum-grid ── */
   @media (max-width: 640px) {
     .sum-grid { grid-template-columns: 1fr 1fr; }
   }
 
-  /* ── Nav links (usados por Header.astro) ── */
   .nav-link {
-    font-size: 13px; font-weight: 500; color: rgba(255,255,255,.70);
+    font-size: 13px; font-weight: 600; color: rgba(255,255,255,.70);
     padding: 6px 12px; border-radius: 8px; transition: all .2s;
     white-space: nowrap; text-decoration: none;
   }
-  .nav-link:hover  { color: #fff; background: rgba(255,255,255,.10); }
-  .nav-link.active { color: #D4A843; font-weight: 600; }
+  .nav-link:hover  { color: #fff; background: rgba(255,255,255,.12); }
+  .nav-link.active { color: #D4A843; }
 </style>

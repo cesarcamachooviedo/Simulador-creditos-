@@ -1,18 +1,8 @@
 ---
-/**
- * Header.astro
- * ─────────────────────────────────────────────────────────────────────────────
- * Navegación unificada y sticky para todas las páginas del sitio.
- */
-
 const pathname = Astro.url.pathname;
-
-// Helper optimizado para producción en Cloudflare (limpia barras finales antes de comparar)
-const cleanPath = pathname.endsWith('/') && pathname !== '/' ? pathname.slice(0, -1) : pathname;
-
 const isActive = (href: string): boolean => {
-  if (href === '/') return cleanPath === '/' || cleanPath === '/index';
-  return cleanPath === href || cleanPath.startsWith(href + '/');
+  if (href === '/') return pathname === '/' || pathname === '/index';
+  return pathname.startsWith(href);
 };
 ---
 
@@ -24,62 +14,59 @@ const isActive = (href: string): boolean => {
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <div class="flex items-center justify-between h-16">
 
-      <a href="/" class="flex items-center gap-2.5 flex-shrink-0" aria-label="SimuladordeCreditos.com - Inicio">
-        <div class="w-9 h-9 rounded-xl gold-bg flex items-center justify-center shadow-lg border border-yellow-500/30">
-          <svg class="w-5 h-5 text-slate-900 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.251.11a3.375 3.375 0 004.496-2.355c.192-.952-.247-1.923-1.124-2.365L11.75 9.64c-.877-.441-1.316-1.413-1.124-2.365a3.375 3.375 0 014.496-2.355c.25.11.25.11.25.11M12 3v18" />
+      <a href="/" class="flex items-center gap-2.5 flex-shrink-0" aria-label="Inicio">
+        <div class="w-9 h-9 rounded-xl gold-bg flex items-center justify-center shadow-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.8"/>
+            <path d="M12 7v1m0 8v1M9.5 9.5C9.5 8.67 10.67 8 12 8s2.5.67 2.5 1.5S13.33 11 12 11s-2.5.67-2.5 1.5S10.67 14 12 14s2.5.67 2.5 1.5"
+              stroke="white" stroke-width="1.6" stroke-linecap="round"/>
           </svg>
         </div>
-        <div class="flex flex-col">
-          <span class="font-display font-black tracking-tight text-white text-base leading-none">Simulador<span class="text-yellow-400 font-medium">de</span>Créditos</span>
-          <span class="text-[9px] font-mono-num tracking-[.25em] text-blue-300/80 uppercase mt-0.5 font-bold">Bolivia</span>
-        </div>
+        <span class="font-display text-xl text-white font-bold leading-none">
+          Simulador<span class="text-yellow-300">de</span>Créditos
+        </span>
       </a>
 
       <div class="hidden md:flex items-center gap-1">
-        <a 
-          href="/" 
-          class={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-150 ${isActive('/') ? 'text-yellow-400 bg-white/5' : 'text-blue-100 hover:text-white hover:bg-white/5'}`}
-        >
-          Calculadora
-        </a>
-        <a 
-          href="/tre" 
-          class={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-150 ${isActive('/tre') ? 'text-yellow-400 bg-white/5' : 'text-blue-100 hover:text-white hover:bg-white/5'}`}
-        >
-          ¿Qué es la TRE?
-        </a>
-        <a 
-          href="/requisitos" 
-          class={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-150 ${isActive('/requisitos') ? 'text-yellow-400 bg-white/5' : 'text-blue-100 hover:text-white hover:bg-white/5'}`}
-        >
-          Requisitos
-        </a>
+        <a href="/"                class={`nav-link ${isActive('/')               ? 'active' : ''}`}>Calculadora</a>
+        <a href="/tre"             class={`nav-link ${isActive('/tre')             ? 'active' : ''}`}>¿Qué es la TRE?</a>
+        <a href="/vivienda-social" class={`nav-link ${isActive('/vivienda-social') ? 'active' : ''}`}>Crédito VIS</a>
+        <a href="/requisitos"      class={`nav-link ${isActive('/requisitos')      ? 'active' : ''}`}>Requisitos</a>
       </div>
 
-      <div class="hidden sm:flex items-center gap-3 bg-slate-950/40 border border-white/5 rounded-2xl py-1.5 pl-3.5 pr-4 shadow-inner">
-        <div class="flex flex-col items-end">
-          <span class="text-[9px] font-bold uppercase tracking-widest text-blue-300/70 leading-none">TRE Vigente</span>
-          <span class="text-[10px] text-slate-400 mt-0.5 leading-none">Mayo 2026</span>
+      <div class="flex items-center gap-3">
+
+        <div class="tre-pill" title="Tasa de Referencia – Banco Central de Bolivia">
+          <div class="tre-dot" aria-hidden="true"></div>
+          TRE:&nbsp;<strong id="hdrTRE" class="tre-value">2.95</strong>%
         </div>
-        <div class="h-6 w-px bg-white/10"></div>
-        <strong id="hdrTRE" class="font-mono-num text-base font-bold text-yellow-400 leading-none">-- %</strong>
-      </div>
 
-      <div class="flex items-center md:hidden">
+        {!isActive('/') && (
+          <a
+            href="/"
+            class="hidden sm:flex items-center gap-1.5 text-sm font-bold text-white px-4 py-2 rounded-xl transition-all"
+            style="background: linear-gradient(135deg,#D4A843 0%,#A87420 100%); box-shadow: 0 3px 12px rgba(212,168,67,.40);"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/>
+            </svg>
+            Simular
+          </a>
+        )}
+
         <button
-          id="hamburgerBtn"
-          type="button"
-          class="inline-flex items-center justify-center p-2 rounded-xl text-blue-200 hover:text-white hover:bg-white/5 focus:outline-none transition-colors duration-150"
+          id="hamburger"
           aria-controls="mobileMenu"
           aria-expanded="false"
+          aria-label="Abrir menú"
+          class="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
         >
-          <span class="sr-only">Abrir menú principal</span>
-          <svg id="iconMenu" class="block h-6 w-6 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          <svg id="iconMenu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6"  x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
-          <svg id="iconClose" class="hidden h-6 w-6 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <svg id="iconClose" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden">
+            <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
         </button>
       </div>
@@ -87,79 +74,60 @@ const isActive = (href: string): boolean => {
     </div>
   </div>
 
-  <div class="hidden md:hidden bg-[#071328] border-t border-white/5" id="mobileMenu">
-    <div class="px-2 pt-2 pb-4 space-y-1 shadow-2xl">
-      <a
-        href="/"
-        class={`block px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${isActive('/') ? 'text-yellow-400 bg-white/5' : 'text-blue-100 hover:text-white hover:bg-white/5'}`}
-      >
-        Calculadora de Crédito
-      </a>
-      <a
-        href="/tre"
-        class={`block px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${isActive('/tre') ? 'text-yellow-400 bg-white/5' : 'text-blue-100 hover:text-white hover:bg-white/5'}`}
-      >
-        ¿Qué es la TRE?
-      </a>
-      <a
-        href="/requisitos"
-        class={`block px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${isActive('/requisitos') ? 'text-yellow-400 bg-white/5' : 'text-blue-100 hover:text-white hover:bg-white/5'}`}
-      >
-        Requisitos de Admisión
-      </a>
+  <div
+    id="mobileMenu"
+    class="hidden md:hidden"
+    style="background: rgba(6,15,30,.97); border-top: 1px solid rgba(255,255,255,.08);"
+  >
+    <div class="flex flex-col gap-1 px-4 py-3">
+      <a href="/"                class={`mobile-link ${isActive('/')               ? 'mobile-active' : ''}`}>🧮 Calculadora</a>
+      <a href="/tre"             class={`mobile-link ${isActive('/tre')             ? 'mobile-active' : ''}`}>📈 ¿Qué es la TRE?</a>
+      <a href="/vivienda-social" class={`mobile-link ${isActive('/vivienda-social') ? 'mobile-active' : ''}`}>🏠 Crédito VIS</a>
+      <a href="/requisitos"      class={`mobile-link ${isActive('/requisitos')      ? 'mobile-active' : ''}`}>📋 Requisitos</a>
     </div>
   </div>
 </nav>
 
-<script>
-  // Manejo interactivo del menú móvil en el cliente
-  const hamburger = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const iconMenu = document.getElementById('iconMenu');
-  const iconClose = document.getElementById('iconClose');
+<style>
+  .mobile-link {
+    color: rgba(255,255,255,.80); padding: 10px 14px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; text-decoration: none; transition: all .2s; display: block;
+  }
+  .mobile-link:hover, .mobile-active { background: rgba(212,168,67,.15); color: #D4A843; }
+</style>
 
-  if (hamburger && mobileMenu && iconMenu && iconClose) {
+<script is:inline>
+  (function () {
+    const hamburger  = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const iconMenu   = document.getElementById('iconMenu');
+    const iconClose  = document.getElementById('iconClose');
+    if (!hamburger || !mobileMenu) return;
+
     function toggleMenu() {
       const isOpen = !mobileMenu.classList.contains('hidden');
-
-      if (isOpen) {
-        mobileMenu.classList.add('hidden');
-        hamburger.setAttribute('aria-expanded', 'false');
-        iconMenu.classList.remove('hidden');
-        iconClose.classList.add('hidden');
-      } else {
-        mobileMenu.classList.remove('hidden');
-        hamburger.setAttribute('aria-expanded', 'true');
-        iconMenu.classList.add('hidden');
-        iconClose.classList.remove('hidden');
-      }
+      mobileMenu.classList.toggle('hidden', isOpen);
+      hamburger.setAttribute('aria-expanded', String(!isOpen));
+      iconMenu.classList.toggle('hidden', !isOpen);
+      iconClose.classList.toggle('hidden', isOpen);
     }
 
     hamburger.addEventListener('click', toggleMenu);
-
-    // Cerrar al hacer clic fuera del menú
-    document.addEventListener('click', function (e) {
-      const target = e.target as HTMLElement;
-      if (
-        !mobileMenu.classList.contains('hidden') &&
-        !mobileMenu.contains(target) &&
-        !hamburger.contains(target)
-      ) {
+    document.addEventListener('click', function(e) {
+      if (!mobileMenu.classList.contains('hidden') &&
+          !mobileMenu.contains(e.target) && !hamburger.contains(e.target)) {
         mobileMenu.classList.add('hidden');
         hamburger.setAttribute('aria-expanded', 'false');
         iconMenu.classList.remove('hidden');
         iconClose.classList.add('hidden');
       }
     });
-
-    // Cerrar al redimensionar a escritorio
-    window.addEventListener('resize', function () {
+    window.addEventListener('resize', function() {
       if (window.innerWidth >= 768) {
         mobileMenu.classList.add('hidden');
-        hamburger.setAttribute('aria-expanded', 'false');
         iconMenu.classList.remove('hidden');
         iconClose.classList.add('hidden');
       }
     });
-  }
+  })();
 </script>

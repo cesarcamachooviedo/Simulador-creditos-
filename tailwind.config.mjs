@@ -1,16 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  // ─── Astro content scanning ─────────────────────────────────────────────────
-  // Tailwind analiza todos estos archivos en busca de clases para incluir en el build
   content: [
-    './src/**/*.{astro,html,js,jsx,ts,tsx,vue,svelte}',
+    './src/**/*.{astro,html,js,jsx,ts,tsx}',
     './public/**/*.html',
   ],
-
   theme: {
     extend: {
-      // ─── Paleta corporativa ─────────────────────────────────────────────────
-      // Extraída del bloque tailwind.config del index.html original
       colors: {
         navy: {
           50:  '#EEF4FF',
@@ -28,18 +23,12 @@ export default {
           600: '#9A6E00',
         },
       },
-
-      // ─── Tipografía corporativa ──────────────────────────────────────────────
       fontFamily: {
-        // Serif editorial para títulos y displays financieros
-        display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
-        // Sans principal para cuerpo de texto e interfaz
-        sans:    ['Outfit', 'system-ui', 'sans-serif'],
-        // Monoespaciada para cifras financieras (numerales tabulares)
+        display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        sans:    ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
         mono:    ['"DM Mono"', '"Courier New"', 'monospace'],
       },
     },
   },
-
   plugins: [],
 };
