@@ -41,7 +41,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <label class="lbl">Monto del Préstamo</label>
           <div class="relative">
             <span id="currSym" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-yellow-600">Bs.</span>
-            <input type="number" id="monto" class="inp pl-12" value="500000" min="1000" step="1000">
+            <input type="number" id="monto" class="inp" style="padding-left: 2.75rem;" value="500000" min="1000" step="1000">
           </div>
           <input type="range" id="montoSlider" min="10000" max="5000000" step="10000" value="500000" class="mt-2"
                  oninput="syncVal('montoSlider','monto')">
@@ -191,7 +191,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <label class="lbl">Ingreso Mensual Neto</label>
         <div class="relative">
           <span id="currSym2" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-yellow-600">Bs.</span>
-          <input type="number" id="ingreso" class="inp pl-12" placeholder="Ej: 8,000" min="0">
+          <input type="number" id="ingreso" class="inp" style="padding-left: 2.75rem;" placeholder="Ej: 8,000" min="0">
         </div>
         <p class="text-xs text-blue-400 mt-1">Opcional. Tu sueldo para el análisis de riesgo bancario (estándar ASFI).</p>
       </div>

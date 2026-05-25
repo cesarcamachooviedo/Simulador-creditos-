@@ -6,37 +6,85 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 <style>
   .font-mono-num { font-family: 'DM Mono', 'Courier New', monospace; font-weight: 500; }
-  .hero-bg  { background: linear-gradient(135deg, #060F1E 0%, #0A1F42 45%, #0D2860 100%); }
-  .gold-bg  { background: linear-gradient(135deg, #D4A843 0%, #A87420 100%); }
-  .card     { background: #fff; border-radius: 16px; box-shadow: 0 2px 18px rgba(10,31,66,.08); }
-  .badge-gold { background: rgba(212,168,67,.14); border: 1px solid rgba(212,168,67,.40); color: #A87420; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: .04em; }
-  .doc-item { transition: background-color 0.2s, border-color 0.2s; cursor: pointer; user-select: none; }
-  .doc-item.done { background-color: #F0FDF4 !important; border-color: #86EFAC !important; }
-  .doc-item.done .doc-title { color: #166534 !important; text-decoration: line-through; opacity: 0.85; }
-  .doc-item.done .doc-desc  { color: #16a34a !important; opacity: 0.80; }
-  .check-box {
-    width: 24px; height: 24px; min-width: 24px; border-radius: 8px;
-    border: 2px solid #CBD5E1; background: #fff;
-    display: flex; align-items: center; justify-content: center;
-    transition: background-color 0.18s, border-color 0.18s, transform 0.1s; flex-shrink: 0;
+  .hero-bg { background: linear-gradient(135deg, #060F1E 0%, #0A1F42 45%, #0D2860 100%); }
+  .gold-bg { background: linear-gradient(135deg, #D4A843 0%, #A87420 100%); }
+  .card    { background: #fff; border-radius: 16px; box-shadow: 0 2px 18px rgba(10,31,66,.08); }
+
+  /* ── Checkbox custom ── */
+  .req-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1.5px solid #E8EEF8;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .18s, background .18s;
+    user-select: none;
   }
-  .check-box:active { transform: scale(0.90); }
-  .check-box.checked { background-color: #22C55E !important; border-color: #16A34A !important; }
-  .check-icon { display: none; width: 14px; height: 14px; stroke: white; stroke-width: 3; fill: none; }
-  .check-box.checked .check-icon { display: block; }
-  #progressRing { transition: stroke-dasharray 0.35s cubic-bezier(0.4, 0, 0.2, 1); transform: rotate(-90deg); transform-origin: 50% 50%; }
-  .tab-btn { transition: all 0.2s; }
-  .tab-btn.active { background-color: #0A1F42; color: #ffffff; box-shadow: 0 4px 12px rgba(10,31,66,0.15); }
+  .req-item:hover { border-color: #D4A843; background: #FFFDF5; }
+  .req-item.done  { border-color: #86EFAC; background: #F0FDF4; }
+
+  .req-checkbox {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border-radius: 6px;
+    border: 2px solid #CBD5E1;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    transition: background .15s, border-color .15s, transform .1s;
+    flex-shrink: 0;
+  }
+  .req-item:hover .req-checkbox { border-color: #D4A843; }
+  .req-item.done  .req-checkbox {
+    background: #22C55E;
+    border-color: #16A34A;
+    transform: scale(1.05);
+  }
+
+  /* Checkmark SVG: oculto por defecto, visible cuando done */
+  .req-checkmark { display: none; }
+  .req-item.done .req-checkmark { display: block; }
+
+  .req-title { font-size: 15px; font-weight: 700; color: #0A1F42; line-height: 1.3; transition: color .15s; }
+  .req-desc  { font-size: 13px; color: #64748B; line-height: 1.5; margin-top: 3px; transition: color .15s; }
+  .req-item.done .req-title { color: #166534; }
+  .req-item.done .req-desc  { color: #4ADE80; opacity: .85; }
+
+  .req-cat {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .07em; color: #94A3B8;
+    background: #F1F5F9; padding: 2px 8px; border-radius: 20px;
+    display: inline-block; margin-bottom: 4px;
+  }
+
+  /* Progress ring */
+  #progressRing {
+    transition: stroke-dasharray .4s cubic-bezier(.4,0,.2,1);
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+
+  /* Tabs */
+  .tab-btn { transition: all .2s; border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; }
+  .tab-btn.active { background: #0A1F42 !important; color: #fff !important; box-shadow: 0 4px 12px rgba(10,31,66,.18); }
 </style>
 
-<section class="hero-bg text-white overflow-hidden relative">
-  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+<!-- HERO -->
+<section class="hero-bg text-white relative overflow-hidden">
+  <div class="absolute inset-0 pointer-events-none">
     <div style="position:absolute;top:-60px;right:-60px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.10) 0%,transparent 70%)"></div>
-    <div style="position:absolute;bottom:-80px;left:-40px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(29,78,216,.15) 0%,transparent 70%)"></div>
   </div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20 relative">
     <div class="max-w-3xl">
-      <span class="badge-gold uppercase mb-3 inline-block" style="color:#D4A843">Guía de Preparación</span>
+      <span style="background:rgba(212,168,67,.14);border:1px solid rgba(212,168,67,.40);color:#D4A843;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.04em;display:inline-block;margin-bottom:12px;">
+        Guía de Preparación
+      </span>
       <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4">
         Requisitos para tu<br><span class="text-yellow-300">Crédito Bancario</span>
       </h1>
@@ -47,79 +95,88 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   </div>
 </section>
 
+<!-- CUERPO -->
 <section class="py-12 max-w-7xl mx-auto px-4 sm:px-6">
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
-    <div class="space-y-5">
+    <!-- Sidebar -->
+    <div class="space-y-4">
 
+      <!-- Progreso -->
       <div class="card p-6 text-center">
-        <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Tu Progreso</p>
-        <div class="relative inline-flex items-center justify-center mb-3">
+        <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#94A3B8;margin-bottom:16px;">Tu Progreso</p>
+        <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
           <svg width="110" height="110" viewBox="0 0 110 110">
             <circle cx="55" cy="55" r="40" fill="none" stroke="#E2E8F0" stroke-width="9"/>
-            <circle id="progressRing" cx="55" cy="55" r="40" fill="none" stroke="#22C55E" stroke-width="9"
-                    stroke-linecap="round" style="stroke-dasharray:0 251.2"/>
+            <circle id="progressRing" cx="55" cy="55" r="40" fill="none" stroke="#22C55E"
+                    stroke-width="9" stroke-linecap="round" style="stroke-dasharray:0 251.2"/>
           </svg>
-          <div class="absolute text-center">
-            <p class="font-mono-num text-2xl font-bold text-slate-900" id="progressPct">0%</p>
+          <div style="position:absolute;text-align:center;">
+            <p class="font-mono-num" style="font-size:22px;font-weight:700;color:#0A1F42;" id="progressPct">0%</p>
           </div>
         </div>
-        <p class="font-bold text-slate-800 text-base" id="progressLabel">Sin documentos</p>
-        <p class="text-slate-400 text-sm mt-1" id="progressSub">Empieza a marcar</p>
-        <div class="mt-4 pt-4 border-t border-gray-100">
-          <p class="text-xs text-slate-400 mb-1">Documentos listos</p>
-          <p class="font-mono-num text-2xl font-bold text-slate-900">
-            <span id="doneCount">0</span> <span class="text-slate-400 font-normal text-lg">de</span> <span id="totalCount">0</span>
+        <p style="font-weight:700;color:#0A1F42;font-size:15px;" id="progressLabel">Sin documentos</p>
+        <p style="color:#94A3B8;font-size:13px;margin-top:4px;" id="progressSub">Empezá a marcar</p>
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid #F1F5F9;">
+          <p style="font-size:12px;color:#94A3B8;margin-bottom:4px;">Documentos listos</p>
+          <p class="font-mono-num" style="font-size:22px;font-weight:700;color:#0A1F42;">
+            <span id="doneCount">0</span><span style="color:#CBD5E1;font-weight:400;font-size:16px;"> de </span><span id="totalCount">0</span>
           </p>
         </div>
-        <button id="btnReset" class="mt-4 text-xs text-slate-400 hover:text-red-500 transition-colors underline">
+        <button id="btnReset" style="margin-top:12px;font-size:12px;color:#94A3B8;background:none;border:none;cursor:pointer;text-decoration:underline;">
           Reiniciar checklist
         </button>
       </div>
 
-      <div class="card p-5">
-        <div class="flex gap-3 items-start">
-          <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#DBEAFE">
-            <i data-lucide="lightbulb" class="w-4 h-4 text-blue-700"></i>
-          </div>
-          <div>
-            <h4 class="font-bold text-sm text-slate-800 mb-1">Consejo Pro</h4>
-            <p class="text-xs text-slate-500 leading-relaxed">Consultá tu calificación en la Central de Riesgos ASFI antes de ir al banco. Entrá a <a href="https://asfi.gob.bo" target="_blank" class="text-yellow-600 hover:underline font-semibold">asfi.gob.bo</a> con tu CI.</p>
-          </div>
+      <!-- Consejo -->
+      <div class="card p-5" style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:36px;height:36px;border-radius:10px;background:#DBEAFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><path d="M12 2a7 7 0 017 7c0 3.5-2.5 6-4 7.5V18a1 1 0 01-1 1h-4a1 1 0 01-1-1v-1.5C7.5 15 5 12.5 5 9a7 7 0 017-7z"/><path d="M9 21h6"/></svg>
+        </div>
+        <div>
+          <p style="font-weight:700;font-size:13px;color:#0A1F42;margin-bottom:4px;">Consejo Pro</p>
+          <p style="font-size:12px;color:#64748B;line-height:1.5;">Consultá tu calificación en la Central de Riesgos ASFI antes de ir al banco en <a href="https://asfi.gob.bo" target="_blank" style="color:#D4A843;font-weight:700;">asfi.gob.bo</a></p>
         </div>
       </div>
 
-      <div class="rounded-2xl p-5" style="background:rgba(10,31,66,.04);border:1px solid rgba(10,31,66,.10)">
-        <div class="flex gap-3 items-start">
-          <div class="p-2 rounded-xl gold-bg flex-shrink-0">
-            <i data-lucide="shield-check" class="w-4 h-4 text-white"></i>
-          </div>
-          <div>
-            <h4 class="font-bold text-sm text-navy-900 mb-1">Privacidad Asegurada</h4>
-            <p class="text-xs text-slate-500 leading-relaxed">Tu progreso se guarda localmente en tu navegador. Ningún dato personal se envía a servidores externos.</p>
-          </div>
+      <!-- Privacidad -->
+      <div style="border-radius:14px;padding:16px;background:rgba(10,31,66,.04);border:1px solid rgba(10,31,66,.10);display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#D4A843,#A87420);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <p style="font-weight:700;font-size:13px;color:#0A1F42;margin-bottom:3px;">Privacidad Asegurada</p>
+          <p style="font-size:12px;color:#64748B;line-height:1.5;">Tu progreso se guarda localmente. Ningún dato se envía a servidores.</p>
         </div>
       </div>
 
-      <a href="/" class="btn-gold flex items-center justify-center gap-2 text-sm" style="width:100%;text-decoration:none;display:flex">
-        <i data-lucide="calculator" class="w-4 h-4"></i> Simular mi Crédito
+      <a href="/" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#D4A843,#A87420);color:#fff;font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 4px 16px rgba(212,168,67,.38);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+        Simular mi Crédito
       </a>
     </div>
 
-    <div class="lg:col-span-2 space-y-5">
+    <!-- Panel checklist -->
+    <div class="lg:col-span-2 space-y-4">
 
-      <div class="flex p-1.5 gap-1 rounded-2xl" style="background:#E2E8F0">
+      <!-- Tabs -->
+      <div style="display:flex;gap:4px;padding:5px;border-radius:16px;background:#E2E8F0;">
         <button data-type="dependiente"
-          class="tab-btn active flex-1 py-3 px-4 rounded-xl text-sm font-bold text-slate-600 hover:text-slate-900 whitespace-nowrap flex items-center justify-center gap-2">
-          <i data-lucide="briefcase" class="w-4 h-4"></i> Asalariado / Dependiente
+          class="tab-btn active"
+          style="flex:1;padding:11px 12px;border-radius:12px;font-size:13px;font-weight:700;color:#475569;background:transparent;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+          Asalariado / Dependiente
         </button>
         <button data-type="independiente"
-          class="tab-btn flex-1 py-3 px-4 rounded-xl text-sm font-bold text-slate-600 hover:text-slate-900 whitespace-nowrap flex items-center justify-center gap-2">
-          <i data-lucide="store" class="w-4 h-4"></i> Independiente / Consultor
+          class="tab-btn"
+          style="flex:1;padding:11px 12px;border-radius:12px;font-size:13px;font-weight:700;color:#475569;background:transparent;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Independiente / Consultor
         </button>
       </div>
 
-      <div id="checklistContainer" class="space-y-3"></div>
+      <!-- Items generados por JS -->
+      <div id="checklistContainer" class="space-y-2"></div>
 
     </div>
   </div>
@@ -128,117 +185,112 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 <script>
   const dataRequisitos = {
     dependiente: [
-      { id: 'dep_id',        cat: 'Identificación', title: 'Cédula de Identidad (C.I.)',            desc: 'Fotocopia vigente y legible del solicitante y cónyuge (si corresponde).' },
-      { id: 'dep_aviso',     cat: 'Domicilio',       title: 'Aviso de Cobranza de Luz o Agua',       desc: 'Último mes pagado del domicilio actual (sirve para verificar la dirección exacta).' },
-      { id: 'dep_croquis',   cat: 'Domicilio',       title: 'Croquis de Ubicación',                  desc: 'Dibujo detallado de la ubicación de tu domicilio y de tu fuente laboral.' },
-      { id: 'dep_boletas',   cat: 'Ingresos',        title: '3 Últimas Boletas de Pago',             desc: 'Originales y firmadas/selladas por la empresa.' },
-      { id: 'dep_afp',       cat: 'Ingresos',        title: 'Extracto de AFP / Gestora Pública',     desc: 'Histórico de aportes actualizado (mínimo los últimos 12 meses).' },
-      { id: 'dep_banco',     cat: 'Ingresos',        title: 'Extracto Bancario — Cuenta de Sueldos', desc: 'Movimientos de los últimos 6 meses donde se refleje el abono del salario.' },
-      { id: 'dep_trabajo',   cat: 'Laboral',         title: 'Certificado de Trabajo',                desc: 'Original indicando cargo, antigüedad mínima de 1 año, sueldo básico y tipo de contrato.' },
+      { id: 'dep_id',      cat: 'Identificación', title: 'Cédula de Identidad (C.I.)',             desc: 'Fotocopia vigente y legible del solicitante y cónyuge (si corresponde).' },
+      { id: 'dep_aviso',   cat: 'Domicilio',       title: 'Aviso de Cobranza de Luz o Agua',        desc: 'Último mes pagado del domicilio actual.' },
+      { id: 'dep_croquis', cat: 'Domicilio',       title: 'Croquis de Ubicación',                   desc: 'Dibujo detallado de la ubicación de tu domicilio y fuente laboral.' },
+      { id: 'dep_boletas', cat: 'Ingresos',        title: '3 Últimas Boletas de Pago',              desc: 'Originales y firmadas/selladas por la empresa.' },
+      { id: 'dep_afp',     cat: 'Ingresos',        title: 'Extracto de AFP / Gestora Pública',      desc: 'Histórico de aportes actualizado (mínimo los últimos 12 meses).' },
+      { id: 'dep_banco',   cat: 'Ingresos',        title: 'Extracto Bancario — Cuenta de Sueldos',  desc: 'Movimientos de los últimos 6 meses donde se refleje el abono del salario.' },
+      { id: 'dep_trabajo', cat: 'Laboral',         title: 'Certificado de Trabajo',                 desc: 'Original indicando cargo, antigüedad mínima 1 año, sueldo y tipo de contrato.' },
     ],
     independiente: [
-      { id: 'ind_id',        cat: 'Identificación',  title: 'Cédula de Identidad (C.I.)',            desc: 'Fotocopia vigente y legible del solicitante y cónyuge (si corresponde).' },
-      { id: 'ind_aviso',     cat: 'Domicilio',       title: 'Aviso de Cobranza de Luz o Agua',       desc: 'Último mes pagado de tu domicilio y del local comercial o negocio.' },
-      { id: 'ind_croquis',   cat: 'Domicilio',       title: 'Croquis de Ubicación',                  desc: 'Detalle de ubicación exacto de tu residencia y del lugar del negocio.' },
-      { id: 'ind_nit',       cat: 'Legal Negocio',   title: 'NIT y Certificado de Inscripción',      desc: 'Régimen General o Simplificado debidamente actualizado.' },
-      { id: 'ind_licencia',  cat: 'Legal Negocio',   title: 'Licencia de Funcionamiento',            desc: 'Emitida por el Gobierno Autónomo Municipal correspondiente.' },
-      { id: 'ind_impuestos', cat: 'Impuestos',       title: 'Formularios de Impuestos (IVA/IT/IUE)', desc: 'Pagos de los últimos 3 meses o última gestión anual según el régimen.' },
-      { id: 'ind_extractos', cat: 'Ingresos',        title: 'Extractos Bancarios de Cuentas',        desc: 'Últimos 6 meses de cuentas personales y/o del negocio que demuestren flujo constante.' },
-      { id: 'ind_respaldos', cat: 'Ingresos',        title: 'Cuadernos de Venta / Facturas / Contratos', desc: 'Documentación que respalde el movimiento diario de caja o inventarios.' },
+      { id: 'ind_id',        cat: 'Identificación', title: 'Cédula de Identidad (C.I.)',             desc: 'Fotocopia vigente y legible del solicitante y cónyuge (si corresponde).' },
+      { id: 'ind_aviso',     cat: 'Domicilio',      title: 'Aviso de Cobranza de Luz o Agua',        desc: 'Último mes pagado de tu domicilio y del local comercial.' },
+      { id: 'ind_croquis',   cat: 'Domicilio',      title: 'Croquis de Ubicación',                   desc: 'Detalle exacto de tu residencia y del lugar del negocio.' },
+      { id: 'ind_nit',       cat: 'Legal',          title: 'NIT y Certificado de Inscripción',       desc: 'Régimen General o Simplificado debidamente actualizado.' },
+      { id: 'ind_licencia',  cat: 'Legal',          title: 'Licencia de Funcionamiento',             desc: 'Emitida por el Gobierno Autónomo Municipal correspondiente.' },
+      { id: 'ind_impuestos', cat: 'Impuestos',      title: 'Formularios de Impuestos (IVA/IT/IUE)',  desc: 'Pagos de los últimos 3 meses o última gestión anual.' },
+      { id: 'ind_extractos', cat: 'Ingresos',       title: 'Extractos Bancarios de Cuentas',         desc: 'Últimos 6 meses de cuentas personales y/o del negocio.' },
+      { id: 'ind_respaldos', cat: 'Ingresos',       title: 'Cuadernos de Venta / Facturas / Contratos', desc: 'Documentación que respalde el movimiento diario de caja.' },
     ],
   };
 
   let currentType = 'dependiente';
 
   document.addEventListener('DOMContentLoaded', () => {
-    if (window.lucide) window.lucide.createIcons();
     renderChecklist();
+
     document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const type = e.currentTarget.getAttribute('data-type');
+      btn.addEventListener('click', () => {
+        const type = btn.getAttribute('data-type');
         if (!type || type === currentType) return;
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        e.currentTarget.classList.add('active');
+        btn.classList.add('active');
         currentType = type;
         renderChecklist();
       });
     });
-    document.getElementById('btnReset')?.addEventListener('click', resetChecklist);
+
+    document.getElementById('btnReset').addEventListener('click', () => {
+      dataRequisitos[currentType].forEach(item => localStorage.removeItem('req_' + item.id));
+      renderChecklist();
+    });
   });
 
   function renderChecklist() {
     const container = document.getElementById('checklistContainer');
     if (!container) return;
     container.innerHTML = '';
-    const items = dataRequisitos[currentType];
-    items.forEach(item => {
-      const isDone = localStorage.getItem(`req_${item.id}`) === 'true';
-      const row = document.createElement('div');
-      row.id        = `row_${item.id}`;
-      row.className = `doc-item card p-5 border border-slate-100 flex items-start gap-4 ${isDone ? 'done' : ''}`;
-      row.innerHTML = `
-        <div class="mt-0.5">
-          <div id="check_${item.id}" class="check-box ${isDone ? 'checked' : ''}">
-            <svg class="check-icon" viewBox="0 0 24 24">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </div>
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-[11px] font-bold uppercase tracking-wide px-2 py-0.5 bg-slate-100 rounded text-slate-500">${item.cat}</span>
-          </div>
-          <h4 class="doc-title font-bold text-slate-800 text-base leading-snug">${item.title}</h4>
-          <p class="doc-desc text-sm text-slate-500 leading-relaxed mt-1">${item.desc}</p>
-        </div>`;
-      row.addEventListener('click', () => toggleItem(item.id));
-      container.appendChild(row);
-    });
-    updateProgress();
-  }
 
-  function toggleItem(id) {
-    const row = document.getElementById(`row_${id}`);
-    const box = document.getElementById(`check_${id}`);
-    if (!row || !box) return;
-    const isDone = row.classList.contains('done');
-    if (isDone) {
-      row.classList.remove('done');
-      box.classList.remove('checked');
-      localStorage.removeItem(`req_${id}`);
-    } else {
-      row.classList.add('done');
-      box.classList.add('checked');
-      localStorage.setItem(`req_${id}`, 'true');
-    }
+    dataRequisitos[currentType].forEach(item => {
+      const isDone = localStorage.getItem('req_' + item.id) === 'true';
+      const div = document.createElement('div');
+      div.id = 'row_' + item.id;
+      div.className = 'req-item' + (isDone ? ' done' : '');
+
+      div.innerHTML =
+        '<div class="req-checkbox">' +
+          '<svg class="req-checkmark" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
+            '<polyline points="20 6 9 17 4 12"></polyline>' +
+          '</svg>' +
+        '</div>' +
+        '<div style="flex:1;min-width:0;">' +
+          '<span class="req-cat">' + item.cat + '</span>' +
+          '<p class="req-title">' + item.title + '</p>' +
+          '<p class="req-desc">' + item.desc + '</p>' +
+        '</div>';
+
+      div.addEventListener('click', () => {
+        const done = div.classList.contains('done');
+        if (done) {
+          div.classList.remove('done');
+          localStorage.removeItem('req_' + item.id);
+        } else {
+          div.classList.add('done');
+          localStorage.setItem('req_' + item.id, 'true');
+        }
+        updateProgress();
+      });
+
+      container.appendChild(div);
+    });
+
     updateProgress();
   }
 
   function updateProgress() {
     const items = dataRequisitos[currentType];
     const total = items.length;
-    let done = 0;
-    items.forEach(item => { if (localStorage.getItem(`req_${item.id}`) === 'true') done++; });
-    const pct           = total ? Math.round((done / total) * 100) : 0;
-    const circumference = 2 * Math.PI * 40;
-    const ring = document.getElementById('progressRing');
-    if (ring) ring.style.strokeDasharray = `${(pct / 100) * circumference} ${circumference}`;
-    const el = id => document.getElementById(id);
-    if (el('progressPct'))   el('progressPct').textContent   = pct + '%';
-    if (el('doneCount'))     el('doneCount').textContent     = done;
-    if (el('totalCount'))    el('totalCount').textContent    = total;
-    let label = 'Sin documentos', sub = 'Empieza a marcar tus documentos';
-    if (pct > 0   && pct < 40)  { label = 'Iniciando';           sub = 'Buen comienzo, seguí reuniendo'; }
-    if (pct >= 40 && pct < 70)  { label = 'En progreso';         sub = 'Ya tenés lo más importante'; }
-    if (pct >= 70 && pct < 100) { label = 'Casi listo 🔥';       sub = 'Solo faltan algunos documentos'; }
-    if (pct === 100)             { label = '¡Listo para el banco! 🎉'; sub = 'Tenés todo para presentar'; }
-    if (el('progressLabel')) el('progressLabel').textContent = label;
-    if (el('progressSub'))   el('progressSub').textContent   = sub;
-  }
+    const done  = items.filter(i => localStorage.getItem('req_' + i.id) === 'true').length;
+    const pct   = total ? Math.round((done / total) * 100) : 0;
+    const circ  = 2 * Math.PI * 40;
 
-  function resetChecklist() {
-    dataRequisitos[currentType].forEach(item => localStorage.removeItem(`req_${item.id}`));
-    renderChecklist();
+    const ring = document.getElementById('progressRing');
+    if (ring) ring.style.strokeDasharray = (pct / 100 * circ) + ' ' + circ;
+
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    set('progressPct',  pct + '%');
+    set('doneCount',    done);
+    set('totalCount',   total);
+
+    let label = 'Sin documentos', sub = 'Empezá a marcar tus documentos';
+    if (pct > 0   && pct < 40)  { label = 'Iniciando';                sub = 'Buen comienzo, seguí reuniendo'; }
+    if (pct >= 40 && pct < 70)  { label = 'En progreso';              sub = 'Ya tenés lo más importante'; }
+    if (pct >= 70 && pct < 100) { label = 'Casi listo 🔥';            sub = 'Solo faltan algunos documentos'; }
+    if (pct === 100)             { label = '¡Listo para el banco! 🎉'; sub = 'Tenés todo para presentar'; }
+
+    set('progressLabel', label);
+    set('progressSub',   sub);
   }
 </script>
 

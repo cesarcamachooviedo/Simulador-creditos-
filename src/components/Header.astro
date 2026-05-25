@@ -22,11 +22,12 @@ const isActive = (href: string): boolean => {
               stroke="white" stroke-width="1.6" stroke-linecap="round"/>
           </svg>
         </div>
-        <span class="font-display text-xl text-white font-bold leading-none">
+        <span class="text-xl text-white font-bold leading-none" style="font-family:'Plus Jakarta Sans',sans-serif">
           Simulador<span class="text-yellow-300">de</span>Créditos
         </span>
       </a>
 
+      <!-- Links desktop -->
       <div class="hidden md:flex items-center gap-1">
         <a href="/"                class={`nav-link ${isActive('/')               ? 'active' : ''}`}>Calculadora</a>
         <a href="/tre"             class={`nav-link ${isActive('/tre')             ? 'active' : ''}`}>¿Qué es la TRE?</a>
@@ -34,9 +35,11 @@ const isActive = (href: string): boolean => {
         <a href="/requisitos"      class={`nav-link ${isActive('/requisitos')      ? 'active' : ''}`}>Requisitos</a>
       </div>
 
+      <!-- Derecha desktop: TRE + CTA + hamburger -->
       <div class="flex items-center gap-3">
 
-        <div class="tre-pill" title="Tasa de Referencia – Banco Central de Bolivia">
+        <!-- TRE: solo visible en desktop (md+) -->
+        <div class="hidden md:inline-flex tre-pill" title="Tasa de Referencia – Banco Central de Bolivia">
           <div class="tre-dot" aria-hidden="true"></div>
           TRE:&nbsp;<strong id="hdrTRE" class="tre-value">2.95</strong>%
         </div>
@@ -47,53 +50,62 @@ const isActive = (href: string): boolean => {
             class="hidden sm:flex items-center gap-1.5 text-sm font-bold text-white px-4 py-2 rounded-xl transition-all"
             style="background: linear-gradient(135deg,#D4A843 0%,#A87420 100%); box-shadow: 0 3px 12px rgba(212,168,67,.40);"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/>
             </svg>
             Simular
           </a>
         )}
 
+        <!-- Hamburger mobile: SVG explícito con color blanco forzado -->
         <button
           id="hamburger"
           aria-controls="mobileMenu"
           aria-expanded="false"
           aria-label="Abrir menú"
-          class="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+          style="background:transparent;border:none;cursor:pointer;padding:8px;border-radius:8px;display:flex;align-items:center;justify-content:center;"
+          class="md:hidden"
         >
-          <svg id="iconMenu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="6"  x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
+          <svg id="iconMenu" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="3" y1="6"  x2="21" y2="6"  stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="3" y1="12" x2="21" y2="12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="3" y1="18" x2="21" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
-          <svg id="iconClose" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden">
-            <path d="M18 6L6 18M6 6l12 12"/>
+          <svg id="iconClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+            <line x1="6" y1="6"  x2="18" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="18" y1="6" x2="6"  y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
         </button>
-      </div>
 
+      </div>
     </div>
   </div>
 
+  <!-- Menú mobile -->
   <div
     id="mobileMenu"
-    class="hidden md:hidden"
-    style="background: rgba(6,15,30,.97); border-top: 1px solid rgba(255,255,255,.08);"
+    style="display:none; background:rgba(6,15,30,.97); border-top:1px solid rgba(255,255,255,.08);"
   >
-    <div class="flex flex-col gap-1 px-4 py-3">
-      <a href="/"                class={`mobile-link ${isActive('/')               ? 'mobile-active' : ''}`}>🧮 Calculadora</a>
-      <a href="/tre"             class={`mobile-link ${isActive('/tre')             ? 'mobile-active' : ''}`}>📈 ¿Qué es la TRE?</a>
-      <a href="/vivienda-social" class={`mobile-link ${isActive('/vivienda-social') ? 'mobile-active' : ''}`}>🏠 Crédito VIS</a>
-      <a href="/requisitos"      class={`mobile-link ${isActive('/requisitos')      ? 'mobile-active' : ''}`}>📋 Requisitos</a>
+    <div style="padding:12px 16px; display:flex; flex-direction:column; gap:4px;">
+      <a href="/"                style="color:rgba(255,255,255,.85);padding:11px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;" class={isActive('/')               ? 'mobile-active' : ''}>🧮 Calculadora</a>
+      <a href="/tre"             style="color:rgba(255,255,255,.85);padding:11px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;" class={isActive('/tre')             ? 'mobile-active' : ''}>📈 ¿Qué es la TRE?</a>
+      <a href="/vivienda-social" style="color:rgba(255,255,255,.85);padding:11px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;" class={isActive('/vivienda-social') ? 'mobile-active' : ''}>🏠 Crédito VIS</a>
+      <a href="/requisitos"      style="color:rgba(255,255,255,.85);padding:11px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;" class={isActive('/requisitos')      ? 'mobile-active' : ''}>📋 Requisitos</a>
+      <!-- TRE en mobile: aparece dentro del menú desplegable -->
+      <div style="margin-top:8px;padding:10px 14px;border-radius:10px;background:rgba(212,168,67,.10);border:1px solid rgba(212,168,67,.25);display:inline-flex;align-items:center;gap:8px;align-self:flex-start;">
+        <div style="width:7px;height:7px;border-radius:50%;background:#D4A843;animation:trepulse 2s infinite;"></div>
+        <span style="font-size:13px;color:#D4A843;font-weight:700;">TRE Vigente: <span class="tre-value">2.95</span>%</span>
+      </div>
     </div>
   </div>
+
 </nav>
 
 <style>
-  .mobile-link {
-    color: rgba(255,255,255,.80); padding: 10px 14px; border-radius: 8px;
-    font-size: 14px; font-weight: 600; text-decoration: none; transition: all .2s; display: block;
+  .mobile-active {
+    background: rgba(212,168,67,.15) !important;
+    color: #D4A843 !important;
   }
-  .mobile-link:hover, .mobile-active { background: rgba(212,168,67,.15); color: #D4A843; }
 </style>
 
 <script is:inline>
@@ -104,30 +116,35 @@ const isActive = (href: string): boolean => {
     const iconClose  = document.getElementById('iconClose');
     if (!hamburger || !mobileMenu) return;
 
-    function toggleMenu() {
-      const isOpen = !mobileMenu.classList.contains('hidden');
-      mobileMenu.classList.toggle('hidden', isOpen);
-      hamburger.setAttribute('aria-expanded', String(!isOpen));
-      iconMenu.classList.toggle('hidden', !isOpen);
-      iconClose.classList.toggle('hidden', isOpen);
+    function openMenu() {
+      mobileMenu.style.display = 'block';
+      hamburger.setAttribute('aria-expanded', 'true');
+      iconMenu.style.display  = 'none';
+      iconClose.style.display = 'block';
     }
 
-    hamburger.addEventListener('click', toggleMenu);
+    function closeMenu() {
+      mobileMenu.style.display = 'none';
+      hamburger.setAttribute('aria-expanded', 'false');
+      iconMenu.style.display  = 'block';
+      iconClose.style.display = 'none';
+    }
+
+    hamburger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      mobileMenu.style.display === 'none' ? openMenu() : closeMenu();
+    });
+
     document.addEventListener('click', function(e) {
-      if (!mobileMenu.classList.contains('hidden') &&
-          !mobileMenu.contains(e.target) && !hamburger.contains(e.target)) {
-        mobileMenu.classList.add('hidden');
-        hamburger.setAttribute('aria-expanded', 'false');
-        iconMenu.classList.remove('hidden');
-        iconClose.classList.add('hidden');
+      if (mobileMenu.style.display !== 'none' &&
+          !mobileMenu.contains(e.target) &&
+          !hamburger.contains(e.target)) {
+        closeMenu();
       }
     });
+
     window.addEventListener('resize', function() {
-      if (window.innerWidth >= 768) {
-        mobileMenu.classList.add('hidden');
-        iconMenu.classList.remove('hidden');
-        iconClose.classList.add('hidden');
-      }
+      if (window.innerWidth >= 768) closeMenu();
     });
   })();
 </script>
