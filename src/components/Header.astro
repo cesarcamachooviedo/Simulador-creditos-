@@ -7,71 +7,62 @@ const isActive = (href: string): boolean => {
 ---
 
 <nav
-  class="hero-bg sticky top-0 z-50"
-  style="box-shadow: 0 2px 20px rgba(0,0,0,.35);"
+  style="background:linear-gradient(135deg,#060F1E 0%,#0A1F42 45%,#0D2860 100%);box-shadow:0 2px 20px rgba(0,0,0,.35);position:sticky;top:0;z-index:50;width:100%;overflow:hidden;"
   aria-label="Navegación principal"
 >
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="flex items-center justify-between h-16">
+  <div style="max-width:80rem;margin:0 auto;padding:0 16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:64px;gap:8px;">
 
-      <a href="/" class="flex items-center gap-2.5 flex-shrink-0" aria-label="Inicio">
-        <div class="w-9 h-9 rounded-xl gold-bg flex items-center justify-center shadow-lg">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <!-- Logo -->
+      <a href="/" style="display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;" aria-label="Inicio">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#D4A843,#A87420);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.8"/>
-            <path d="M12 7v1m0 8v1M9.5 9.5C9.5 8.67 10.67 8 12 8s2.5.67 2.5 1.5S13.33 11 12 11s-2.5.67-2.5 1.5S10.67 14 12 14s2.5.67 2.5 1.5"
-              stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M12 7v1m0 8v1M9.5 9.5C9.5 8.67 10.67 8 12 8s2.5.67 2.5 1.5S13.33 11 12 11s-2.5.67-2.5 1.5S10.67 14 12 14s2.5.67 2.5 1.5" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
           </svg>
         </div>
-        <span class="text-xl text-white font-bold leading-none" style="font-family:'Plus Jakarta Sans',sans-serif">
-          Simulador<span class="text-yellow-300">de</span>Créditos
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:white;white-space:nowrap;line-height:1;">
+          Simulador<span style="color:#FDE047;">de</span>Créditos
         </span>
       </a>
 
       <!-- Links desktop -->
-      <div class="hidden md:flex items-center gap-1">
-        <a href="/"                class={`nav-link ${isActive('/')               ? 'active' : ''}`}>Calculadora</a>
-        <a href="/tre"             class={`nav-link ${isActive('/tre')             ? 'active' : ''}`}>¿Qué es la TRE?</a>
-        <a href="/vivienda-social" class={`nav-link ${isActive('/vivienda-social') ? 'active' : ''}`}>Crédito VIS</a>
-        <a href="/requisitos"      class={`nav-link ${isActive('/requisitos')      ? 'active' : ''}`}>Requisitos</a>
+      <div style="display:none;" class="desk-links">
+        <a href="/"                style={`font-size:13px;font-weight:600;color:${isActive('/')?'#D4A843':'rgba(255,255,255,.75)'};padding:6px 11px;border-radius:8px;text-decoration:none;white-space:nowrap;`}>Calculadora</a>
+        <a href="/tre"             style={`font-size:13px;font-weight:600;color:${isActive('/tre')?'#D4A843':'rgba(255,255,255,.75)'};padding:6px 11px;border-radius:8px;text-decoration:none;white-space:nowrap;`}>¿Qué es la TRE?</a>
+        <a href="/vivienda-social" style={`font-size:13px;font-weight:600;color:${isActive('/vivienda-social')?'#D4A843':'rgba(255,255,255,.75)'};padding:6px 11px;border-radius:8px;text-decoration:none;white-space:nowrap;`}>Crédito VIS</a>
+        <a href="/requisitos"      style={`font-size:13px;font-weight:600;color:${isActive('/requisitos')?'#D4A843':'rgba(255,255,255,.75)'};padding:6px 11px;border-radius:8px;text-decoration:none;white-space:nowrap;`}>Requisitos</a>
       </div>
 
-      <!-- Derecha desktop: TRE + CTA + hamburger -->
-      <div class="flex items-center gap-3">
+      <!-- Derecha -->
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
 
-        <!-- TRE: solo visible en desktop (md+) -->
-        <div class="hidden md:inline-flex tre-pill" title="Tasa de Referencia – Banco Central de Bolivia">
-          <div class="tre-dot" aria-hidden="true"></div>
+        <!-- TRE solo desktop -->
+        <div class="tre-desktop" style="display:none;align-items:center;gap:6px;background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.35);border-radius:20px;padding:4px 11px;font-size:11px;color:#C9A840;font-weight:700;white-space:nowrap;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#D4A843;animation:trepulse 2s infinite;flex-shrink:0;"></div>
           TRE:&nbsp;<strong id="hdrTRE" class="tre-value">2.95</strong>%
         </div>
 
+        <!-- CTA desktop -->
         {!isActive('/') && (
-          <a
-            href="/"
-            class="hidden sm:flex items-center gap-1.5 text-sm font-bold text-white px-4 py-2 rounded-xl transition-all"
-            style="background: linear-gradient(135deg,#D4A843 0%,#A87420 100%); box-shadow: 0 3px 12px rgba(212,168,67,.40);"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/>
-            </svg>
+          <a href="/" class="cta-desktop" style="display:none;align-items:center;gap:6px;font-size:13px;font-weight:700;color:white;padding:8px 14px;border-radius:10px;text-decoration:none;background:linear-gradient(135deg,#D4A843,#A87420);white-space:nowrap;">
             Simular
           </a>
         )}
 
-        <!-- Hamburger mobile: SVG explícito con color blanco forzado -->
+        <!-- Hamburger: botón grande y visible -->
         <button
           id="hamburger"
-          aria-controls="mobileMenu"
-          aria-expanded="false"
           aria-label="Abrir menú"
-          style="background:transparent;border:none;cursor:pointer;padding:8px;border-radius:8px;display:flex;align-items:center;justify-content:center;"
-          class="md:hidden"
+          style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);border-radius:8px;padding:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"
+          class="ham-btn"
         >
-          <svg id="iconMenu" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg id="iconMenu" width="22" height="22" viewBox="0 0 24 24" fill="none">
             <line x1="3" y1="6"  x2="21" y2="6"  stroke="white" stroke-width="2.5" stroke-linecap="round"/>
             <line x1="3" y1="12" x2="21" y2="12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
             <line x1="3" y1="18" x2="21" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
-          <svg id="iconClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+          <svg id="iconClose" width="22" height="22" viewBox="0 0 24 24" fill="none" style="display:none;">
             <line x1="6" y1="6"  x2="18" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
             <line x1="18" y1="6" x2="6"  y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
@@ -82,29 +73,27 @@ const isActive = (href: string): boolean => {
   </div>
 
   <!-- Menú mobile -->
-  <div
-    id="mobileMenu"
-    style="display:none; background:rgba(6,15,30,.97); border-top:1px solid rgba(255,255,255,.08);"
-  >
-    <div style="padding:12px 16px; display:flex; flex-direction:column; gap:4px;">
-      <a href="/"                style="color:rgba(255,255,255,.85);padding:11px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;" class={isActive('/')               ? 'mobile-active' : ''}>🧮 Calculadora</a>
-      <a href="/tre"             style="color:rgba(255,255,255,.85);padding:11px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;" class={isActive('/tre')             ? 'mobile-active' : ''}>📈 ¿Qué es la TRE?</a>
-      <a href="/vivienda-social" style="color:rgba(255,255,255,.85);padding:11px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;" class={isActive('/vivienda-social') ? 'mobile-active' : ''}>🏠 Crédito VIS</a>
-      <a href="/requisitos"      style="color:rgba(255,255,255,.85);padding:11px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;" class={isActive('/requisitos')      ? 'mobile-active' : ''}>📋 Requisitos</a>
-      <!-- TRE en mobile: aparece dentro del menú desplegable -->
-      <div style="margin-top:8px;padding:10px 14px;border-radius:10px;background:rgba(212,168,67,.10);border:1px solid rgba(212,168,67,.25);display:inline-flex;align-items:center;gap:8px;align-self:flex-start;">
-        <div style="width:7px;height:7px;border-radius:50%;background:#D4A843;animation:trepulse 2s infinite;"></div>
+  <div id="mobileMenu" style="display:none;background:rgba(6,15,30,.98);border-top:1px solid rgba(255,255,255,.08);">
+    <div style="padding:12px 16px;display:flex;flex-direction:column;gap:4px;">
+      <a href="/"                style={`padding:12px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;color:${isActive('/')?'#D4A843':'rgba(255,255,255,.85)'};background:${isActive('/')?'rgba(212,168,67,.12)':'transparent'};`}>🧮 Calculadora</a>
+      <a href="/tre"             style={`padding:12px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;color:${isActive('/tre')?'#D4A843':'rgba(255,255,255,.85)'};background:${isActive('/tre')?'rgba(212,168,67,.12)':'transparent'};`}>📈 ¿Qué es la TRE?</a>
+      <a href="/vivienda-social" style={`padding:12px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;color:${isActive('/vivienda-social')?'#D4A843':'rgba(255,255,255,.85)'};background:${isActive('/vivienda-social')?'rgba(212,168,67,.12)':'transparent'};`}>🏠 Crédito VIS</a>
+      <a href="/requisitos"      style={`padding:12px 14px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:block;color:${isActive('/requisitos')?'#D4A843':'rgba(255,255,255,.85)'};background:${isActive('/requisitos')?'rgba(212,168,67,.12)':'transparent'};`}>📋 Requisitos</a>
+      <!-- TRE en mobile dentro del menú -->
+      <div style="margin-top:8px;padding:10px 14px;border-radius:10px;background:rgba(212,168,67,.10);border:1px solid rgba(212,168,67,.25);display:flex;align-items:center;gap:8px;">
+        <div style="width:7px;height:7px;border-radius:50%;background:#D4A843;flex-shrink:0;"></div>
         <span style="font-size:13px;color:#D4A843;font-weight:700;">TRE Vigente: <span class="tre-value">2.95</span>%</span>
       </div>
     </div>
   </div>
-
 </nav>
 
-<style>
-  .mobile-active {
-    background: rgba(212,168,67,.15) !important;
-    color: #D4A843 !important;
+<style is:global>
+  @media (min-width: 768px) {
+    .desk-links  { display:flex !important; align-items:center; gap:2px; }
+    .tre-desktop { display:flex !important; }
+    .cta-desktop { display:flex !important; }
+    .ham-btn     { display:none !important; }
   }
 </style>
 
@@ -116,35 +105,30 @@ const isActive = (href: string): boolean => {
     const iconClose  = document.getElementById('iconClose');
     if (!hamburger || !mobileMenu) return;
 
-    function openMenu() {
+    function open() {
       mobileMenu.style.display = 'block';
+      iconMenu.style.display   = 'none';
+      iconClose.style.display  = 'block';
       hamburger.setAttribute('aria-expanded', 'true');
-      iconMenu.style.display  = 'none';
-      iconClose.style.display = 'block';
     }
-
-    function closeMenu() {
+    function close() {
       mobileMenu.style.display = 'none';
+      iconMenu.style.display   = 'block';
+      iconClose.style.display  = 'none';
       hamburger.setAttribute('aria-expanded', 'false');
-      iconMenu.style.display  = 'block';
-      iconClose.style.display = 'none';
     }
 
     hamburger.addEventListener('click', function(e) {
       e.stopPropagation();
-      mobileMenu.style.display === 'none' ? openMenu() : closeMenu();
+      mobileMenu.style.display === 'none' ? open() : close();
     });
-
     document.addEventListener('click', function(e) {
       if (mobileMenu.style.display !== 'none' &&
           !mobileMenu.contains(e.target) &&
-          !hamburger.contains(e.target)) {
-        closeMenu();
-      }
+          !hamburger.contains(e.target)) close();
     });
-
     window.addEventListener('resize', function() {
-      if (window.innerWidth >= 768) closeMenu();
+      if (window.innerWidth >= 768) close();
     });
   })();
 </script>
