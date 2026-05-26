@@ -105,6 +105,23 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
             </select>
           </div>
           <div>
+            <label class="lbl-dpf">Titular del DPF</label>
+            <div style="display:flex;gap:4px;background:#F0F4FB;padding:4px;border-radius:11px;">
+              <button id="btnPersona" onclick="setTitular('persona')"
+                style="flex:1;padding:9px 8px;border-radius:8px;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s;background:#0A1F42;color:#fff;box-shadow:0 2px 8px rgba(10,31,66,.25);">
+                👤 Persona Natural
+              </button>
+              <button id="btnEmpresa" onclick="setTitular('empresa')"
+                style="flex:1;padding:9px 8px;border-radius:8px;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s;background:transparent;color:#4B6A9B;">
+                🏢 Empresa / NIT Jurídico
+              </button>
+            </div>
+            <div id="titularNota" class="mt-2 rounded-xl px-3 py-2 text-xs leading-relaxed"
+                 style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.20);color:#DC2626;">
+              <strong>Persona Natural:</strong> sujeto a RC-IVA (13% sobre intereses). El banco retiene automáticamente.
+            </div>
+          </div>
+          <div>
             <label class="lbl-dpf">Monto a Invertir</label>
             <div class="relative">
               <span id="currSymbol" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-yellow-600">Bs.</span>
@@ -345,7 +362,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 
 <script is:inline>
 "use strict";
-var DPF = { moneda:'BOB', monto:50000, dias:90, tasa:4.50 };
+var DPF = { moneda:'BOB', monto:50000, dias:90, tasa:4.50, titular:'persona' };
 var FAQS = [
   { q:'¿Puedo retirar el dinero antes del vencimiento?', a:'Generalmente no, o implica penalidades. La mayoría de bancos bolivianos aplican la pérdida parcial o total de los intereses si retirás antes del plazo. Algunos ofrecen "DPF con liquidez" a tasas menores. Consultá con tu banco antes de contratar.' },
   { q:'¿El RC-IVA aplica en dólares también?', a:'Sí. El RC-IVA (13%) aplica tanto a DPFs en Bolivianos como en Dólares, siempre que el plazo sea de 3 años o menos. No hay distinción por moneda para esta retención.' },
@@ -356,6 +373,40 @@ var FAQS = [
 ];
 
 document.addEventListener('DOMContentLoaded', function() { renderFAQs(); calcDPF(); });
+
+function setTitular(tipo) {
+  DPF.titular = tipo;
+  var isEmpresa = tipo === 'empresa';
+
+  var btnP = document.getElementById('btnPersona');
+  var btnE = document.getElementById('btnEmpresa');
+  var nota = document.getElementById('titularNota');
+
+  if (isEmpresa) {
+    btnE.style.background    = '#0A1F42';
+    btnE.style.color         = '#fff';
+    btnE.style.boxShadow     = '0 2px 8px rgba(10,31,66,.25)';
+    btnP.style.background    = 'transparent';
+    btnP.style.color         = '#4B6A9B';
+    btnP.style.boxShadow     = 'none';
+    nota.style.background    = 'rgba(34,197,94,.06)';
+    nota.style.borderColor   = 'rgba(34,197,94,.25)';
+    nota.style.color         = '#16A34A';
+    nota.innerHTML = '<strong>Empresa / NIT Jurídico:</strong> exento de RC-IVA. Las empresas tributan por IUE, no por RC-IVA personal. Recibís el 100% del interés bruto.';
+  } else {
+    btnP.style.background    = '#0A1F42';
+    btnP.style.color         = '#fff';
+    btnP.style.boxShadow     = '0 2px 8px rgba(10,31,66,.25)';
+    btnE.style.background    = 'transparent';
+    btnE.style.color         = '#4B6A9B';
+    btnE.style.boxShadow     = 'none';
+    nota.style.background    = 'rgba(239,68,68,.06)';
+    nota.style.borderColor   = 'rgba(239,68,68,.20)';
+    nota.style.color         = '#DC2626';
+    nota.innerHTML = '<strong>Persona Natural:</strong> sujeto a RC-IVA (13% sobre intereses). El banco retiene automáticamente.';
+  }
+  calcDPF();
+}
 
 function setPlazo(btn) {
   document.querySelectorAll('.plazo-pill').forEach(function(b) { b.classList.remove('active'); });
@@ -392,7 +443,13 @@ function calcDPF() {
   document.getElementById('sliderMid').textContent = fmtCompact(monto, mon);
   document.getElementById('dpfSlider').value = monto;
   var interesBruto = monto * (tasa / 100) * (dias / 360);
-  var esExento  = (mon === 'BOB') && (dias > 1080);
+  var esExentoEmpresa = DPF.titular === 'empresa';
+  var esExentoPlazo   = (mon === 'BOB') && (dias > 1080);
+  var esExento        = esExentoEmpresa || esExentoPlazo;
+
+  var motivoExencion = esExentoEmpresa
+    ? 'Empresa / NIT Jurídico — exento de RC-IVA (tributa por IUE)'
+    : 'DPF en BOB mayor a 3 años — exento de RC-IVA por normativa';
   var rcIva     = esExento ? 0 : interesBruto * 0.13;
   var interesNeto = interesBruto - rcIva;
   var montoFinal  = monto + interesNeto;
@@ -413,7 +470,7 @@ function calcDPF() {
   set('tNeto',  f(interesNeto));
   set('tFinal', f(montoFinal));
   document.getElementById('rcIvaNota').textContent = esExento
-    ? '* Exento de RC-IVA por ser DPF en BOB mayor a 3 años. Verificá con tu entidad.'
+    ? '* ' + motivoExencion + '. Verificá con tu entidad financiera.'
     : '* El banco retiene el RC-IVA (13%) automáticamente al momento del vencimiento.';
   document.getElementById('alertaExencion').classList.toggle('hidden', !esExento);
   var maxTasa = Math.max(tasa, 10);
