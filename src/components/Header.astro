@@ -83,6 +83,23 @@ const isActive = (href: string): boolean => {
           </div>
         </div>
 
+        <!-- Ayuda dropdown -->
+        <div class="nav-dropdown" style="position:relative;">
+          <button class="nav-drop-btn" style={`font-size:13px;font-weight:600;padding:6px 11px;border-radius:8px;background:none;border:none;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;color:${isActive('/ayuda')?'#D4A843':'rgba(255,255,255,.75)'};`}>
+            Ayuda
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="nav-drop-menu" style="display:none;position:absolute;top:calc(100% + 8px);left:0;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(10,31,66,.18);border:1px solid #E5EDF8;min-width:220px;padding:6px;z-index:100;">
+            <a href="/ayuda/dudas-frecuentes" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;color:#0A1F42;font-size:13px;font-weight:600;" onmouseover="this.style.background='#F0F4FB'" onmouseout="this.style.background='transparent'">
+              <span style="font-size:16px;">❓</span>
+              <div>
+                <div>Dudas Frecuentes</div>
+                <div style="font-size:11px;font-weight:400;color:#6B7A8D;">Preguntas sobre créditos y finanzas</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
         <!-- TRE -->
         <a href="/tre"
            style={`font-size:13px;font-weight:600;padding:6px 11px;border-radius:8px;text-decoration:none;white-space:nowrap;color:${isActive('/tre')?'#D4A843':'rgba(255,255,255,.75)'};`}>
@@ -146,6 +163,12 @@ const isActive = (href: string): boolean => {
       </a>
       <a href="/dpf/tasas-en-bolivia" style={`padding:11px 14px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;display:block;color:${isActive('/dpf/tasas-en-bolivia')?'#D4A843':'rgba(255,255,255,.80)'};background:${isActive('/dpf/tasas-en-bolivia')?'rgba(212,168,67,.12)':'transparent'};`}>
         📊 Tasas en Bolivia
+      </a>
+
+      <!-- Sección Ayuda -->
+      <div style="padding:8px 14px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35);margin-top:4px;">Ayuda</div>
+      <a href="/ayuda/dudas-frecuentes" style={`padding:11px 14px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;display:block;color:${isActive('/ayuda')?'#D4A843':'rgba(255,255,255,.80)'};background:${isActive('/ayuda')?'rgba(212,168,67,.12)':'transparent'};`}>
+        ❓ Dudas Frecuentes
       </a>
 
       <!-- TRE -->
