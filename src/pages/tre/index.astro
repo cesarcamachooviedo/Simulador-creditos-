@@ -384,58 +384,84 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   // ── Gráfico TRE dinámico desde Google Sheets ──────────────────────────
   async function cargarGraficoTRE() {
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRvUbdrExg3eirmhYGRuOblvnC4npyYmsw1aOdBXgUJMuZJ4EKMrJJ4zsZIR8vSxQtXhVN_aJyuzmR_/pub?gid=1252112532&single=true&output=csv';
+    const PROXY   = 'https://corsproxy.io/?url=';
 
+    let text = '';
     try {
-      const res  = await fetch(CSV_URL);
-      const text = await res.text();
-      const rows = text.trim().split('\n');
-
-      // Leer columnas A y B de la hoja historial (índices 0 y 1)
-      const historial = [];
-      rows.forEach((row, i) => {
-        if (i === 0) return; // saltar header
-        const cols = row.split(',');
-        const mes  = cols[0]?.trim();
-        const val  = parseFloat(cols[1]?.trim());
-        if (mes && !isNaN(val)) historial.push({ mes, val });
-      });
-
-      if (!historial.length) return;
-
-      // Calcular min y max para escalar las barras
-      const vals  = historial.map(h => h.val);
-      const minV  = Math.min(...vals) - 0.5;
-      const maxV  = Math.max(...vals) + 0.1;
-      const range = maxV - minV;
-
-      const container = document.getElementById('treChartBars');
-      if (!container) return;
-      container.innerHTML = '';
-
-      historial.forEach((h, i) => {
-        const isLast  = i === historial.length - 1;
-        const heightP = Math.max(15, ((h.val - minV) / range) * 100);
-        const bg      = isLast
-          ? 'linear-gradient(to top,#D4A843,#A87420)'
-          : 'linear-gradient(to top,#0A1F42,#1D4ED8)';
-        const shadow  = isLast ? 'box-shadow:0 0 12px rgba(212,168,67,.4)' : '';
-
-        const col = document.createElement('div');
-        col.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;';
-        col.innerHTML =
-          '<div style="width:100%;border-radius:4px 4px 0 0;background:' + bg + ';' + shadow + ';height:' + heightP + '%;transition:height .6s cubic-bezier(.34,1.56,.64,1);" title="' + h.mes + ': ' + h.val + '%"></div>' +
-          '<span style="font-size:9px;color:' + (isLast ? '#D4A843' : '#94A3B8') + ';font-weight:' + (isLast ? '700' : '400') + ';white-space:nowrap;">' + h.mes.split('-')[0] + '</span>';
-        container.appendChild(col);
-      });
-
-      // Actualizar label "Vigente"
-      const ultimo = historial[historial.length - 1];
-      const vigEl  = document.getElementById('treVigenteChart');
-      if (vigEl) vigEl.textContent = ultimo.val;
-
-    } catch(e) {
-      console.warn('No se pudo cargar historial TRE:', e);
+      // Intento 1: directo
+      const res = await fetch(CSV_URL);
+      if (!res.ok) throw new Error('directo falló');
+      text = await res.text();
+    } catch {
+      try {
+        // Intento 2: con proxy CORS
+        const res = await fetch(PROXY + encodeURIComponent(CSV_URL));
+        if (!res.ok) throw new Error('proxy falló');
+        text = await res.text();
+      } catch(e) {
+        console.warn('No se pudo cargar historial TRE:', e);
+        renderGraficoFallback();
+        return;
+      }
     }
+
+    const rows = text.trim().split(/\r?\n/);
+    const historial = [];
+    rows.forEach((row, i) => {
+      if (i === 0) return;
+      const cols = row.split(',');
+      const mes  = cols[0]?.trim();
+      const val  = parseFloat(cols[1]?.trim());
+      if (mes && !isNaN(val)) historial.push({ mes, val });
+    });
+
+    if (!historial.length) { renderGraficoFallback(); return; }
+    renderGrafico(historial);
+  }
+
+  function renderGrafico(historial) {
+    const container = document.getElementById('treChartBars');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const vals  = historial.map(h => h.val);
+    const minV  = Math.min(...vals) - 0.3;
+    const maxV  = Math.max(...vals) + 0.1;
+    const range = maxV - minV || 1;
+
+    historial.forEach((h, i) => {
+      const isLast  = i === historial.length - 1;
+      const heightP = Math.max(20, ((h.val - minV) / range) * 100);
+      const bg      = isLast
+        ? 'linear-gradient(to top,#D4A843,#A87420)'
+        : 'linear-gradient(to top,#0A1F42,#1D4ED8)';
+      const shadow  = isLast ? 'box-shadow:0 0 12px rgba(212,168,67,.4);' : '';
+      const label   = h.mes.split('-')[0];
+      const color   = isLast ? '#D4A843' : '#94A3B8';
+      const weight  = isLast ? '700' : '400';
+
+      const col = document.createElement('div');
+      col.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;height:100%;justify-content:flex-end;';
+      col.innerHTML =
+        '<div style="width:100%;border-radius:4px 4px 0 0;background:' + bg + ';' + shadow + 'height:' + heightP + '%;transition:height .6s cubic-bezier(.34,1.56,.64,1);" title="' + h.mes + ': ' + h.val + '%"></div>' +
+        '<span style="font-size:9px;color:' + color + ';font-weight:' + weight + ';white-space:nowrap;">' + label + '</span>';
+      container.appendChild(col);
+    });
+
+    const ultimo = historial[historial.length - 1];
+    const vigEl  = document.getElementById('treVigenteChart');
+    if (vigEl) vigEl.textContent = ultimo.val;
+  }
+
+  function renderGraficoFallback() {
+    // Datos hardcodeados como respaldo si falla la conexión
+    const fallback = [
+      {mes:'Jun-24',val:2.98},{mes:'Jul-24',val:2.97},{mes:'Ago-24',val:2.96},
+      {mes:'Sep-24',val:2.97},{mes:'Oct-24',val:2.95},{mes:'Nov-24',val:2.96},
+      {mes:'Dic-24',val:2.95},{mes:'Ene-25',val:2.95},{mes:'Feb-25',val:2.96},
+      {mes:'Mar-25',val:2.95},{mes:'Abr-25',val:2.95},{mes:'May-25',val:2.95}
+    ];
+    renderGrafico(fallback);
   }
 
     function calcImpacto() {
