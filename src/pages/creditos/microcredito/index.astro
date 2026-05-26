@@ -1,0 +1,399 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Microcrédito en Bolivia 2026 — Guía Completa para Emprendedores"
+  description="Todo lo que necesitás saber sobre el microcrédito en Bolivia. Cómo te evalúa el banco, diferencia con crédito comercial, checklist de documentos y consejos para mejorar tu perfil crediticio."
+>
+
+<style>
+  .hero-bg { background:linear-gradient(135deg,#060F1E 0%,#0A1F42 45%,#0D2860 100%); }
+  .gold-bg  { background:linear-gradient(135deg,#D4A843 0%,#A87420 100%); }
+  .card     { background:#fff; border-radius:16px; box-shadow:0 2px 18px rgba(10,31,66,.08); }
+  .font-mono-num { font-family:'DM Mono','Courier New',monospace; font-weight:500; }
+  .badge-gold   { background:rgba(212,168,67,.14);border:1px solid rgba(212,168,67,.40);color:#A87420;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.04em;display:inline-block; }
+  .badge-green  { background:#D1FAE5;color:#065F46;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block; }
+  .badge-blue   { background:#DBEAFE;color:#1E40AF;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block; }
+  .badge-purple { background:#EDE9FE;color:#5B21B6;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block; }
+  .badge-orange { background:#FFEDD5;color:#9A3412;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block; }
+  .step-item { display:flex;gap:16px;position:relative; }
+  .step-item::after { content:'';position:absolute;left:19px;top:44px;width:2px;height:calc(100% - 4px);background:linear-gradient(to bottom,#D4A843,rgba(212,168,67,.1)); }
+  .step-item:last-child::after { display:none; }
+  .step-num { width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;flex-shrink:0;z-index:1; }
+  .chk-item { display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:12px;border:1.5px solid #E8EEF8;background:#fff;cursor:pointer;transition:border-color .18s,background .18s;user-select:none;margin-bottom:8px; }
+  .chk-item:hover { border-color:#D4A843;background:#FFFDF5; }
+  .chk-item.done  { border-color:#86EFAC;background:#F0FDF4; }
+  .chk-box { width:22px;height:22px;min-width:22px;border-radius:6px;border:2px solid #CBD5E1;background:#fff;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;margin-top:1px; }
+  .chk-item.done .chk-box { background:#22C55E;border-color:#16A34A; }
+  .chk-mark { display:none; }
+  .chk-item.done .chk-mark { display:block; }
+  .chk-title { font-size:14px;font-weight:700;color:#0A1F42;transition:color .15s; }
+  .chk-desc  { font-size:12px;color:#64748B;margin-top:2px;line-height:1.5; }
+  .chk-item.done .chk-title { color:#166534; }
+  .chk-item.done .chk-desc  { color:#4ADE80;opacity:.85; }
+  .cmp-tbl { width:100%;border-collapse:separate;border-spacing:0;font-size:13px; }
+  .cmp-tbl thead th { padding:12px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em; }
+  .cmp-tbl thead th:first-child { text-align:left; }
+  .cmp-tbl td { padding:12px 14px;border-bottom:1px solid #EDF2F9; }
+  .cmp-tbl td:first-child { font-weight:600;color:#4B6A9B; }
+  .cmp-tbl tbody tr:last-child td { border-bottom:none; }
+  .cmp-tbl tbody tr:hover td { background:#F7FAFF; }
+  .score-bar { height:10px;border-radius:5px;background:#E5EDF8;overflow:hidden;margin:6px 0; }
+  .score-fill { height:100%;border-radius:5px;transition:width .8s cubic-bezier(.34,1.56,.64,1); }
+  .tip-box { border-left:4px solid;border-radius:0 12px 12px 0;padding:14px 16px; }
+  #chkRing { transition:stroke-dasharray .4s cubic-bezier(.4,0,.2,1);transform:rotate(-90deg);transform-origin:50% 50%; }
+</style>
+
+<section class="hero-bg text-white relative overflow-hidden">
+  <div class="absolute inset-0 pointer-events-none">
+    <div style="position:absolute;top:-60px;right:-80px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.09) 0%,transparent 70%)"></div>
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20 relative">
+    <div class="max-w-3xl">
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="badge-gold uppercase">Guía Completa 2026</span>
+        <span class="badge-green">Normativa ASFI</span>
+        <span class="badge-purple">Para Emprendedores</span>
+      </div>
+      <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4">
+        Microcrédito en Bolivia<br><span class="text-yellow-300">Todo lo que necesita<br>saber un Emprendedor</span>
+      </h1>
+      <p class="text-blue-200 text-base sm:text-lg leading-relaxed max-w-2xl">
+        Si trabajás por cuenta propia, tenés un negocio o querés emprender, esta guía te explica cómo acceder al financiamiento del sistema financiero boliviano con tu perfil de independiente.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="#checklist" style="background:linear-gradient(135deg,#D4A843,#A87420);color:#fff;font-weight:700;padding:12px 24px;border-radius:12px;text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(212,168,67,.40);">
+          Ver Checklist de Documentos
+        </a>
+        <a href="/" style="background:transparent;color:white;font-weight:700;padding:12px 24px;border-radius:12px;text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:8px;border:2px solid rgba(255,255,255,.3);">
+          Simular mi Cuota
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="bg-white border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="text-center"><p class="font-mono-num text-xl font-bold text-navy-900">Bs. 70k</p><p class="text-slate-500 text-xs mt-0.5">Límite típico microcrédito</p></div>
+    <div class="text-center border-l border-gray-100"><p class="font-mono-num text-xl font-bold text-yellow-600">5 años</p><p class="text-slate-500 text-xs mt-0.5">Plazo máximo habitual</p></div>
+    <div class="text-center border-l border-gray-100"><p class="font-mono-num text-xl font-bold text-green-600">1 año</p><p class="text-slate-500 text-xs mt-0.5">Antigüedad mínima del negocio</p></div>
+    <div class="text-center border-l border-gray-100"><p class="font-mono-num text-xl font-bold text-purple-600">Flujo de caja</p><p class="text-slate-500 text-xs mt-0.5">Base de la evaluación</p></div>
+  </div>
+</div>
+
+<section class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+    <div>
+      <span class="badge-gold uppercase mb-3 inline-block">Definición ASFI</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold mb-4">¿Qué es exactamente<br>un Microcrédito?</h2>
+      <p class="text-slate-500 leading-relaxed mb-5">Según la normativa de la ASFI, el <strong class="text-navy-900">microcrédito</strong> es el crédito otorgado a personas naturales o jurídicas que desarrollan actividades de producción, comercio o servicios, cuyo nivel de ventas o ingresos es relativamente reducido.</p>
+      <p class="text-slate-500 leading-relaxed mb-6">La diferencia clave con otros créditos es que la evaluación se basa principalmente en el <strong class="text-navy-900">flujo de caja real del negocio</strong>, no en estados financieros formales ni en recibos de sueldo.</p>
+      <div class="space-y-3">
+        <div class="flex gap-3 p-4 rounded-2xl" style="background:#F0FDF4;border:1px solid #BBF7D0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" class="flex-shrink-0 mt-0.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          <p class="text-sm text-green-700"><strong>No necesitás boletas de sueldo</strong> — el banco evalúa los ingresos reales de tu negocio.</p>
+        </div>
+        <div class="flex gap-3 p-4 rounded-2xl" style="background:#EEF4FF;border:1px solid #BFDBFE;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2" class="flex-shrink-0 mt-0.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          <p class="text-sm text-blue-700"><strong>No necesitás contabilidad formal</strong> — cuadernos de venta y registros básicos son suficientes.</p>
+        </div>
+        <div class="flex gap-3 p-4 rounded-2xl" style="background:#EDE9FE;border:1px solid #DDD6FE;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B21B6" stroke-width="2" class="flex-shrink-0 mt-0.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          <p class="text-sm text-purple-700"><strong>Garantías más flexibles</strong> — prendaria, personal o mancomunada, según la entidad.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card p-6">
+      <h3 class="font-display text-2xl font-semibold mb-5">¿Quién puede acceder?</h3>
+      <div class="space-y-4">
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#DBEAFE;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+          </div>
+          <div><p class="font-bold text-sm text-navy-900">Comerciantes y tenderos</p><p class="text-xs text-slate-500 mt-0.5">Tiendas de barrio, mercados, ferias. Uno de los segmentos más atendidos por el microcrédito boliviano.</p></div>
+        </div>
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#D1FAE5;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div><p class="font-bold text-sm text-navy-900">Artesanos y productores</p><p class="text-xs text-slate-500 mt-0.5">Talleres, manufactura pequeña, producción textil, alimentaria y artesanal.</p></div>
+        </div>
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#FEF3C7;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div><p class="font-bold text-sm text-navy-900">Prestadores de servicios</p><p class="text-xs text-slate-500 mt-0.5">Peluquerías, mecánicas, transporte, tecnología, gastronomía y servicios profesionales independientes.</p></div>
+        </div>
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#EDE9FE;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B21B6" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div><p class="font-bold text-sm text-navy-900">Emprendedores en crecimiento</p><p class="text-xs text-slate-500 mt-0.5">Negocios en etapa de expansión que necesitan capital de trabajo o equipamiento.</p></div>
+        </div>
+        <div class="mt-4 p-3 rounded-xl text-xs" style="background:#FEF3C7;color:#92400E;">El negocio debe tener al menos <strong>1 año de actividad comprobable</strong>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-12 sm:py-16" style="background:linear-gradient(135deg,#F0F4FF,#EEF2FA)">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-10">
+      <span class="badge-gold uppercase">Comparativa</span>
+      <h2 class="font-display text-3xl font-semibold mt-3">Microcrédito vs Crédito Comercial</h2>
+      <p class="text-slate-500 mt-2">Entendé cuál aplica a tu situación antes de ir al banco</p>
+    </div>
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="cmp-tbl">
+          <thead>
+            <tr style="background:#F8FAFF;">
+              <th style="color:#4B6A9B;border-bottom:2px solid #E5EDF8;text-align:left;min-width:180px;">Característica</th>
+              <th style="color:#5B21B6;border-bottom:2px solid #E5EDF8;text-align:center;background:#F5F3FF;">Microcrédito</th>
+              <th style="color:#0A1F42;border-bottom:2px solid #E5EDF8;text-align:center;">Crédito Comercial</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Monto típico</td><td class="text-center" style="background:#F5F3FF;"><span class="badge-purple font-mono-num">Hasta Bs. 70,000</span></td><td class="text-center"><span class="badge-blue font-mono-num">Bs. 70,001 en adelante</span></td></tr>
+            <tr><td>Base de evaluación</td><td class="text-center" style="background:#F5F3FF;">Flujo de caja del negocio</td><td class="text-center">Estados financieros formales</td></tr>
+            <tr><td>Contabilidad requerida</td><td class="text-center" style="background:#F5F3FF;"><span class="badge-green">No es obligatoria</span></td><td class="text-center"><span class="badge-blue">Sí, con contador</span></td></tr>
+            <tr><td>Garantía habitual</td><td class="text-center" style="background:#F5F3FF;">Prendaria o personal</td><td class="text-center">Hipotecaria generalmente</td></tr>
+            <tr><td>Plazo máximo</td><td class="text-center" style="background:#F5F3FF;">Hasta 5 años</td><td class="text-center">Hasta 10 años</td></tr>
+            <tr><td>Visita al negocio</td><td class="text-center" style="background:#F5F3FF;"><span class="badge-orange">Casi siempre</span></td><td class="text-center">Depende del banco</td></tr>
+            <tr><td>Tiempo de aprobación</td><td class="text-center" style="background:#F5F3FF;">3 a 10 días hábiles</td><td class="text-center">10 a 30 días hábiles</td></tr>
+            <tr><td>Entidades que lo ofrecen</td><td class="text-center" style="background:#F5F3FF;">Bancos PYME, Cooperativas, IFDs</td><td class="text-center">Bancos Múltiples</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="text-center mb-12">
+    <span class="badge-gold uppercase">Proceso de Evaluación</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-3">Cómo evalúa el banco tu negocio</h2>
+    <p class="text-slate-500 mt-2 max-w-xl mx-auto">El asesor de crédito construye una imagen de tu negocio antes de aprobar. Entender este proceso es tu mayor ventaja.</p>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+    <div class="space-y-6">
+      <div class="step-item pb-6">
+        <div class="step-num gold-bg">1</div>
+        <div class="flex-1">
+          <h4 class="font-bold text-base text-navy-900 mb-2">Análisis del flujo de caja</h4>
+          <p class="text-sm text-slate-500 leading-relaxed">El asesor reconstruye los ingresos y egresos reales de tu negocio. Pregunta cuánto vendés por día o mes, cuáles son tus costos fijos y cuánto queda de ganancia neta.</p>
+          <div class="mt-3 p-3 rounded-xl text-xs" style="background:#FFFBEB;color:#92400E;">Llevá registros claros aunque sean manuales. El asesor valora la consistencia entre lo que decís y lo que muestran tus cuadernos.</div>
+        </div>
+      </div>
+      <div class="step-item pb-6">
+        <div class="step-num" style="background:#0A1F42;">2</div>
+        <div class="flex-1">
+          <h4 class="font-bold text-base text-navy-900 mb-2">Visita al local</h4>
+          <p class="text-sm text-slate-500 leading-relaxed">El asesor visita tu negocio físicamente. Evalúa el inventario, el movimiento de clientes, el estado de las instalaciones y si la actividad es coherente con los ingresos declarados.</p>
+          <div class="mt-3 p-3 rounded-xl text-xs" style="background:#F0FDF4;color:#166534;">Tené el negocio ordenado y en operación durante la visita.</div>
+        </div>
+      </div>
+      <div class="step-item pb-6">
+        <div class="step-num" style="background:#0A1F42;">3</div>
+        <div class="flex-1">
+          <h4 class="font-bold text-base text-navy-900 mb-2">Evaluación de activos y patrimonio</h4>
+          <p class="text-sm text-slate-500 leading-relaxed">El banco registra los bienes del negocio: mercadería, maquinaria, equipos, vehículos de trabajo. Un patrimonio sólido reduce el riesgo percibido.</p>
+        </div>
+      </div>
+      <div class="step-item pb-6">
+        <div class="step-num" style="background:#0A1F42;">4</div>
+        <div class="flex-1">
+          <h4 class="font-bold text-base text-navy-900 mb-2">Consulta a la Central de Riesgos</h4>
+          <p class="text-sm text-slate-500 leading-relaxed">El banco consulta obligatoriamente tu historial en la ASFI. Una calificación D o E bloquea automáticamente la solicitud. Verificá en asfi.gob.bo antes de aplicar.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num" style="background:linear-gradient(135deg,#22C55E,#15803D);">✓</div>
+        <div class="flex-1">
+          <h4 class="font-bold text-base text-navy-900 mb-2">Resolución y desembolso</h4>
+          <p class="text-sm text-slate-500 leading-relaxed">Si todo está en orden, el comité de crédito aprueba el monto. El plazo total es de 3 a 10 días hábiles en general.</p>
+        </div>
+      </div>
+    </div>
+    <div class="space-y-5">
+      <div class="card p-6">
+        <h3 class="font-display text-xl font-semibold mb-5">Factores que pesan más</h3>
+        <div class="space-y-4">
+          <div><div class="flex justify-between text-sm mb-1"><span class="font-semibold text-navy-900">Flujo de caja demostrable</span><span class="font-mono-num font-bold text-purple-600">35%</span></div><div class="score-bar"><div class="score-fill" style="width:35%;background:#8B5CF6;"></div></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span class="font-semibold text-navy-900">Historial crediticio (CENCREF)</span><span class="font-mono-num font-bold text-blue-600">25%</span></div><div class="score-bar"><div class="score-fill" style="width:25%;background:#1D4ED8;"></div></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span class="font-semibold text-navy-900">Antigüedad del negocio</span><span class="font-mono-num font-bold text-yellow-600">20%</span></div><div class="score-bar"><div class="score-fill" style="width:20%;background:#D4A843;"></div></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span class="font-semibold text-navy-900">Garantías ofrecidas</span><span class="font-mono-num font-bold text-green-600">12%</span></div><div class="score-bar"><div class="score-fill" style="width:12%;background:#22C55E;"></div></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span class="font-semibold text-navy-900">Patrimonio y activos del negocio</span><span class="font-mono-num font-bold text-slate-500">8%</span></div><div class="score-bar"><div class="score-fill" style="width:8%;background:#94A3B8;"></div></div></div>
+        </div>
+        <p class="text-xs text-slate-400 mt-4 italic">* Pesos referenciales. Varían según la entidad y el analista.</p>
+      </div>
+      <div class="card p-6">
+        <h3 class="font-display text-xl font-semibold mb-4">¿Dónde buscar microcrédito?</h3>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 p-3 rounded-xl" style="background:#F5F3FF;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:#EDE9FE;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5B21B6" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>
+            <div><p class="font-bold text-sm text-navy-900">Bancos PYME</p><p class="text-xs text-slate-500">Banco Sol, Banco Prodem, Banco FIE — especializados en microfinanzas</p></div>
+          </div>
+          <div class="flex items-center gap-3 p-3 rounded-xl" style="background:#F0FDF4;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:#D1FAE5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <div><p class="font-bold text-sm text-navy-900">Cooperativas ASFI</p><p class="text-xs text-slate-500">Tasas competitivas, trato cercano, evaluación flexible</p></div>
+          </div>
+          <div class="flex items-center gap-3 p-3 rounded-xl" style="background:#EFF6FF;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:#DBEAFE;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg></div>
+            <div><p class="font-bold text-sm text-navy-900">IFDs</p><p class="text-xs text-slate-500">CRECER, CIDRE, FADES — enfocadas en sector rural y productivo</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="checklist" class="py-12 sm:py-16" style="background:linear-gradient(135deg,#F0F4FF,#EEF2FA)">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-10">
+      <span class="badge-gold uppercase">Herramienta Interactiva</span>
+      <h2 class="font-display text-3xl font-semibold mt-3">Checklist: Tu Carpeta de Crédito</h2>
+      <p class="text-slate-500 mt-2">Marcá los documentos que ya tenés listos. Tu progreso se guarda automáticamente.</p>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      <div class="space-y-4">
+        <div class="card p-6 text-center">
+          <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#94A3B8;margin-bottom:16px;">Tu Progreso</p>
+          <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
+            <svg width="110" height="110" viewBox="0 0 110 110">
+              <circle cx="55" cy="55" r="40" fill="none" stroke="#E2E8F0" stroke-width="9"/>
+              <circle id="chkRing" cx="55" cy="55" r="40" fill="none" stroke="#22C55E" stroke-width="9" stroke-linecap="round" style="stroke-dasharray:0 251.2"/>
+            </svg>
+            <div style="position:absolute;text-align:center;">
+              <p class="font-mono-num" style="font-size:22px;font-weight:700;color:#0A1F42;" id="chkPct">0%</p>
+            </div>
+          </div>
+          <p style="font-weight:700;color:#0A1F42;font-size:15px;" id="chkLabel">Sin documentos</p>
+          <p style="color:#94A3B8;font-size:13px;margin-top:4px;" id="chkSub">Empezá a marcar</p>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid #F1F5F9;">
+            <p class="font-mono-num" style="font-size:22px;font-weight:700;color:#0A1F42;">
+              <span id="chkDone">0</span><span style="color:#CBD5E1;font-weight:400;font-size:16px;"> de </span><span id="chkTotal">0</span>
+            </p>
+          </div>
+          <button id="btnChkReset" style="margin-top:12px;font-size:12px;color:#94A3B8;background:none;border:none;cursor:pointer;text-decoration:underline;">Reiniciar</button>
+        </div>
+        <div class="tip-box" style="border-color:#D4A843;background:#FFFBEB;">
+          <p class="font-bold text-sm text-yellow-800 mb-1">Consejo clave</p>
+          <p class="text-xs text-yellow-700 leading-relaxed">Llevá 2 juegos de fotocopias de todo. Los bancos suelen pedir actualizaciones.</p>
+        </div>
+        <div class="tip-box" style="border-color:#22C55E;background:#F0FDF4;">
+          <p class="font-bold text-sm text-green-800 mb-1">Antes de ir al banco</p>
+          <p class="text-xs text-green-700 leading-relaxed">Consultá tu calificación en <strong>asfi.gob.bo</strong>. Si tenés mora, regularizala primero.</p>
+        </div>
+      </div>
+      <div class="lg:col-span-2">
+        <div id="microChkContainer"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-12 sm:py-16 max-w-5xl mx-auto px-4 sm:px-6">
+  <div class="text-center mb-10">
+    <span class="badge-gold uppercase">Estrategia Financiera</span>
+    <h2 class="font-display text-3xl font-semibold mt-3">Cómo mejorar tu perfil crediticio</h2>
+    <p class="text-slate-500 mt-2">Acciones concretas para ser un candidato más atractivo para los bancos</p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div class="card p-6 flex gap-4"><div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 gold-bg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div><h4 class="font-bold text-sm text-navy-900 mb-2">Abrí una cuenta de ahorro y usala</h4><p class="text-xs text-slate-500 leading-relaxed">Depositar regularmente crea un historial de movimientos. El asesor puede ver que tu negocio genera ingresos constantes.</p></div></div>
+    <div class="card p-6 flex gap-4"><div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:#EDE9FE;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B21B6" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div><h4 class="font-bold text-sm text-navy-900 mb-2">Llevá un cuaderno de ventas</h4><p class="text-xs text-slate-500 leading-relaxed">Registrá diariamente tus ventas e ingresos. No necesita ser contabilidad formal — alcanza con un cuaderno organizado.</p></div></div>
+    <div class="card p-6 flex gap-4"><div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:#D1FAE5;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div><h4 class="font-bold text-sm text-navy-900 mb-2">Pagá puntual cualquier deuda actual</h4><p class="text-xs text-slate-500 leading-relaxed">Un historial A en la Central de Riesgos abre puertas en cualquier entidad del sistema financiero.</p></div></div>
+    <div class="card p-6 flex gap-4"><div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:#DBEAFE;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div><div><h4 class="font-bold text-sm text-navy-900 mb-2">Cotizá en varias entidades</h4><p class="text-xs text-slate-500 leading-relaxed">Cada banco tiene criterios diferentes. Los bancos PYME y cooperativas tienen criterios más flexibles para emprendedores.</p></div></div>
+    <div class="card p-6 flex gap-4"><div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:#FEF3C7;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><div><h4 class="font-bold text-sm text-navy-900 mb-2">Considerá un codeudor solidario</h4><p class="text-xs text-slate-500 leading-relaxed">Si tus ingresos solos no alcanzan, un familiar o socio con buenos ingresos puede ser codeudor y aumentar las chances de aprobación.</p></div></div>
+    <div class="card p-6 flex gap-4"><div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:#F0FDF4;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div><h4 class="font-bold text-sm text-navy-900 mb-2">Empezá con un monto conservador</h4><p class="text-xs text-slate-500 leading-relaxed">Pedir menos del máximo y pagarlo puntualmente construye tu historial. En el siguiente crédito podés acceder a más.</p></div></div>
+  </div>
+</section>
+
+<section class="hero-bg py-14 text-center text-white">
+  <div class="max-w-2xl mx-auto px-4">
+    <div class="w-14 h-14 rounded-2xl gold-bg mx-auto mb-5 flex items-center justify-center">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+    </div>
+    <h2 class="font-display text-3xl sm:text-4xl font-bold mb-3">Calculá tu cuota de microcrédito</h2>
+    <p class="text-blue-200 mb-7">Usá nuestra calculadora para ver exactamente cuánto pagarías por mes según el monto, plazo y tasa que te ofrezca tu banco.</p>
+    <div class="flex flex-wrap gap-3 justify-center">
+      <a href="/" style="background:linear-gradient(135deg,#D4A843,#A87420);color:#fff;font-weight:700;padding:14px 30px;border-radius:12px;text-decoration:none;font-size:15px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(212,168,67,.40);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>Calculadora de Créditos</a>
+      <a href="/requisitos" style="background:transparent;color:white;font-weight:700;padding:14px 30px;border-radius:12px;text-decoration:none;font-size:15px;display:inline-flex;align-items:center;gap:8px;border:2px solid rgba(255,255,255,.3);">Ver Requisitos Completos</a>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+"use strict";
+var MICRO_DOCS = [
+  { id:'mi_ci',       grupo:'Identidad', title:'Cédula de Identidad vigente', desc:'Fotocopia anverso y reverso. Original para cotejo en el banco.' },
+  { id:'mi_croquis',  grupo:'Identidad', title:'Croquis de ubicación del negocio', desc:'Dibujo de la ubicación exacta del local. El asesor lo usa para la visita.' },
+  { id:'mi_aviso',    grupo:'Identidad', title:'Aviso de cobranza de luz o agua', desc:'Último mes pagado del domicilio o del local comercial.' },
+  { id:'mi_nit',      grupo:'Legal', title:'NIT activo (Impuestos Nacionales)', desc:'Imprimí el QR de verificación desde impuestos.gob.bo. Debe estar vigente.' },
+  { id:'mi_licencia', grupo:'Legal', title:'Licencia de funcionamiento municipal', desc:'Emitida por el Gobierno Municipal correspondiente. Vigente al año actual.' },
+  { id:'mi_cuaderno', grupo:'Ingresos', title:'Cuaderno de ventas (mínimo 3 meses)', desc:'Registros de ingresos diarios o semanales. El principal respaldo de tus ingresos.' },
+  { id:'mi_facturas', grupo:'Ingresos', title:'Facturas o recibos de compra/venta', desc:'Documentos de transacciones del negocio. Refuerzan el flujo de caja declarado.' },
+  { id:'mi_extracto', grupo:'Ingresos', title:'Extracto bancario (si tenés cuenta)', desc:'Últimos 3 a 6 meses. Muestra que los ingresos se depositan regularmente.' },
+  { id:'mi_impuesto', grupo:'Impuestos', title:'Formularios de IVA o IT (últimos 3)', desc:'Si estás en Régimen General. En Régimen Simplificado no aplica.' },
+  { id:'mi_solicitud', grupo:'Banco', title:'Formulario de solicitud del banco', desc:'Cada banco tiene el suyo. Pedílo en sucursal o descargalo de su web.' },
+  { id:'mi_foto',     grupo:'Banco', title:'Fotografías del local y mercadería', desc:'Algunos bancos las piden antes de la visita. Tomá fotos actualizadas del negocio.' },
+];
+
+function renderMicroChecklist() {
+  var container = document.getElementById('microChkContainer');
+  if (!container) return;
+  var grupos = {};
+  MICRO_DOCS.forEach(function(d) { if (!grupos[d.grupo]) grupos[d.grupo] = []; grupos[d.grupo].push(d); });
+  var html = '';
+  Object.keys(grupos).forEach(function(g) {
+    html += '<p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#94A3B8;margin:16px 0 8px;padding:0 4px;">' + g + '</p>';
+    grupos[g].forEach(function(doc) {
+      var isDone = localStorage.getItem('micro_' + doc.id) === 'true';
+      html += '<div class="chk-item ' + (isDone ? 'done' : '') + '" id="mrow_' + doc.id + '" onclick="toggleMicro(\'' + doc.id + '\')">' +
+        '<div class="chk-box"><svg class="chk-mark" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>' +
+        '<div style="flex:1;min-width:0;"><p class="chk-title">' + doc.title + '</p><p class="chk-desc">' + doc.desc + '</p></div>' +
+      '</div>';
+    });
+  });
+  container.innerHTML = html;
+  updateMicroProgress();
+}
+
+function toggleMicro(id) {
+  var row = document.getElementById('mrow_' + id);
+  var isDone = row.classList.contains('done');
+  if (isDone) { row.classList.remove('done'); localStorage.removeItem('micro_' + id); }
+  else { row.classList.add('done'); localStorage.setItem('micro_' + id, 'true'); }
+  updateMicroProgress();
+}
+
+function updateMicroProgress() {
+  var total = MICRO_DOCS.length;
+  var done  = MICRO_DOCS.filter(function(d) { return localStorage.getItem('micro_' + d.id) === 'true'; }).length;
+  var pct   = total ? Math.round((done / total) * 100) : 0;
+  var circ  = 2 * Math.PI * 40;
+  var ring  = document.getElementById('chkRing');
+  if (ring) ring.style.strokeDasharray = (pct / 100 * circ) + ' ' + circ;
+  var s = function(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; };
+  s('chkPct', pct + '%'); s('chkDone', done); s('chkTotal', total);
+  var label = 'Sin documentos', sub = 'Empezá a marcar';
+  if (pct > 0   && pct < 40)  { label = 'Iniciando';           sub = 'Seguí reuniendo documentos'; }
+  if (pct >= 40 && pct < 70)  { label = 'En progreso';         sub = 'Ya tenés lo esencial'; }
+  if (pct >= 70 && pct < 100) { label = 'Casi listo 🔥';       sub = 'Faltan pocos documentos'; }
+  if (pct === 100)             { label = 'Listo para el banco!'; sub = 'Tenés todo lo necesario'; }
+  s('chkLabel', label); s('chkSub', sub);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderMicroChecklist();
+  var btn = document.getElementById('btnChkReset');
+  if (btn) btn.addEventListener('click', function() {
+    MICRO_DOCS.forEach(function(d) { localStorage.removeItem('micro_' + d.id); });
+    renderMicroChecklist();
+  });
+});
+</script>
+
+</BaseLayout>
