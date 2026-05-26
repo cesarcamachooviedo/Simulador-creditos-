@@ -173,6 +173,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
             <th>180 días</th>
             <th>360 días</th>
             <th>+360 días</th>
+            <th style="text-align:left;">Nota</th>
           </tr>
         </thead>
         <tbody id="ratesBody">
@@ -208,7 +209,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     <div class="space-y-4" id="rankingBars">
       <!-- Generado por JS -->
     </div>
-    <p class="text-xs text-slate-400 mt-4 italic">* Tasas referenciales en BOB para persona natural. Antes del RC-IVA. · <strong>Datos actualizados al 26/05/2026</strong></p>
+    <p class="text-xs text-slate-400 mt-4 italic">* Tasas reales obtenidas de sitios oficiales de cada banco · BOB · Persona natural hasta Bs. 70,000 (tasa regulada D.S. 5403) · Antes del RC-IVA · <strong>Datos actualizados al 26/05/2026</strong></p>
+    <p class="text-xs text-slate-400 mt-1 italic">Fuentes: bcp.com.bo, bnb.com.bo, bmsc.com.bo, bancosol.com.bo, bancoFIE.com.bo, boliviaconsulta.com · Las entidades sin tasa publicada requieren consulta directa en sucursal.</p>
   </div>
 
 </section>
@@ -437,30 +439,30 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 "use strict";
 
 var ENTIDADES = [
-  // Bancos Múltiples
-  { nombre:'Banco BCP',        tipo:'bancos', t30:1.5,  t90:2.5,  t180:3.0, t360:4.0, tPlus:4.5 },
-  { nombre:'BNB',              tipo:'bancos', t30:1.8,  t90:2.8,  t180:3.2, t360:4.2, tPlus:5.0 },
-  { nombre:'Banco FIE',        tipo:'bancos', t30:2.0,  t90:3.0,  t180:3.8, t360:5.0, tPlus:5.5 },
-  { nombre:'Banco Bisa',       tipo:'bancos', t30:1.5,  t90:2.5,  t180:3.0, t360:4.0, tPlus:4.5 },
-  { nombre:'Banco Mercantil',  tipo:'bancos', t30:1.8,  t90:2.7,  t180:3.2, t360:4.3, tPlus:5.0 },
-  { nombre:'Banco Nacional',   tipo:'bancos', t30:1.6,  t90:2.6,  t180:3.1, t360:4.1, tPlus:4.8 },
-  // Bancos PYME
-  { nombre:'Banco Sol',        tipo:'pyme',   t30:2.5,  t90:3.5,  t180:4.5, t360:6.0, tPlus:6.5, destacado:true },
-  { nombre:'Banco Prodem',     tipo:'pyme',   t30:2.3,  t90:3.3,  t180:4.2, t360:5.5, tPlus:6.0 },
-  { nombre:'Banco Comunidad',  tipo:'pyme',   t30:2.2,  t90:3.2,  t180:4.0, t360:5.2, tPlus:5.8 },
-  // Cooperativas
-  { nombre:'COOB Ltda.',       tipo:'coops',  t30:3.0,  t90:4.0,  t180:5.0, t360:6.5, tPlus:7.0, destacado:true },
-  { nombre:'San Martín Ltda.', tipo:'coops',  t30:2.8,  t90:3.8,  t180:4.8, t360:6.2, tPlus:6.8 },
-  { nombre:'Fátima Ltda.',     tipo:'coops',  t30:2.5,  t90:3.5,  t180:4.5, t360:6.0, tPlus:6.5 },
+  // Bancos Múltiples — tasas reales publicadas en sitios oficiales (feb 2026)
+  { nombre:'BCP Digital',       tipo:'bancos', t30:null, t90:null,  t180:3.50, t360:4.00, tPlus:4.50, nota:'DPF 100% digital — apertura por app' },
+  { nombre:'BCP Clásico',       tipo:'bancos', t30:null, t90:null,  t180:2.50, t360:3.00, tPlus:3.50, nota:'Apertura en sucursal' },
+  { nombre:'BNB',               tipo:'bancos', t30:null, t90:null,  t180:null, t360:2.99, tPlus:4.00, nota:'4.00% desde 361 días' },
+  { nombre:'BMSC',              tipo:'bancos', t30:null, t90:null,  t180:null, t360:4.10, tPlus:4.60, nota:'A 365 días' },
+  { nombre:'Banco Unión',       tipo:'bancos', t30:null, t90:null,  t180:null, t360:null, tPlus:null, nota:'Consultar tarifario en bancounion.com.bo' },
+  { nombre:'Banco BISA',        tipo:'bancos', t30:null, t90:null,  t180:null, t360:null, tPlus:null, nota:'Consultar tarifario en bisa.com' },
+  { nombre:'Banco Económico',   tipo:'bancos', t30:null, t90:null,  t180:null, t360:null, tPlus:null, nota:'Consultar tarifario en baneco.com.bo' },
+  { nombre:'Banco Ganadero',    tipo:'bancos', t30:null, t90:null,  t180:null, t360:null, tPlus:null, nota:'Consultar tarifario en bg.com.bo' },
+  { nombre:'Banco Fortaleza',   tipo:'bancos', t30:null, t90:null,  t180:null, t360:null, tPlus:null, nota:'Consultar tarifario en bancofortaleza.com.bo' },
+  // Bancos PYME — tasas reales publicadas (feb 2026)
+  { nombre:'BancoSol',          tipo:'pyme',   t30:null, t90:null,  t180:null, t360:5.25, tPlus:6.00, nota:'DPF Sol Festivo — mejor tasa PYME', destacado:true },
+  { nombre:'Banco FIE',         tipo:'pyme',   t30:null, t90:null,  t180:null, t360:5.00, tPlus:6.00, nota:'DPF+ hasta Bs. 200,000' },
+  { nombre:'Banco Prodem',      tipo:'pyme',   t30:null, t90:null,  t180:null, t360:null, tPlus:null, nota:'Consultar tarifario en bancoprodem.com.bo' },
 ];
 
 var currentTab = 'todos';
 
 function ratePill(val, isBest) {
-  if (isBest) return '<span class="rate-pill rate-best">★ ' + val.toFixed(1) + '%</span>';
-  if (val >= 5) return '<span class="rate-pill rate-high">' + val.toFixed(1) + '%</span>';
-  if (val >= 3) return '<span class="rate-pill rate-mid">' + val.toFixed(1) + '%</span>';
-  return '<span class="rate-pill rate-low">' + val.toFixed(1) + '%</span>';
+  if (val === null || val === undefined) return '<span style="font-size:11px;color:#94A3B8;font-style:italic;">Consultar</span>';
+  if (isBest) return '<span class="rate-pill rate-best">★ ' + val.toFixed(2) + '%</span>';
+  if (val >= 5) return '<span class="rate-pill rate-high">' + val.toFixed(2) + '%</span>';
+  if (val >= 3) return '<span class="rate-pill rate-mid">' + val.toFixed(2) + '%</span>';
+  return '<span class="rate-pill rate-low">' + val.toFixed(2) + '%</span>';
 }
 
 function tipoLabel(tipo) {
@@ -470,10 +472,11 @@ function tipoLabel(tipo) {
 
 function renderTable(tab) {
   var filtered = tab === 'todos' ? ENTIDADES : ENTIDADES.filter(function(e) { return e.tipo === tab; });
-  var maxT360  = Math.max.apply(null, filtered.map(function(e) { return e.t360; }));
+  var vals360  = filtered.map(function(e) { return e.t360; }).filter(function(v) { return v !== null && v !== undefined; });
+  var maxT360  = vals360.length ? Math.max.apply(null, vals360) : 0;
 
   var html = filtered.map(function(e) {
-    var isBest360 = e.t360 === maxT360;
+    var isBest360 = e.t360 !== null && e.t360 === maxT360;
     return '<tr class="' + (e.destacado ? 'destacado' : '') + '">' +
       '<td>' + e.nombre + (e.destacado ? ' <span style="font-size:10px;color:#D4A843;">★</span>' : '') + '</td>' +
       '<td>' + tipoLabel(e.tipo) + '</td>' +
@@ -482,6 +485,7 @@ function renderTable(tab) {
       '<td>' + ratePill(e.t180, false) + '</td>' +
       '<td>' + ratePill(e.t360, isBest360) + '</td>' +
       '<td>' + ratePill(e.tPlus,false) + '</td>' +
+      '<td style="font-size:11px;color:#94A3B8;font-style:italic;text-align:left;max-width:180px;">' + (e.nota || '') + '</td>' +
     '</tr>';
   }).join('');
 
@@ -490,7 +494,7 @@ function renderTable(tab) {
 }
 
 function renderRanking(entities, maxVal) {
-  var sorted = entities.slice().sort(function(a, b) { return b.t360 - a.t360; }).slice(0, 6);
+  var sorted = entities.slice().filter(function(e) { return e.t360 !== null; }).sort(function(a, b) { return b.t360 - a.t360; }).slice(0, 6);
   var html = sorted.map(function(e) {
     var pct = (e.t360 / maxVal) * 100;
     var color = e.tipo === 'coops' ? '#22C55E' : e.tipo === 'pyme' ? '#8B5CF6' : '#1D4ED8';
