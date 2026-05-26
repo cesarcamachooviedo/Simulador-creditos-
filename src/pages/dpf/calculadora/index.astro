@@ -1,0 +1,448 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Calculadora DPF Bolivia 2026 — Interés Neto Real con RC-IVA"
+  description="Calculá el interés real de tu Depósito a Plazo Fijo en Bolivia. Incluye descuento automático del RC-IVA (13%). Simulador actualizado 2026 según normativa ASFI."
+>
+
+<style>
+  .font-mono-num { font-family: 'DM Mono','Courier New',monospace; font-weight:500; }
+  .hero-bg { background: linear-gradient(135deg,#060F1E 0%,#0A1F42 45%,#0D2860 100%); }
+  .gold-bg { background: linear-gradient(135deg,#D4A843 0%,#A87420 100%); }
+  .card    { background:#fff; border-radius:16px; box-shadow:0 2px 18px rgba(10,31,66,.08); }
+  .lbl-dpf { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#4B6A9B; margin-bottom:6px; }
+  .inp-dpf { width:100%; padding:11px 14px; border:1.5px solid #D1DCF0; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; color:#0A1F42; background:#F7FAFF; outline:none; transition:border-color .2s,box-shadow .2s; }
+  .inp-dpf:focus { border-color:#D4A843; background:#fff; box-shadow:0 0 0 3px rgba(212,168,67,.15); }
+  select.inp-dpf { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234B6A9B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:36px; }
+  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; }
+  .plazo-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  @media(max-width:480px) { .plazo-grid { grid-template-columns:repeat(3,1fr); } }
+  .plazo-pill { padding:9px 4px; border-radius:10px; border:1.5px solid #D1DCF0; background:#F7FAFF; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; color:#4B6A9B; cursor:pointer; text-align:center; transition:all .18s; }
+  .plazo-pill:hover  { border-color:#D4A843; color:#A87420; background:#FFFDF5; }
+  .plazo-pill.active { border-color:#0A1F42; background:#0A1F42; color:#fff; }
+  .res-card { border-radius:14px; padding:20px 22px; display:flex; flex-direction:column; gap:4px; transition:transform .2s; }
+  .res-card:hover { transform:translateY(-2px); }
+  .res-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; opacity:.75; }
+  .res-value { font-family:'DM Mono','Courier New',monospace; font-size:28px; font-weight:500; line-height:1.1; }
+  .res-note  { font-size:11px; opacity:.65; margin-top:2px; }
+  .cmp-bar  { height:8px; border-radius:4px; background:#E5EDF8; overflow:hidden; }
+  .cmp-fill { height:100%; border-radius:4px; transition:width .6s cubic-bezier(.34,1.56,.64,1); }
+  .sum-tbl { width:100%; border-collapse:separate; border-spacing:0; font-size:13px; }
+  .sum-tbl td { padding:10px 14px; border-bottom:1px solid #EDF2F9; }
+  .sum-tbl tr:last-child td { border-bottom:none; }
+  .sum-tbl tr:hover td { background:#F7FAFF; }
+  .sum-tbl td:first-child { color:#4B6A9B; font-weight:600; }
+  .sum-tbl td:last-child  { text-align:right; font-family:'DM Mono',monospace; font-weight:500; color:#0A1F42; }
+  .faq-item { border-bottom:1px solid #EDF2F9; }
+  .faq-item:last-child { border-bottom:none; }
+  .faq-btn { width:100%; display:flex; align-items:center; justify-content:space-between; padding:16px 0; background:none; border:none; cursor:pointer; text-align:left; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:600; color:#0A1F42; }
+  .faq-icon { width:20px; height:20px; border-radius:50%; background:#EEF4FF; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:transform .25s,background .2s; }
+  .faq-icon.open { transform:rotate(45deg); background:#0A1F42; }
+  .faq-icon.open svg { stroke:white; }
+  .faq-body { max-height:0; overflow:hidden; transition:max-height .35s ease; }
+  .faq-body.open { max-height:400px; }
+  .faq-body-inner { padding-bottom:16px; font-size:13px; color:#4B6A9B; line-height:1.7; }
+  .badge-gold { background:rgba(212,168,67,.14);border:1px solid rgba(212,168,67,.40);color:#A87420;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.04em;display:inline-block; }
+  .btn-calc { width:100%; padding:15px; border-radius:12px; border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; background:linear-gradient(135deg,#D4A843 0%,#A87420 100%); color:#fff; box-shadow:0 4px 16px rgba(212,168,67,.40); transition:all .2s; }
+  .btn-calc:hover { transform:translateY(-1px); box-shadow:0 7px 22px rgba(212,168,67,.52); }
+  .live-dot { width:8px;height:8px;border-radius:50%;background:#22C55E;animation:livepulse 2s infinite;flex-shrink:0; }
+  @keyframes livepulse { 0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)} 70%{box-shadow:0 0 0 8px rgba(34,197,94,0)} 100%{box-shadow:0 0 0 0 rgba(34,197,94,0)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+  .fade-up{animation:fadeUp .45s ease forwards}
+  .d1{animation-delay:.06s;opacity:0} .d2{animation-delay:.14s;opacity:0}
+  .d3{animation-delay:.22s;opacity:0} .d4{animation-delay:.30s;opacity:0}
+</style>
+
+<section class="hero-bg text-white relative overflow-hidden">
+  <div class="absolute inset-0 pointer-events-none overflow-hidden">
+    <div style="position:absolute;top:-60px;right:-80px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.09) 0%,transparent 70%)"></div>
+    <div style="position:absolute;bottom:-60px;left:-40px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(29,78,216,.12) 0%,transparent 70%)"></div>
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20 relative">
+    <div class="max-w-3xl">
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <div class="live-dot"></div>
+        <span style="font-size:12px;font-weight:700;color:#86EFAC;letter-spacing:.04em;">RC-IVA INCLUIDO · ASFI 2026</span>
+      </div>
+      <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4">
+        Calculadora de <span class="text-yellow-300">Depósito a<br>Plazo Fijo</span> Bolivia
+      </h1>
+      <p class="text-blue-200 text-base sm:text-lg leading-relaxed max-w-2xl">
+        Calculá el <strong class="text-white">interés neto real</strong> que vas a recibir de tu DPF, con el descuento automático del RC-IVA (13%). El único simulador en Bolivia que te muestra lo que realmente vas a cobrar en ventanilla.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="bg-white border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="text-center"><p class="font-mono-num text-xl font-bold text-navy-900">13%</p><p class="text-slate-500 text-xs mt-0.5">RC-IVA retenido</p></div>
+    <div class="text-center border-l border-gray-100"><p class="font-mono-num text-xl font-bold text-yellow-600">7</p><p class="text-slate-500 text-xs mt-0.5">Plazos disponibles</p></div>
+    <div class="text-center border-l border-gray-100"><p class="font-mono-num text-xl font-bold text-navy-900">BOB / USD</p><p class="text-slate-500 text-xs mt-0.5">Monedas</p></div>
+    <div class="text-center border-l border-gray-100"><p class="font-mono-num text-xl font-bold text-green-600">Exento</p><p class="text-slate-500 text-xs mt-0.5">> 3 años en BOB</p></div>
+  </div>
+</div>
+
+<section class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="grid grid-cols-1 xl:grid-cols-5 gap-8 items-start">
+
+    <div class="xl:col-span-2 space-y-5">
+      <div class="card p-6">
+        <h2 class="font-display text-xl font-semibold mb-5 flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg flex items-center justify-center" style="background:#EEF4FF">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A1F42" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </span>
+          Parámetros del DPF
+        </h2>
+        <div class="space-y-5">
+          <div>
+            <label class="lbl-dpf">Moneda</label>
+            <select id="dpfMoneda" class="inp-dpf" onchange="onMonedaChange()">
+              <option value="BOB">BOB — Boliviano</option>
+              <option value="USD">USD — Dólar Americano</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl-dpf">Monto a Invertir</label>
+            <div class="relative">
+              <span id="currSymbol" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-yellow-600">Bs.</span>
+              <input type="number" id="dpfMonto" class="inp-dpf" style="padding-left:2.75rem" value="50000" min="100" step="100" oninput="calcDPF()">
+            </div>
+            <input type="range" id="dpfSlider" min="1000" max="500000" step="1000" value="50000"
+                   style="accent-color:#D4A843;width:100%;margin-top:8px"
+                   oninput="document.getElementById('dpfMonto').value=this.value;calcDPF()">
+            <div class="flex justify-between text-xs text-blue-400 mt-1">
+              <span id="sliderMin">Bs. 1k</span>
+              <span id="sliderMid" class="font-semibold text-yellow-600">Bs. 50k</span>
+              <span id="sliderMax">Bs. 500k</span>
+            </div>
+          </div>
+          <div>
+            <label class="lbl-dpf">Plazo del DPF</label>
+            <div class="plazo-grid">
+              <button class="plazo-pill"        data-dias="30"   onclick="setPlazo(this)">30 días</button>
+              <button class="plazo-pill"        data-dias="60"   onclick="setPlazo(this)">60 días</button>
+              <button class="plazo-pill active" data-dias="90"   onclick="setPlazo(this)">90 días</button>
+              <button class="plazo-pill"        data-dias="180"  onclick="setPlazo(this)">180 días</button>
+              <button class="plazo-pill"        data-dias="360"  onclick="setPlazo(this)">360 días</button>
+              <button class="plazo-pill"        data-dias="720"  onclick="setPlazo(this)">2 años</button>
+              <button class="plazo-pill"        data-dias="1080" onclick="setPlazo(this)">3 años</button>
+            </div>
+            <p class="text-xs text-blue-400 mt-2" id="plazoNota">Plazo seleccionado: <strong>90 días</strong></p>
+          </div>
+          <div>
+            <label class="lbl-dpf">Tasa de Interés Anual (%)</label>
+            <input type="number" id="dpfTasa" class="inp-dpf" value="4.50" min="0.01" max="20" step="0.01" oninput="calcDPF()">
+            <p class="text-xs text-blue-400 mt-1">Ingresá la tasa que te ofrece tu banco. Referencial: 2%–7% según entidad y plazo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl p-4" style="background:rgba(212,168,67,.08);border:1px solid rgba(212,168,67,.25)">
+        <div class="flex gap-3 items-start">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4A843" stroke-width="2" class="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+          <div>
+            <p class="font-bold text-sm text-yellow-700 mb-1">¿Qué es el RC-IVA?</p>
+            <p class="text-xs text-yellow-800 leading-relaxed">El Régimen Complementario al IVA retiene el <strong>13%</strong> de los intereses ganados en DPFs de hasta 3 años en BOB. El banco lo descuenta automáticamente antes de pagarte. En DPFs mayores a 3 años en bolivianos, estás <strong>exento</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-calc" onclick="calcDPF()">💰&nbsp; Calcular Interés Neto Real</button>
+    </div>
+
+    <div class="xl:col-span-3 space-y-5">
+      <div id="dpfPlaceholder" class="card p-14 flex flex-col items-center text-center gap-4" style="min-height:300px">
+        <div class="w-16 h-16 rounded-full gold-bg flex items-center justify-center opacity-25">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div>
+          <h3 class="font-display text-2xl opacity-40">Configurá tu DPF</h3>
+          <p class="text-slate-400 text-sm mt-1 opacity-60">Completá los parámetros y presioná <strong>Calcular</strong><br>para ver tu ganancia real.</p>
+        </div>
+      </div>
+
+      <div id="dpfResultados" class="hidden space-y-5">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="col-span-2 res-card fade-up d1" style="background:linear-gradient(135deg,#D4A843 0%,#A87420 100%)">
+            <p class="res-label text-yellow-100">💰 Interés Neto Real — Lo que cobrás</p>
+            <p class="res-value text-white" id="rNetoBig">—</p>
+            <p class="res-note text-yellow-100">Después del RC-IVA · Lo que el banco deposita en tu cuenta</p>
+          </div>
+          <div class="res-card fade-up d2" style="background:linear-gradient(135deg,#060F1E,#0A1F42)">
+            <p class="res-label text-blue-300">Interés Bruto</p>
+            <p class="res-value text-white text-2xl" id="rBruto">—</p>
+            <p class="res-note text-blue-400">Antes del impuesto</p>
+          </div>
+          <div class="res-card fade-up d3" style="background:#FEF2F2;border:1.5px solid #FECACA">
+            <p class="res-label text-red-400">RC-IVA Retenido</p>
+            <p class="res-value text-red-600 text-2xl" id="rRCIVA">—</p>
+            <p class="res-note text-red-400">13% del interés bruto</p>
+          </div>
+          <div class="res-card fade-up d4" style="background:#F0FDF4;border:1.5px solid #BBF7D0">
+            <p class="res-label text-green-500">Monto Final</p>
+            <p class="res-value text-green-700 text-2xl" id="rTotal">—</p>
+            <p class="res-note text-green-500">Capital + interés neto</p>
+          </div>
+          <div class="res-card fade-up d4" style="background:#EEF4FF;border:1.5px solid #BFDBFE">
+            <p class="res-label text-blue-400">TIR Efectiva Neta</p>
+            <p class="res-value text-blue-700 text-2xl" id="rTIR">—</p>
+            <p class="res-note text-blue-400">Rendimiento anual real</p>
+          </div>
+        </div>
+
+        <div class="card p-5 fade-up">
+          <h3 class="font-display text-lg font-semibold mb-4">Desglose del Cálculo</h3>
+          <table class="sum-tbl">
+            <tbody>
+              <tr><td>Monto invertido</td><td id="tMonto">—</td></tr>
+              <tr><td>Plazo</td><td id="tPlazo">—</td></tr>
+              <tr><td>Tasa nominal anual</td><td id="tTasa">—</td></tr>
+              <tr><td>Interés bruto</td><td id="tBruto">—</td></tr>
+              <tr><td>RC-IVA (13%)</td><td id="tRCIVA" style="color:#DC2626">—</td></tr>
+              <tr><td style="font-weight:700;color:#0A1F42">Interés neto</td><td id="tNeto" style="font-weight:700;color:#16A34A">—</td></tr>
+              <tr><td style="font-weight:700;color:#0A1F42">Monto final a cobrar</td><td id="tFinal" style="font-weight:700;color:#0A1F42">—</td></tr>
+            </tbody>
+          </table>
+          <p class="text-xs text-slate-400 mt-3 italic" id="rcIvaNota"></p>
+        </div>
+
+        <div class="card p-5 fade-up">
+          <h3 class="font-display text-lg font-semibold mb-4">DPF vs Cuenta de Ahorro</h3>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-semibold text-slate-700">Tu DPF (tasa ingresada)</span>
+                <span class="font-mono-num font-bold text-yellow-600" id="cmpDPFpct">—</span>
+              </div>
+              <div class="cmp-bar"><div class="cmp-fill gold-bg" id="cmpDPFbar" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-semibold text-slate-700">Cuenta de ahorro (≈ 2% promedio)</span>
+                <span class="font-mono-num font-bold text-slate-400">2.00%</span>
+              </div>
+              <div class="cmp-bar"><div class="cmp-fill" style="width:20%;background:#CBD5E1"></div></div>
+            </div>
+          </div>
+          <div id="cmpMensaje" class="mt-4 rounded-xl p-3 text-sm text-green-700 font-semibold" style="background:#F0FDF4;border:1px solid #BBF7D0"></div>
+        </div>
+
+        <div id="alertaExencion" class="hidden rounded-2xl p-4 flex gap-3 items-start" style="background:#F0FDF4;border:1.5px solid #86EFAC">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" class="flex-shrink-0 mt-0.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <div>
+            <p class="font-bold text-green-800 text-sm mb-1">¡Exento de RC-IVA!</p>
+            <p class="text-green-700 text-xs leading-relaxed">Tu DPF es mayor a 3 años en Bolivianos, por lo que está <strong>exento del RC-IVA</strong> según la normativa vigente. El 100% del interés bruto es tuyo. Verificá esta condición con tu entidad financiera.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-12 sm:py-16" style="background:linear-gradient(135deg,#F0F4FF,#EEF2FA)">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-10">
+      <span class="badge-gold uppercase">Educación Financiera</span>
+      <h2 class="font-display text-3xl font-semibold mt-3">¿Cómo funciona el DPF en Bolivia?</h2>
+      <p class="text-slate-500 mt-2 max-w-xl mx-auto">Lo que tu banco no siempre explica con claridad antes de firmar.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div class="card p-6">
+        <div class="w-11 h-11 rounded-2xl flex items-center justify-center mb-4" style="background:#EEF4FF">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+        </div>
+        <h3 class="font-bold text-base text-navy-900 mb-2">1. Depositás y bloqueás</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Inmovilizás tu dinero por el plazo pactado. A diferencia de una caja de ahorro, <strong>no podés retirar antes</strong> sin penalidades (generalmente pérdida de intereses).</p>
+      </div>
+      <div class="card p-6">
+        <div class="w-11 h-11 rounded-2xl flex items-center justify-center mb-4" style="background:#FEF3C7">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <h3 class="font-bold text-base text-navy-900 mb-2">2. El banco calcula el interés</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">La fórmula es: <code class="bg-slate-100 px-1 rounded text-xs">Monto × (Tasa/100) × (Días/360)</code>. El año financiero en Bolivia es de <strong>360 días</strong>, no 365.</p>
+      </div>
+      <div class="card p-6">
+        <div class="w-11 h-11 rounded-2xl flex items-center justify-center mb-4" style="background:#D1FAE5">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <h3 class="font-bold text-base text-navy-900 mb-2">3. Recibís el neto</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Al vencimiento, el banco descuenta automáticamente el RC-IVA (13%) y te acredita el <strong>interés neto</strong> más tu capital original.</p>
+      </div>
+    </div>
+    <div class="mt-8 rounded-2xl p-6 sm:p-8 text-center" style="background:#0A1F42;border:1px solid rgba(212,168,67,.25)">
+      <p class="text-blue-300 text-xs uppercase tracking-widest mb-4 font-semibold">Fórmula Completa — Bolivia</p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-white flex-wrap">
+        <div class="text-center">
+          <div class="font-mono-num text-2xl font-bold text-yellow-300">Interés Bruto</div>
+          <div class="text-blue-300 text-xs mt-1">= Monto × Tasa × Días/360</div>
+        </div>
+        <div class="text-2xl text-slate-500">−</div>
+        <div class="text-center">
+          <div class="font-mono-num text-2xl font-bold text-red-400">RC-IVA</div>
+          <div class="text-blue-300 text-xs mt-1">= Bruto × 13%</div>
+        </div>
+        <div class="text-2xl text-slate-500">=</div>
+        <div class="text-center">
+          <div class="font-mono-num text-2xl font-bold text-green-400">Interés Neto</div>
+          <div class="text-blue-300 text-xs mt-1">Lo que cobrás</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-12 sm:py-16 max-w-3xl mx-auto px-4 sm:px-6">
+  <div class="text-center mb-10">
+    <span class="badge-gold uppercase">Preguntas Frecuentes</span>
+    <h2 class="font-display text-3xl font-semibold mt-3">Dudas sobre el DPF</h2>
+  </div>
+  <div class="card px-6">
+    <div id="faqContainer"></div>
+  </div>
+</section>
+
+<section class="hero-bg py-14 text-center text-white">
+  <div class="max-w-2xl mx-auto px-4">
+    <div class="w-14 h-14 rounded-2xl gold-bg mx-auto mb-5 flex items-center justify-center">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    </div>
+    <h2 class="font-display text-3xl sm:text-4xl font-bold mb-3">¿Preferís pedir un crédito?</h2>
+    <p class="text-blue-200 mb-7">Si en vez de invertir necesitás financiamiento, usá nuestra calculadora de créditos con Sistema Francés y normativa ASFI.</p>
+    <div class="flex flex-wrap gap-3 justify-center">
+      <a href="/" style="background:linear-gradient(135deg,#D4A843,#A87420);color:#fff;font-weight:700;padding:14px 30px;border-radius:12px;text-decoration:none;font-size:15px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(212,168,67,.40);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+        Calculadora de Créditos
+      </a>
+      <a href="/dpf/tasas-en-bolivia" style="background:transparent;color:white;font-weight:700;padding:14px 30px;border-radius:12px;text-decoration:none;font-size:15px;display:inline-flex;align-items:center;gap:8px;border:2px solid rgba(255,255,255,.3);">
+        Ver Tasas de Bancos
+      </a>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+"use strict";
+var DPF = { moneda:'BOB', monto:50000, dias:90, tasa:4.50 };
+var FAQS = [
+  { q:'¿Puedo retirar el dinero antes del vencimiento?', a:'Generalmente no, o implica penalidades. La mayoría de bancos bolivianos aplican la pérdida parcial o total de los intereses si retirás antes del plazo. Algunos ofrecen "DPF con liquidez" a tasas menores. Consultá con tu banco antes de contratar.' },
+  { q:'¿El RC-IVA aplica en dólares también?', a:'Sí. El RC-IVA (13%) aplica tanto a DPFs en Bolivianos como en Dólares, siempre que el plazo sea de 3 años o menos. No hay distinción por moneda para esta retención.' },
+  { q:'¿Qué pasa si el plazo es mayor a 3 años en BOB?', a:'Según la normativa boliviana, los DPFs en Bolivianos con plazo mayor a 3 años (más de 1080 días) están exentos del RC-IVA. Esto significa que el 100% del interés bruto es tuyo. Esta exención aplica únicamente para moneda nacional.' },
+  { q:'¿Qué es el Fondo de Protección al Ahorrista (FOPA)?', a:'El FOPA cubre hasta UFV 250,000 (aproximadamente Bs. 596,000) por persona en cada entidad financiera regulada por la ASFI. Si la entidad quiebra, el Estado garantiza esa suma. Para montos mayores, considerá diversificar en más de un banco.' },
+  { q:'¿Cuál es la diferencia entre DPF y Caja de Ahorro?', a:'La Caja de Ahorro te permite retirar en cualquier momento pero paga tasas bajas (1%–3% anual). El DPF bloquea tu dinero por un plazo fijo pero paga tasas mucho mayores. La clave es que el dinero del DPF no debe ser de emergencia.' },
+  { q:'¿En qué banco conviene poner el DPF?', a:'Las Cooperativas de Ahorro y Crédito autorizadas por la ASFI y los Bancos PYME suelen ofrecer tasas más altas que los Bancos Múltiples. Revisá nuestra tabla comparativa de tasas para ver las opciones actuales.' },
+];
+
+document.addEventListener('DOMContentLoaded', function() { renderFAQs(); calcDPF(); });
+
+function setPlazo(btn) {
+  document.querySelectorAll('.plazo-pill').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  DPF.dias = parseInt(btn.getAttribute('data-dias'));
+  var textos = {30:'30 días',60:'60 días',90:'90 días',180:'180 días (6 meses)',360:'360 días (1 año)',720:'720 días (2 años)',1080:'1,080 días (3 años)'};
+  document.getElementById('plazoNota').innerHTML = 'Plazo seleccionado: <strong>' + (textos[DPF.dias] || DPF.dias + ' días') + '</strong>';
+  calcDPF();
+}
+
+function onMonedaChange() {
+  DPF.moneda = document.getElementById('dpfMoneda').value;
+  var isBOB = DPF.moneda === 'BOB';
+  document.getElementById('currSymbol').textContent = isBOB ? 'Bs.' : 'US$';
+  var max = isBOB ? 500000 : 50000;
+  var mid = isBOB ? 50000  : 5000;
+  document.getElementById('dpfSlider').max   = max;
+  document.getElementById('dpfSlider').value = mid;
+  document.getElementById('dpfMonto').value  = mid;
+  document.getElementById('sliderMin').textContent = isBOB ? 'Bs. 1k'  : 'US$ 100';
+  document.getElementById('sliderMid').textContent = isBOB ? 'Bs. 50k' : 'US$ 5k';
+  document.getElementById('sliderMax').textContent = isBOB ? 'Bs. 500k': 'US$ 50k';
+  DPF.monto = mid;
+  calcDPF();
+}
+
+function calcDPF() {
+  var monto = parseFloat(document.getElementById('dpfMonto').value) || 0;
+  var tasa  = parseFloat(document.getElementById('dpfTasa').value)  || 0;
+  var dias  = DPF.dias;
+  var mon   = document.getElementById('dpfMoneda').value;
+  if (monto <= 0 || tasa <= 0) return;
+  DPF.monto = monto; DPF.tasa = tasa; DPF.moneda = mon;
+  document.getElementById('sliderMid').textContent = fmtCompact(monto, mon);
+  document.getElementById('dpfSlider').value = monto;
+  var interesBruto = monto * (tasa / 100) * (dias / 360);
+  var esExento  = (mon === 'BOB') && (dias > 1080);
+  var rcIva     = esExento ? 0 : interesBruto * 0.13;
+  var interesNeto = interesBruto - rcIva;
+  var montoFinal  = monto + interesNeto;
+  var tirNeta = (interesNeto / monto) * (360 / dias) * 100;
+  var f   = function(n) { return (mon==='BOB'?'Bs. ':'US$ ') + n.toLocaleString('es-BO',{minimumFractionDigits:2,maximumFractionDigits:2}); };
+  var pct = function(n) { return n.toFixed(2)+'%'; };
+  set('rNetoBig', f(interesNeto));
+  set('rBruto',   f(interesBruto));
+  set('rRCIVA',   esExento ? 'Exento' : f(rcIva));
+  set('rTotal',   f(montoFinal));
+  set('rTIR',     pct(tirNeta));
+  var td = {30:'30 días',60:'60 días',90:'90 días',180:'180 días',360:'360 días (1 año)',720:'2 años (720 días)',1080:'3 años (1,080 días)'};
+  set('tMonto', f(monto));
+  set('tPlazo', td[dias] || dias+' días');
+  set('tTasa',  pct(tasa));
+  set('tBruto', f(interesBruto));
+  set('tRCIVA', esExento ? 'Exento (BOB > 3 años)' : '− '+f(rcIva)+' (13%)');
+  set('tNeto',  f(interesNeto));
+  set('tFinal', f(montoFinal));
+  document.getElementById('rcIvaNota').textContent = esExento
+    ? '* Exento de RC-IVA por ser DPF en BOB mayor a 3 años. Verificá con tu entidad.'
+    : '* El banco retiene el RC-IVA (13%) automáticamente al momento del vencimiento.';
+  document.getElementById('alertaExencion').classList.toggle('hidden', !esExento);
+  var maxTasa = Math.max(tasa, 10);
+  document.getElementById('cmpDPFbar').style.width = Math.min((tasa/maxTasa)*100,100)+'%';
+  document.getElementById('cmpDPFpct').textContent = pct(tasa);
+  var ahorroCuenta = monto * 0.02 * (dias / 360);
+  var diferencia   = interesNeto - ahorroCuenta;
+  document.getElementById('cmpMensaje').textContent =
+    'Con este DPF ganás ' + f(diferencia) + ' más que en una cuenta de ahorro al 2% anual en el mismo plazo.';
+  document.getElementById('dpfPlaceholder').classList.add('hidden');
+  document.getElementById('dpfResultados').classList.remove('hidden');
+}
+
+function renderFAQs() {
+  var c = document.getElementById('faqContainer');
+  if (!c) return;
+  FAQS.forEach(function(faq, i) {
+    var div = document.createElement('div');
+    div.className = 'faq-item';
+    div.innerHTML =
+      '<button class="faq-btn" onclick="toggleFAQ('+i+')">' +
+        '<span style="flex:1;padding-right:12px">'+faq.q+'</span>' +
+        '<span class="faq-icon" id="fi'+i+'">' +
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A1F42" stroke-width="2.5">' +
+            '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>' +
+          '</svg>' +
+        '</span>' +
+      '</button>' +
+      '<div class="faq-body" id="fb'+i+'"><div class="faq-body-inner">'+faq.a+'</div></div>';
+    c.appendChild(div);
+  });
+}
+
+function toggleFAQ(i) {
+  var body = document.getElementById('fb'+i);
+  var icon = document.getElementById('fi'+i);
+  var isOpen = body.classList.contains('open');
+  document.querySelectorAll('.faq-body').forEach(function(b){b.classList.remove('open');});
+  document.querySelectorAll('.faq-icon').forEach(function(ic){ic.classList.remove('open');});
+  if (!isOpen) { body.classList.add('open'); icon.classList.add('open'); }
+}
+
+function set(id, val) { var el=document.getElementById(id); if(el) el.textContent=val; }
+function fmtCompact(n, mon) {
+  var s = mon==='BOB'?'Bs.':'US$';
+  if(n>=1000000) return s+' '+(n/1000000).toFixed(1)+'M';
+  if(n>=1000)    return s+' '+(n/1000).toFixed(0)+'k';
+  return s+' '+n;
+}
+</script>
+
+</BaseLayout>
