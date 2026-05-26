@@ -441,8 +441,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       const weight  = isLast ? '700' : '400';
 
       const col = document.createElement('div');
-      col.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;height:100%;justify-content:flex-end;';
+      col.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;height:100%;justify-content:flex-end;';
       col.innerHTML =
+        '<span style="font-size:9px;color:' + color + ';font-weight:700;white-space:nowrap;margin-bottom:2px;">' + h.val + '%</span>' +
         '<div style="width:100%;border-radius:4px 4px 0 0;background:' + bg + ';' + shadow + 'height:' + heightP + '%;transition:height .6s cubic-bezier(.34,1.56,.64,1);" title="' + h.mes + ': ' + h.val + '%"></div>' +
         '<span style="font-size:9px;color:' + color + ';font-weight:' + weight + ';white-space:nowrap;">' + label + '</span>';
       container.appendChild(col);
