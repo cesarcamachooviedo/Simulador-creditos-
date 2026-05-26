@@ -383,28 +383,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     /* ─── Cálculo de Impacto ─── */
   // ── Gráfico TRE dinámico desde Google Sheets ──────────────────────────
   async function cargarGraficoTRE() {
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRvUbdrExg3eirmhYGRuOblvnC4npyYmsw1aOdBXgUJMuZJ4EKMrJJ4zsZIR8vSxQtXhVN_aJyuzmR_/pub?gid=0&single=true&output=csv';
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRvUbdrExg3eirmhYGRuOblvnC4npyYmsw1aOdBXgUJMuZJ4EKMrJJ4zsZIR8vSxQtXhVN_aJyuzmR_/pub?gid=1252112532&single=true&output=csv';
 
     try {
       const res  = await fetch(CSV_URL);
       const text = await res.text();
       const rows = text.trim().split('\n');
 
-      // Leer columnas D y E — tolerante a celdas vacías en columna C
+      // Leer columnas A y B de la hoja historial (índices 0 y 1)
       const historial = [];
       rows.forEach((row, i) => {
-        if (i === 0) return; // saltar header fila 1
+        if (i === 0) return; // saltar header
         const cols = row.split(',');
-        // Buscar la primera celda no vacía desde la posición 2 en adelante
-        // que tenga un valor numérico en la siguiente columna
-        for (let c = 2; c < cols.length - 1; c++) {
-          const mes = cols[c]?.trim();
-          const val = parseFloat(cols[c + 1]?.trim());
-          if (mes && mes.length > 0 && !isNaN(val) && val > 0) {
-            historial.push({ mes, val });
-            break;
-          }
-        }
+        const mes  = cols[0]?.trim();
+        const val  = parseFloat(cols[1]?.trim());
+        if (mes && !isNaN(val)) historial.push({ mes, val });
       });
 
       if (!historial.length) return;
