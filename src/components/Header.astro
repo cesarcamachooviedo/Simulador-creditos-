@@ -90,6 +90,12 @@ const isActive = (href: string): boolean => {
           </div>
         </div>
 
+        <!-- Inversiones -->
+        <a href="/inversiones"
+           style={`font-size:13px;font-weight:600;padding:6px 11px;border-radius:8px;text-decoration:none;white-space:nowrap;color:${isActive('/inversiones')?'#D4A843':'rgba(255,255,255,.75)'};`}>
+          Inversiones
+        </a>
+
         <!-- Ayuda dropdown -->
         <div class="nav-dropdown" style="position:relative;">
           <button class="nav-drop-btn" style={`font-size:13px;font-weight:600;padding:6px 11px;border-radius:8px;background:none;border:none;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;color:${isActive('/ayuda')?'#D4A843':'rgba(255,255,255,.75)'};`}>
@@ -173,6 +179,11 @@ const isActive = (href: string): boolean => {
       </a>
       <a href="/dpf/tasas-en-bolivia" style={`padding:11px 14px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;display:block;color:${isActive('/dpf/tasas-en-bolivia')?'#D4A843':'rgba(255,255,255,.80)'};background:${isActive('/dpf/tasas-en-bolivia')?'rgba(212,168,67,.12)':'transparent'};`}>
         📊 Tasas en Bolivia
+      </a>
+
+      <!-- Inversiones -->
+      <a href="/inversiones" style={`padding:11px 14px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;display:block;color:${isActive('/inversiones')?'#D4A843':'rgba(255,255,255,.80)'};background:${isActive('/inversiones')?'rgba(212,168,67,.12)':'transparent'};`}>
+        📈 Inversiones en Bolivia
       </a>
 
       <!-- Sección Ayuda -->
