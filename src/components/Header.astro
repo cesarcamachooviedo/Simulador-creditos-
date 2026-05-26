@@ -176,7 +176,7 @@ const isActive = (href: string): boolean => {
   }
 
   /* Dropdown hover */
-  .nav-dropdown:hover .nav-drop-menu { display:block !important; }
+  /* El hover ahora lo maneja JS para evitar el gap entre botón y menú */
   .nav-drop-btn:hover { color:#D4A843 !important; }
 
   /* Animación dropdown */
@@ -222,5 +222,26 @@ const isActive = (href: string): boolean => {
     window.addEventListener('resize', function() {
       if (window.innerWidth >= 768) close();
     });
+    /* ── Dropdowns con delay para evitar cierre al cruzar el gap ── */
+    document.querySelectorAll('.nav-dropdown').forEach(function(dropdown) {
+      var menu  = dropdown.querySelector('.nav-drop-menu');
+      var timer = null;
+
+      function showMenu() {
+        clearTimeout(timer);
+        menu.style.display = 'block';
+      }
+      function hideMenu() {
+        timer = setTimeout(function() {
+          menu.style.display = 'none';
+        }, 120);
+      }
+
+      dropdown.addEventListener('mouseenter', showMenu);
+      dropdown.addEventListener('mouseleave', hideMenu);
+      menu.addEventListener('mouseenter', showMenu);
+      menu.addEventListener('mouseleave', hideMenu);
+    });
+
   })();
 </script>
