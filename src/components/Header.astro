@@ -56,6 +56,13 @@ const isActive = (href: string): boolean => {
                 <div style="font-size:11px;font-weight:400;color:#6B7A8D;">Documentos para tu crédito</div>
               </div>
             </a>
+            <a href="/creditos/microcredito" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;color:#0A1F42;font-size:13px;font-weight:600;" onmouseover="this.style.background='#F0F4FB'" onmouseout="this.style.background='transparent'">
+              <span style="font-size:16px;">🏪</span>
+              <div>
+                <div>Microcrédito</div>
+                <div style="font-size:11px;font-weight:400;color:#6B7A8D;">Guía para emprendedores</div>
+              </div>
+            </a>
           </div>
         </div>
 
@@ -154,6 +161,9 @@ const isActive = (href: string): boolean => {
       </a>
       <a href="/requisitos" style={`padding:11px 14px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;display:block;color:${isActive('/requisitos')?'#D4A843':'rgba(255,255,255,.80)'};background:${isActive('/requisitos')?'rgba(212,168,67,.12)':'transparent'};`}>
         📋 Requisitos
+      </a>
+      <a href="/creditos/microcredito" style={`padding:11px 14px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;display:block;color:${isActive('/creditos')?'#D4A843':'rgba(255,255,255,.80)'};background:${isActive('/creditos')?'rgba(212,168,67,.12)':'transparent'};`}>
+        🏪 Microcrédito
       </a>
 
       <!-- Sección DPF -->
