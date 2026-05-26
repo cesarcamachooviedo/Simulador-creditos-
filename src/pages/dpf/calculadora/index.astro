@@ -110,13 +110,13 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
               <span id="currSymbol" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-yellow-600">Bs.</span>
               <input type="number" id="dpfMonto" class="inp-dpf" style="padding-left:2.75rem" value="50000" min="100" step="100" oninput="calcDPF()">
             </div>
-            <input type="range" id="dpfSlider" min="1000" max="500000" step="1000" value="50000"
+            <input type="range" id="dpfSlider" min="1000" max="10000000" step="10000" value="50000"
                    style="accent-color:#D4A843;width:100%;margin-top:8px"
                    oninput="document.getElementById('dpfMonto').value=this.value;calcDPF()">
             <div class="flex justify-between text-xs text-blue-400 mt-1">
               <span id="sliderMin">Bs. 1k</span>
               <span id="sliderMid" class="font-semibold text-yellow-600">Bs. 50k</span>
-              <span id="sliderMax">Bs. 500k</span>
+              <span id="sliderMax">Bs. 10M</span>
             </div>
           </div>
           <div>
@@ -190,6 +190,26 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
             <p class="res-label text-blue-400">TIR Efectiva Neta</p>
             <p class="res-value text-blue-700 text-2xl" id="rTIR">—</p>
             <p class="res-note text-blue-400">Rendimiento anual real</p>
+          </div>
+          <div class="col-span-2 res-card fade-up d4" style="background:#F5F3FF;border:1.5px solid #DDD6FE">
+            <p class="res-label text-purple-400">📅 Pago Mensual de Intereses</p>
+            <p class="res-value text-purple-700" id="rMensual">—</p>
+            <p class="res-note text-purple-400">Si el banco paga intereses cada mes · Capital intacto todo el plazo</p>
+            <div style="display:flex;gap:16px;margin-top:10px;padding-top:10px;border-top:1px solid #EDE9FE;">
+              <div>
+                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#A78BFA;">Bruto mensual</p>
+                <p style="font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:#5B21B6;" id="rMensualBruto">—</p>
+              </div>
+              <div>
+                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#F87171;">RC-IVA mensual</p>
+                <p style="font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:#DC2626;" id="rMensualRCIVA">—</p>
+              </div>
+              <div>
+                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#34D399;">Neto mensual</p>
+                <p style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:#059669;" id="rMensualNeto">—</p>
+              </div>
+            </div>
+            <p style="font-size:11px;color:#7C3AED;margin-top:8px;opacity:.75;" id="rMensualNota"></p>
           </div>
         </div>
 
@@ -403,6 +423,21 @@ function calcDPF() {
   var diferencia   = interesNeto - ahorroCuenta;
   document.getElementById('cmpMensaje').textContent =
     'Con este DPF ganás ' + f(diferencia) + ' más que en una cuenta de ahorro al 2% anual en el mismo plazo.';
+  var mensualBruto = monto * (tasa / 100) / 12;
+  var mensualRCIVA = esExento ? 0 : mensualBruto * 0.13;
+  var mensualNeto  = mensualBruto - mensualRCIVA;
+  set('rMensual',      f(mensualNeto));
+  set('rMensualBruto', f(mensualBruto));
+  set('rMensualRCIVA', esExento ? 'Exento' : f(mensualRCIVA));
+  set('rMensualNeto',  f(mensualNeto));
+  document.getElementById('rMensualNota').textContent = esExento
+    ? '* Exento de RC-IVA. El banco te paga el 100% del interés mensual.'
+    : '* El banco retiene el RC-IVA (13%) también en los pagos mensuales.';
+
+  var sliderMaxVal = mon === 'BOB' ? 10000000 : 50000;
+  document.getElementById('dpfSlider').max = sliderMaxVal;
+  document.getElementById('sliderMax').textContent = mon === 'BOB' ? 'Bs. 10M' : 'US$ 50k';
+
   document.getElementById('dpfPlaceholder').classList.add('hidden');
   document.getElementById('dpfResultados').classList.remove('hidden');
 }
