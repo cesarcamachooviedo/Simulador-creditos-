@@ -102,7 +102,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <div class="p-2 rounded-xl" style="background:#F0F4FB;"><p class="text-slate-400 font-semibold">Cobertura FOPA</p><p class="font-bold text-green-600 mt-0.5">UFV 250,000</p></div>
       </div>
       <div class="tip-box text-xs" style="border-color:#1D4ED8;background:#EFF6FF;color:#1E40AF;">La opción más segura y simple. Ideal para el primer paso en inversión.</div>
-      <a href="/dpf/calculadora" class="mt-4 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-semibold text-sm border-2 border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white transition-all" style="text-decoration:none;border-color:#0A1F42;color:#0A1F42;">Calcular mi DPF</a>
+      <a href="/dpf/calculadora" style="margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;border:2px solid #0A1F42;color:#0A1F42;text-decoration:none;background:#fff;transition:all .2s;" onmouseover="this.style.background='#0A1F42';this.style.color='#fff';" onmouseout="this.style.background='#fff';this.style.color='#0A1F42';">Calcular mi DPF</a>
     </div>
 
     <div class="inv-card card p-6" style="border-top:4px solid #D4A843;">
@@ -272,6 +272,45 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <div>
         <p class="font-bold text-white text-sm mb-1">La regla de oro de la inversión boliviana</p>
         <p class="text-blue-200 text-sm leading-relaxed">Antes de invertir, asegurate de tener un <strong class="text-white">fondo de emergencia de 3-6 meses de gastos</strong> en una cuenta de ahorro líquida. Solo invertí el dinero que no vas a necesitar en el plazo de la inversión.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-12 sm:py-16 max-w-5xl mx-auto px-4 sm:px-6">
+  <div class="text-center mb-8">
+    <span style="background:rgba(212,168,67,.14);border:1px solid rgba(212,168,67,.40);color:#A87420;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block;">Nueva opción</span>
+    <h2 class="font-display text-3xl font-semibold mt-3">Inversión en Empresas Privadas</h2>
+    <p class="text-slate-500 mt-2 max-w-xl mx-auto">Algunas empresas bolivianas gestionan carteras de inversión privada con rendimientos potencialmente superiores al DPF, a cambio de mayor riesgo y menor liquidez.</p>
+  </div>
+  <div class="card p-8" style="border:2px solid rgba(212,168,67,.30);">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <div>
+        <h3 class="font-display text-2xl font-semibold mb-4">¿Te interesa este tipo de inversión?</h3>
+        <p class="text-slate-500 text-sm leading-relaxed mb-4">Existen empresas especializadas en gestión de capital privado en Bolivia que operan fuera del sistema bancario tradicional. Antes de invertir en cualquiera de ellas es fundamental verificar su trayectoria, respaldo legal y resultados históricos.</p>
+        <div class="space-y-3 text-sm">
+          <div class="flex gap-3 items-start p-3 rounded-xl" style="background:#FEF3C7;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+            <p class="text-yellow-800"><strong>Importante:</strong> Este tipo de inversiones no están cubiertas por el FOPA ni reguladas directamente por la ASFI. Realizá siempre una verificación exhaustiva antes de comprometer tu capital.</p>
+          </div>
+          <div class="flex gap-3 items-start p-3 rounded-xl" style="background:#F0FDF4;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            <p class="text-green-700">Rendimientos potenciales superiores al DPF bancario, aunque con mayor riesgo y plazos más largos.</p>
+          </div>
+        </div>
+      </div>
+      <div class="rounded-2xl p-6 text-center" style="background:linear-gradient(135deg,#060F1E,#0A1F42);">
+        <div class="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style="background:linear-gradient(135deg,#D4A843,#A87420);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h4 class="font-bold text-white text-lg mb-2">¿Querés recomendaciones?</h4>
+        <p class="text-blue-200 text-sm leading-relaxed mb-5">Si te interesan empresas en las que podrías invertir tu capital, envianos un mensaje y te compartimos información de opciones que hemos analizado.</p>
+        <a href="mailto:contacto@simuladordecreditos.com?subject=Consulta%20sobre%20inversiones%20privadas%20en%20Bolivia"
+           style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#D4A843,#A87420);color:#fff;font-weight:700;padding:13px 24px;border-radius:12px;text-decoration:none;font-size:14px;box-shadow:0 4px 14px rgba(212,168,67,.40);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Envianos un mensaje
+        </a>
+        <p class="text-blue-400 text-xs mt-3">Respondemos en menos de 24 horas</p>
       </div>
     </div>
   </div>

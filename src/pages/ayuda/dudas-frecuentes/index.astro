@@ -64,7 +64,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 }
 </script>
 
-<style>
+<style is:global>
   .hero-bg { background:linear-gradient(135deg,#060F1E 0%,#0A1F42 45%,#0D2860 100%); }
   .gold-bg  { background:linear-gradient(135deg,#D4A843 0%,#A87420 100%); }
   .card     { background:#fff; border-radius:16px; box-shadow:0 2px 18px rgba(10,31,66,.08); }
@@ -308,6 +308,13 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
       </table>
     </div>
     <p class="text-xs text-slate-400 mt-3 italic">* Valores aproximados para ilustración.</p>
+    <div class="mt-5 p-4 rounded-2xl flex gap-3 items-start" style="background:#EFF6FF;border:1px solid #BFDBFE;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+      <div>
+        <p class="text-sm font-bold text-blue-800 mb-1">¿Cuál usa la banca boliviana en la práctica?</p>
+        <p class="text-sm text-blue-700 leading-relaxed">La <strong>gran mayoría de bancos en Bolivia aplican exclusivamente el Sistema Francés</strong> para créditos de consumo, hipotecarios y vehiculares. Es el estándar del sistema financiero nacional regulado por la ASFI. El Sistema Alemán existe como alternativa teórica pero es muy poco frecuente en la oferta bancaria local — si querés utilizarlo, debés solicitarlo explícitamente y no todos los bancos lo ofrecen.</p>
+      </div>
+    </div>
   </div>
 </section>
 
