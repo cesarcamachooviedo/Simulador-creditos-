@@ -47,6 +47,34 @@ const {
 
   <script is:inline>
     window.TRE_VIGENTE = 2.95;
+    window.UFV_VIGENTE = 2.3847;
+
+    (async function() {
+      try {
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRvUbdrExg3eirmhYGRuOblvnC4npyYmsw1aOdBXgUJMuZJ4EKMrJJ4zsZIR8vSxQtXhVN_aJyuzmR_/pub?gid=0&single=true&output=csv';
+        const res  = await fetch(CSV_URL);
+        const text = await res.text();
+        const rows = text.trim().split('\n');
+        const data = {};
+        rows.forEach(row => {
+          const [key, val] = row.split(',');
+          if (key && val) data[key.trim()] = parseFloat(val.trim());
+        });
+        if (data.tre) window.TRE_VIGENTE = data.tre;
+        if (data.ufv) window.UFV_VIGENTE = data.ufv;
+
+        // Actualizar todos los elementos TRE visibles
+        document.querySelectorAll('.tre-value').forEach(el => {
+          el.textContent = window.TRE_VIGENTE;
+        });
+        // Actualizar elementos UFV si existen
+        document.querySelectorAll('.ufv-value').forEach(el => {
+          el.textContent = window.UFV_VIGENTE;
+        });
+      } catch(e) {
+        console.warn('No se pudo cargar datos del Sheet, usando valores por defecto.', e);
+      }
+    })();
   </script>
 </head>
 

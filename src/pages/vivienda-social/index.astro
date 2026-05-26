@@ -105,7 +105,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
     <div class="card p-7" style="border:2px solid rgba(212,168,67,.30)">
       <h3 class="font-display text-2xl font-semibold mb-1">Conversor UFV → Bolivianos</h3>
-      <p class="text-slate-400 text-xs mb-5">UFV vigente: Bs. 2.3847 por UFV</p>
+      <p class="text-slate-400 text-xs mb-5">UFV vigente: Bs. <span class="ufv-value">2.3847</span> por UFV</p>
       <div class="space-y-4">
         <div>
           <label class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">Valor del inmueble en UFV</label>
@@ -136,7 +136,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </div>
     <div class="rounded-2xl p-4 mb-10 flex items-center gap-3 max-w-lg mx-auto" style="background:rgba(212,168,67,.10);border:1px solid rgba(212,168,67,.30)">
       <i data-lucide="info" class="w-5 h-5 text-yellow-600 flex-shrink-0"></i>
-      <p class="text-sm text-yellow-800">UFV actual: <strong>Bs. 2.3847</strong> por UFV · Actualizado diariamente por el BCB</p>
+      <p class="text-sm text-yellow-800">UFV actual: <strong>Bs. <span class="ufv-value">2.3847</span></strong> por UFV · Actualizado diariamente por el BCB</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
 
@@ -256,7 +256,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 </section>
 
 <script is:inline>
-  const UFV_VALUE = 2.3847;
+  const UFV_VALUE = window.UFV_VIGENTE || 2.3847;
   const UFV_TIERS = [
     { max: 255000, label: 'Nivel 1 · Tasa máx. 5.5%' },
     { max: 380000, label: 'Nivel 2 · Tasa máx. 6.5%' },

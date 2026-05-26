@@ -370,8 +370,8 @@ document.addEventListener('DOMContentLoaded', () => {
   d.setMonth(d.getMonth() + 1);
   d.setDate(1);
   $('fechaInicio').value = d.toISOString().slice(0, 10);
-  $('treVar').value   = DB_CONFIG.TRE;
-  $('treMixta').value = DB_CONFIG.TRE;
+  $('treVar').value   = window.TRE_VIGENTE || DB_CONFIG.TRE;
+  $('treMixta').value = window.TRE_VIGENTE || DB_CONFIG.TRE;
   const hdrTRE = $('hdrTRE');
   if (hdrTRE) hdrTRE.textContent = DB_CONFIG.TRE;
   $('monto').addEventListener('input', () => {
