@@ -1,0 +1,370 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Tipos de Crédito en Bolivia 2026 — ¿Cuál te Conviene? Guía Completa"
+  description="Guía completa de los tipos de crédito disponibles en Bolivia: hipotecario VIS, vehicular, personal, comercial y microcrédito. Comparativa de tasas, plazos y requisitos según normativa ASFI 2026."
+>
+
+<style>
+  .hero-bg { background:linear-gradient(135deg,#060F1E 0%,#0A1F42 45%,#0D2860 100%); }
+  .gold-bg  { background:linear-gradient(135deg,#D4A843 0%,#A87420 100%); }
+  .card     { background:#fff; border-radius:16px; box-shadow:0 2px 18px rgba(10,31,66,.08); }
+  .font-mono-num { font-family:'DM Mono','Courier New',monospace; font-weight:500; }
+  .badge-gold   { background:rgba(212,168,67,.14);border:1px solid rgba(212,168,67,.40);color:#A87420;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block; }
+  .badge-green  { background:#D1FAE5;color:#065F46;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block; }
+  .badge-blue   { background:#DBEAFE;color:#1E40AF;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block; }
+  .badge-purple { background:#EDE9FE;color:#5B21B6;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block; }
+  .badge-orange { background:#FFEDD5;color:#9A3412;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block; }
+  .credit-card { border-radius:20px;overflow:hidden;border:2px solid #E5EDF8;background:#fff;transition:transform .25s,box-shadow .25s,border-color .25s;display:flex;flex-direction:column; }
+  .credit-card:hover { transform:translateY(-5px);box-shadow:0 14px 40px rgba(10,31,66,.14);border-color:#D4A843; }
+  .rate-pill { font-family:'DM Mono',monospace;font-size:13px;font-weight:700;padding:4px 12px;border-radius:20px;display:inline-block; }
+  .rate-low  { background:#D1FAE5;color:#065F46; }
+  .rate-mid  { background:#DBEAFE;color:#1E40AF; }
+  .rate-high { background:#FEE2E2;color:#991B1B; }
+  .cmp-tbl { width:100%;border-collapse:separate;border-spacing:0;font-size:13px; }
+  .cmp-tbl thead th { padding:12px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em; }
+  .cmp-tbl thead th:first-child { text-align:left; }
+  .cmp-tbl td { padding:12px 14px;border-bottom:1px solid #EDF2F9; }
+  .cmp-tbl td:first-child { font-weight:600;color:#4B6A9B; }
+  .cmp-tbl tbody tr:last-child td { border-bottom:none; }
+  .cmp-tbl tbody tr:hover td { background:#F7FAFF; }
+  .decision-btn { width:100%;padding:14px 18px;border-radius:12px;border:1.5px solid #E5EDF8;background:#fff;cursor:pointer;text-align:left;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;color:#0A1F42;transition:all .2s;display:flex;align-items:center;gap:12px; }
+  .decision-btn:hover { border-color:#D4A843;background:#FFFDF5; }
+  .decision-btn.selected { border-color:#0A1F42;background:#0A1F42;color:#fff; }
+</style>
+
+<section class="hero-bg text-white relative overflow-hidden">
+  <div class="absolute inset-0 pointer-events-none">
+    <div style="position:absolute;top:-60px;right:-80px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.09) 0%,transparent 70%)"></div>
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20 relative">
+    <div class="max-w-3xl">
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="badge-gold uppercase">Guía Completa 2026</span>
+        <span class="badge-green">Normativa ASFI</span>
+      </div>
+      <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4">
+        Tipos de Crédito<br><span class="text-yellow-300">en Bolivia</span><br>¿Cuál te conviene?
+      </h1>
+      <p class="text-blue-200 text-base sm:text-lg leading-relaxed max-w-2xl">
+        El sistema financiero boliviano ofrece distintos tipos de crédito según tu propósito, ingresos y garantías. Entendé las diferencias antes de ir al banco para elegir el que mejor se adapta a tu situación.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="bg-white border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 grid grid-cols-2 sm:grid-cols-5 gap-4">
+    <div class="text-center"><p class="font-mono-num text-lg font-bold text-navy-900">5.5%</p><p class="text-slate-500 text-xs mt-0.5">Tasa mín. VIS</p></div>
+    <div class="text-center border-l border-gray-100"><p class="font-mono-num text-lg font-bold text-yellow-600">30 años</p><p class="text-slate-500 text-xs mt-0.5">Plazo máx. hipotecario</p></div>
+    <div class="text-center border-l border-gray-100"><p class="font-mono-num text-lg font-bold text-green-600">25%</p><p class="text-slate-500 text-xs mt-0.5">Límite cuota/ingreso</p></div>
+    <div class="text-center border-l border-gray-100"><p class="font-mono-num text-lg font-bold text-navy-900">0%</p><p class="text-slate-500 text-xs mt-0.5">Penalidad prepago</p></div>
+    <div class="text-center border-l border-gray-100"><p class="font-mono-num text-lg font-bold text-purple-600">ASFI</p><p class="text-slate-500 text-xs mt-0.5">Ente regulador</p></div>
+  </div>
+</div>
+
+<section class="py-12 sm:py-14 max-w-4xl mx-auto px-4 sm:px-6">
+  <div class="text-center mb-8">
+    <span class="badge-gold uppercase">Herramienta interactiva</span>
+    <h2 class="font-display text-3xl font-semibold mt-3">¿Para qué necesitás el crédito?</h2>
+    <p class="text-slate-500 mt-2">Respondé esta pregunta y te mostramos el tipo de crédito que más te conviene.</p>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+    <button class="decision-btn" onclick="mostrarRecomendacion('vivienda',this)">
+      <span style="font-size:28px;">🏠</span>
+      <div><p style="margin:0;font-size:15px;">Comprar mi primera vivienda</p><p style="margin:0;font-size:12px;opacity:.6;font-weight:400;">Casa o departamento para vivir</p></div>
+    </button>
+    <button class="decision-btn" onclick="mostrarRecomendacion('vehiculo',this)">
+      <span style="font-size:28px;">🚗</span>
+      <div><p style="margin:0;font-size:15px;">Comprar un vehículo</p><p style="margin:0;font-size:12px;opacity:.6;font-weight:400;">Auto nuevo o usado</p></div>
+    </button>
+    <button class="decision-btn" onclick="mostrarRecomendacion('negocio',this)">
+      <span style="font-size:28px;">🏪</span>
+      <div><p style="margin:0;font-size:15px;">Capital para mi negocio</p><p style="margin:0;font-size:12px;opacity:.6;font-weight:400;">Emprendedor o independiente</p></div>
+    </button>
+    <button class="decision-btn" onclick="mostrarRecomendacion('personal',this)">
+      <span style="font-size:28px;">👤</span>
+      <div><p style="margin:0;font-size:15px;">Gastos personales o emergencia</p><p style="margin:0;font-size:12px;opacity:.6;font-weight:400;">Educación, salud, viaje, etc.</p></div>
+    </button>
+  </div>
+  <div id="recomendacion" class="hidden rounded-2xl p-6" style="background:linear-gradient(135deg,#0A1F42,#0D2860);border:1px solid rgba(212,168,67,.3);">
+    <div class="flex items-start gap-4">
+      <div id="recIcon" class="text-4xl flex-shrink-0"></div>
+      <div class="flex-1">
+        <p class="text-yellow-300 text-xs font-bold uppercase tracking-widest mb-1">Recomendación para tu caso</p>
+        <h3 id="recTitulo" class="font-display text-2xl font-bold text-white mb-2"></h3>
+        <p id="recDesc" class="text-blue-200 text-sm leading-relaxed mb-4"></p>
+        <div class="flex flex-wrap gap-3">
+          <a id="recLink1" href="#" style="background:linear-gradient(135deg,#D4A843,#A87420);color:#fff;font-weight:700;padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+            <span id="recLink1Text"></span>
+          </a>
+          <a id="recLink2" href="#" style="background:transparent;color:white;font-weight:700;padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;border:1.5px solid rgba(255,255,255,.3);">
+            <span id="recLink2Text"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="text-center mb-12">
+    <span class="badge-gold uppercase">Catálogo completo</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-3">Los 5 tipos de crédito en Bolivia</h2>
+    <p class="text-slate-500 mt-2 max-w-xl mx-auto">Cada tipo tiene sus propias tasas, plazos y condiciones reguladas por la ASFI.</p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+    <div class="credit-card" style="border-color:#D4A843;">
+      <div class="p-6 pb-4" style="background:linear-gradient(135deg,#0A1F42,#0D2860);">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-12 h-12 rounded-2xl gold-bg flex items-center justify-center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <span style="background:rgba(212,168,67,.2);border:1px solid rgba(212,168,67,.5);color:#FDE047;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;">MAS CONVENIENTE</span>
+        </div>
+        <h3 class="font-display text-xl font-bold text-white mb-1">Crédito Vivienda Social</h3>
+        <p class="text-blue-300 text-xs">VIS — Ley 393 Bolivia</p>
+      </div>
+      <div class="p-6 flex-1 flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <div><p class="text-xs text-slate-400 mb-1">Tasa máxima (fija por ley)</p><p class="font-mono-num text-2xl font-bold text-yellow-600">5.5% – 7.5%</p></div>
+          <div class="text-right"><p class="text-xs text-slate-400 mb-1">Plazo máximo</p><p class="font-mono-num text-2xl font-bold text-navy-900">30 años</p></div>
+        </div>
+        <div class="space-y-2 text-sm mb-5">
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Tasa <strong>fija y garantizada</strong> por ley</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Sin penalidad por pago anticipado</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Para primera y única vivienda</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span class="text-slate-600">Límite: inmueble hasta 460,000 UFV</span></div>
+        </div>
+        <div class="mt-auto space-y-2">
+          <a href="/vivienda-social" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;background:linear-gradient(135deg,#D4A843,#A87420);color:#fff;">Ver guía completa del VIS</a>
+          <a href="/" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;border:1.5px solid #E5EDF8;color:#0A1F42;">Simular cuota</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="credit-card">
+      <div class="p-6 pb-4" style="background:linear-gradient(135deg,#EEF4FF,#DBEAFE);">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:#1D4ED8;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+          <span class="badge-blue">Consumo</span>
+        </div>
+        <h3 class="font-display text-xl font-bold text-navy-900 mb-1">Crédito Vehicular</h3>
+        <p class="text-blue-500 text-xs">Auto nuevo o usado</p>
+      </div>
+      <div class="p-6 flex-1 flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <div><p class="text-xs text-slate-400 mb-1">Tasa referencial anual</p><p class="font-mono-num text-2xl font-bold text-blue-700">8% – 14%</p></div>
+          <div class="text-right"><p class="text-xs text-slate-400 mb-1">Plazo máximo</p><p class="font-mono-num text-2xl font-bold text-navy-900">7 años</p></div>
+        </div>
+        <div class="space-y-2 text-sm mb-5">
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Hasta 90% del valor del vehículo</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Garantía: el propio vehículo</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Aprobación en 5-10 días hábiles</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="3"><path d="M12 8v4m0 4h.01"/></svg></span><span class="text-slate-600">Tasa variable: TRE + spread bancario</span></div>
+        </div>
+        <div class="mt-auto space-y-2">
+          <a href="/" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;background:#0A1F42;color:#fff;">Simular cuota vehicular</a>
+          <a href="/requisitos" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;border:1.5px solid #E5EDF8;color:#0A1F42;">Ver requisitos</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="credit-card">
+      <div class="p-6 pb-4" style="background:linear-gradient(135deg,#F5F3FF,#EDE9FE);">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:#7C3AED;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <span class="badge-purple">Consumo</span>
+        </div>
+        <h3 class="font-display text-xl font-bold text-navy-900 mb-1">Crédito Personal</h3>
+        <p class="text-purple-500 text-xs">Educación, salud, viaje, emergencias</p>
+      </div>
+      <div class="p-6 flex-1 flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <div><p class="text-xs text-slate-400 mb-1">Tasa referencial anual</p><p class="font-mono-num text-2xl font-bold text-purple-700">10% – 18%</p></div>
+          <div class="text-right"><p class="text-xs text-slate-400 mb-1">Plazo máximo</p><p class="font-mono-num text-2xl font-bold text-navy-900">5 años</p></div>
+        </div>
+        <div class="space-y-2 text-sm mb-5">
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Sin garantía hipotecaria</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Aprobación rápida (2-5 días)</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Uso libre del dinero</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span class="text-slate-600">Tasa más alta — montos menores</span></div>
+        </div>
+        <div class="mt-auto space-y-2">
+          <a href="/" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;background:#7C3AED;color:#fff;">Simular cuota personal</a>
+          <a href="/requisitos" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;border:1.5px solid #E5EDF8;color:#0A1F42;">Ver requisitos</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="credit-card">
+      <div class="p-6 pb-4" style="background:linear-gradient(135deg,#FFFBEB,#FEF3C7);">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:#D97706;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <span class="badge-orange">Productivo</span>
+        </div>
+        <h3 class="font-display text-xl font-bold text-navy-900 mb-1">Microcrédito</h3>
+        <p class="text-yellow-700 text-xs">Para emprendedores e independientes</p>
+      </div>
+      <div class="p-6 flex-1 flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <div><p class="text-xs text-slate-400 mb-1">Monto típico</p><p class="font-mono-num text-2xl font-bold text-yellow-700">Hasta Bs. 70k</p></div>
+          <div class="text-right"><p class="text-xs text-slate-400 mb-1">Plazo máximo</p><p class="font-mono-num text-2xl font-bold text-navy-900">5 años</p></div>
+        </div>
+        <div class="space-y-2 text-sm mb-5">
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Sin boletas de sueldo ni contabilidad formal</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Evaluación por flujo de caja del negocio</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Garantía prendaria o personal</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="3"><path d="M12 8v4m0 4h.01"/></svg></span><span class="text-slate-600">El negocio debe tener mínimo 1 año</span></div>
+        </div>
+        <div class="mt-auto space-y-2">
+          <a href="/creditos/microcredito" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;background:linear-gradient(135deg,#D97706,#B45309);color:#fff;">Ver guía completa</a>
+          <a href="/" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;border:1.5px solid #E5EDF8;color:#0A1F42;">Simular cuota</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="credit-card">
+      <div class="p-6 pb-4" style="background:linear-gradient(135deg,#F0FDF4,#D1FAE5);">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:#065F46;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>
+          <span class="badge-green">Empresarial</span>
+        </div>
+        <h3 class="font-display text-xl font-bold text-navy-900 mb-1">Crédito Comercial</h3>
+        <p class="text-green-600 text-xs">PyMEs y empresas establecidas</p>
+      </div>
+      <div class="p-6 flex-1 flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <div><p class="text-xs text-slate-400 mb-1">Monto desde</p><p class="font-mono-num text-2xl font-bold text-green-700">Bs. 70k+</p></div>
+          <div class="text-right"><p class="text-xs text-slate-400 mb-1">Plazo máximo</p><p class="font-mono-num text-2xl font-bold text-navy-900">10 años</p></div>
+        </div>
+        <div class="space-y-2 text-sm mb-5">
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Montos más altos que microcrédito</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="text-slate-600">Plazos más largos para inversión</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span class="text-slate-600">Requiere estados financieros formales</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span class="text-slate-600">Garantía hipotecaria generalmente</span></div>
+        </div>
+        <div class="mt-auto space-y-2">
+          <a href="/" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;background:#065F46;color:#fff;">Simular cuota comercial</a>
+          <a href="/ayuda/dudas-frecuentes" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;border:1.5px solid #E5EDF8;color:#0A1F42;">Preguntas frecuentes</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="credit-card" style="border-style:dashed;border-color:#D1DCF0;background:#F8FAFF;">
+      <div class="p-6 flex-1 flex flex-col items-center justify-center text-center gap-4">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center" style="background:rgba(212,168,67,.12);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D4A843" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3m0 4h.01"/></svg>
+        </div>
+        <div>
+          <h3 class="font-display text-xl font-semibold text-navy-900 mb-2">Tenes dudas?</h3>
+          <p class="text-slate-500 text-sm leading-relaxed mb-4">Consulta nuestra seccion de preguntas frecuentes o contactanos directamente.</p>
+        </div>
+        <div class="space-y-2 w-full">
+          <a href="/ayuda/dudas-frecuentes" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;background:linear-gradient(135deg,#D4A843,#A87420);color:#fff;">Ver dudas frecuentes</a>
+          <a href="/contacto" style="display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;border:1.5px solid #E5EDF8;color:#0A1F42;">Contactarnos</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="py-12 sm:py-16" style="background:linear-gradient(135deg,#F0F4FF,#EEF2FA)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-10">
+      <span class="badge-gold uppercase">Comparativa</span>
+      <h2 class="font-display text-3xl font-semibold mt-3">Todos los tipos en una sola tabla</h2>
+    </div>
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="cmp-tbl">
+          <thead>
+            <tr style="background:#0A1F42;">
+              <th style="color:#93C5FD;border-bottom:2px solid rgba(255,255,255,.1);text-align:left;min-width:160px;">Tipo</th>
+              <th style="color:#93C5FD;border-bottom:2px solid rgba(255,255,255,.1);text-align:center;">Tasa anual</th>
+              <th style="color:#93C5FD;border-bottom:2px solid rgba(255,255,255,.1);text-align:center;">Plazo max.</th>
+              <th style="color:#93C5FD;border-bottom:2px solid rgba(255,255,255,.1);text-align:center;">Garantia</th>
+              <th style="color:#93C5FD;border-bottom:2px solid rgba(255,255,255,.1);text-align:center;">Ideal para</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Vivienda Social VIS</td><td class="text-center"><span class="rate-pill rate-low">5.5% - 7.5%</span></td><td class="text-center font-mono-num">30 anos</td><td class="text-center text-sm">Hipotecaria</td><td class="text-center text-sm">Primera vivienda hasta 460k UFV</td></tr>
+            <tr><td>Vehicular</td><td class="text-center"><span class="rate-pill rate-mid">8% - 14%</span></td><td class="text-center font-mono-num">7 anos</td><td class="text-center text-sm">El vehiculo</td><td class="text-center text-sm">Compra de auto nuevo o usado</td></tr>
+            <tr><td>Personal</td><td class="text-center"><span class="rate-pill rate-high">10% - 18%</span></td><td class="text-center font-mono-num">5 anos</td><td class="text-center text-sm">Personal</td><td class="text-center text-sm">Gastos urgentes, educacion, salud</td></tr>
+            <tr><td>Microcredito</td><td class="text-center"><span class="rate-pill rate-mid">9% - 16%</span></td><td class="text-center font-mono-num">5 anos</td><td class="text-center text-sm">Prendaria</td><td class="text-center text-sm">Emprendedores e independientes</td></tr>
+            <tr><td>Comercial / PyME</td><td class="text-center"><span class="rate-pill rate-mid">8% - 15%</span></td><td class="text-center font-mono-num">10 anos</td><td class="text-center text-sm">Hipotecaria</td><td class="text-center text-sm">Empresas con estados financieros</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="p-4 text-center" style="background:#F0FDF4;border-top:1px solid #BBF7D0;">
+        <p class="text-green-700 text-xs font-semibold">Tasas referenciales. La tasa real depende de tu banco, monto, plazo y perfil crediticio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-12 sm:py-16 max-w-5xl mx-auto px-4 sm:px-6">
+  <div class="text-center mb-10">
+    <span class="badge-gold uppercase">Normativa ASFI</span>
+    <h2 class="font-display text-3xl font-semibold mt-3">Reglas que aplican a todos los creditos</h2>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <div class="card p-6 text-center">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background:#D1FAE5;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      <h3 class="font-bold text-base text-navy-900 mb-2">Pago anticipado sin penalidad</h3>
+      <p class="text-slate-500 text-sm leading-relaxed">Podes amortizar capital extra en cualquier momento sin comisiones. Derecho garantizado por la Ley 393.</p>
+    </div>
+    <div class="card p-6 text-center">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background:#EEF4FF;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <h3 class="font-bold text-base text-navy-900 mb-2">Limite del 25-30% del ingreso</h3>
+      <p class="text-slate-500 text-sm leading-relaxed">El estandar ASFI establece que tu cuota mensual no debe superar el 25% optimo o 30% maximo de tu ingreso neto.</p>
+    </div>
+    <div class="card p-6 text-center">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background:#FEF3C7;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg></div>
+      <h3 class="font-bold text-base text-navy-900 mb-2">Transparencia en la informacion</h3>
+      <p class="text-slate-500 text-sm leading-relaxed">El banco debe entregarte el contrato con todos los costos antes de firmar: tasa, seguros, comisiones y tabla de amortizacion.</p>
+    </div>
+  </div>
+</section>
+
+<section style="background:#F0F4FB;padding:40px 16px;">
+  <div style="max-width:64rem;margin:0 auto;">
+    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#4B6A9B;margin-bottom:16px;">Explora mas</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:#fff;border-radius:12px;border:1.5px solid #E5EDF8;text-decoration:none;" onmouseover="this.style.borderColor='#D4A843'" onmouseout="this.style.borderColor='#E5EDF8'"><span style="font-size:20px;">🧮</span><div><p style="font-size:13px;font-weight:700;color:#0A1F42;margin:0;">Calculadora de Creditos</p><p style="font-size:11px;color:#64748B;margin:0;">Sistema Frances y TRE Bolivia</p></div></a>
+      <a href="/vivienda-social" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:#fff;border-radius:12px;border:1.5px solid #E5EDF8;text-decoration:none;" onmouseover="this.style.borderColor='#D4A843'" onmouseout="this.style.borderColor='#E5EDF8'"><span style="font-size:20px;">🏠</span><div><p style="font-size:13px;font-weight:700;color:#0A1F42;margin:0;">Credito Vivienda Social</p><p style="font-size:11px;color:#64748B;margin:0;">Tasas desde 5.5% — Ley 393</p></div></a>
+      <a href="/creditos/microcredito" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:#fff;border-radius:12px;border:1.5px solid #E5EDF8;text-decoration:none;" onmouseover="this.style.borderColor='#D4A843'" onmouseout="this.style.borderColor='#E5EDF8'"><span style="font-size:20px;">🏪</span><div><p style="font-size:13px;font-weight:700;color:#0A1F42;margin:0;">Microcredito Emprendedores</p><p style="font-size:11px;color:#64748B;margin:0;">Guia completa Bolivia 2026</p></div></a>
+      <a href="/requisitos" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:#fff;border-radius:12px;border:1.5px solid #E5EDF8;text-decoration:none;" onmouseover="this.style.borderColor='#D4A843'" onmouseout="this.style.borderColor='#E5EDF8'"><span style="font-size:20px;">📋</span><div><p style="font-size:13px;font-weight:700;color:#0A1F42;margin:0;">Requisitos para Credito</p><p style="font-size:11px;color:#64748B;margin:0;">Checklist interactivo ASFI</p></div></a>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+var RECOMENDACIONES = {
+  vivienda: { icon:'🏠', titulo:'Credito de Vivienda Social (VIS)', desc:'Es tu mejor opcion. Con tasas fijadas por ley desde 5.5% y plazos de hasta 30 anos, el VIS es el credito hipotecario mas conveniente de Bolivia siempre que el inmueble no supere los 460,000 UFV y sea tu primera vivienda.', link1:'/', link1Text:'Simular cuota VIS', link2:'/vivienda-social', link2Text:'Ver todos los detalles' },
+  vehiculo: { icon:'🚗', titulo:'Credito Vehicular', desc:'El credito vehicular te financia hasta el 90% del valor del auto con el propio vehiculo como garantia. Los plazos son de hasta 7 anos y la aprobacion suele tardar entre 5 y 10 dias habiles.', link1:'/', link1Text:'Simular cuota vehicular', link2:'/requisitos', link2Text:'Ver requisitos' },
+  negocio:  { icon:'🏪', titulo:'Microcredito para Emprendedores', desc:'Si sos independiente o tenes un negocio propio, el microcredito es tu alternativa. No necesitas boletas de sueldo ni contabilidad formal — el banco evalua el flujo de caja real de tu negocio.', link1:'/', link1Text:'Simular cuota', link2:'/creditos/microcredito', link2Text:'Ver guia completa' },
+  personal: { icon:'👤', titulo:'Credito Personal', desc:'Para gastos personales, educacion, salud o emergencias, el credito personal es la opcion mas rapida y simple. No requiere garantia hipotecaria, aunque las tasas son mas altas que otros tipos de credito.', link1:'/', link1Text:'Simular cuota personal', link2:'/ayuda/dudas-frecuentes', link2Text:'Ver dudas frecuentes' }
+};
+function mostrarRecomendacion(tipo, btn) {
+  var r = RECOMENDACIONES[tipo];
+  if (!r) return;
+  document.querySelectorAll('.decision-btn').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  document.getElementById('recIcon').textContent      = r.icon;
+  document.getElementById('recTitulo').textContent    = r.titulo;
+  document.getElementById('recDesc').textContent      = r.desc;
+  document.getElementById('recLink1').href            = r.link1;
+  document.getElementById('recLink1Text').textContent = r.link1Text;
+  document.getElementById('recLink2').href            = r.link2;
+  document.getElementById('recLink2Text').textContent = r.link2Text;
+  var rec = document.getElementById('recomendacion');
+  rec.classList.remove('hidden');
+  rec.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+</script>
+
+</BaseLayout>
